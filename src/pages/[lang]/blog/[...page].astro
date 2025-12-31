@@ -1,0 +1,85 @@
+---
+import BlogCard from '@/components/BlogCard.astro'
+import Breadcrumbs from '@/components/Breadcrumbs.astro'
+import PageHead from '@/components/PageHead.astro'
+import PaginationComponent from '@/components/ui/pagination'
+import { SITE } from '@/consts'
+import type { ui } from '@/i18n/ui'
+import { languages } from '@/i18n/ui'
+import { useLocalizedPath, useTranslations } from '@/i18n/utils'
+import Layout from '@/layouts/Layout.astro'
+import { getAllPosts, groupPostsByYear } from '@/lib/data-utils'
+import type { PaginateFunction } from 'astro'
+
+export async function getStaticPaths({
+    paginate,
+}: {
+    paginate: PaginateFunction
+}) {
+    const paths = []
+    for (const lang of Object.keys(languages)) {
+        const allPosts = await getAllPosts(lang)
+        const paginatedPaths = paginate(allPosts, {
+            pageSize: SITE.postsPerPage,
+            params: { lang },
+        })
+        paths.push(...paginatedPaths)
+    }
+    return paths
+}
+
+const { page } = Astro.props
+const { lang } = Astro.params
+
+const t = useTranslations(lang as keyof typeof ui)
+const l = useLocalizedPath(lang as keyof typeof ui)
+
+const postsByYear = groupPostsByYear(page.data)
+const years = Object.keys(postsByYear).sort((a, b) => parseInt(b) - parseInt(a))
+
+const translatedBlogLabel = t('nav.blog')
+const translatedPageLabel =
+    lang === 'en' ? `Page ${page.currentPage}` : `第 ${page.currentPage} 页`
+---
+
+<Layout class="max-w-3xl" lang={lang}>
+    <PageHead slot="head" title={translatedBlogLabel} />
+    <Breadcrumbs
+        items={[
+            {
+                label: translatedBlogLabel,
+                href: l('/blog'),
+                icon: 'lucide:library-big',
+            },
+            { label: translatedPageLabel, icon: 'lucide:book-copy' },
+        ]}
+    />
+
+    <div class="flex min-h-[calc(100vh-18rem)] flex-col">
+        {
+            years.map((year) => (
+                <section class="flex flex-col">
+                    <div class="text-muted-foreground/60 mt-6 mb-2.5 text-xs font-medium tracking-wider uppercase first:mt-0">
+                        {year}
+                    </div>
+                    <ul class="flex flex-col gap-2">
+                        {postsByYear[year].map((post) => (
+                            <li>
+                                <BlogCard entry={post} />
+                            </li>
+                        ))}
+                    </ul>
+                </section>
+            ))
+        }
+    </div>
+
+    <div class="mt-6">
+        <PaginationComponent
+            currentPage={page.currentPage}
+            totalPages={page.lastPage}
+            baseUrl={l('/blog/')}
+            client:idle
+        />
+    </div>
+</Layout>

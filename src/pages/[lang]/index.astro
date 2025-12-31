@@ -1,0 +1,437 @@
+---
+import BlogCard from '@/components/BlogCard.astro'
+import Link from '@/components/Link.astro'
+import PageHead from '@/components/PageHead.astro'
+import { ErrorBoundary } from '@/components/react/ErrorBoundary'
+import Skills from '@/components/react/Skills'
+import { buttonVariants } from '@/components/ui/button'
+import { ICON_MAP, SITE, SOCIAL_LINKS } from '@/consts'
+import type { ui } from '@/i18n/ui'
+import { useLocalizedPath, useTranslations } from '@/i18n/utils'
+import Layout from '@/layouts/Layout.astro'
+import { getRecentPosts } from '@/lib/data-utils'
+import type { SocialLink } from '@/types'
+import { Icon } from 'astro-icon/components'
+
+export function getStaticPaths() {
+    return [{ params: { lang: 'zh-cn' } }, { params: { lang: 'en' } }]
+}
+
+const { lang } = Astro.params
+const t = useTranslations(lang as keyof typeof ui)
+const l = useLocalizedPath(lang as keyof typeof ui)
+
+// Error handling for fetching recent posts
+let latestPosts: Awaited<ReturnType<typeof getRecentPosts>> = []
+try {
+    // We need to filter by lang in the future, for now just getting all
+    latestPosts = await getRecentPosts(2, lang)
+} catch (error) {
+    console.error('Error fetching recent posts:', error)
+}
+
+// Person Schema for homepage SEO
+const personSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'Person',
+    name: SITE.title,
+    url: SITE.href,
+    description: t('home.description'),
+}
+
+// Organization Schema
+const organizationSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    name: SITE.title,
+    url: SITE.href,
+    description: t('home.description'),
+}
+
+// Website Schema
+const websiteSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    name: SITE.title,
+    url: SITE.href,
+    description: t('home.description'),
+    potentialAction: {
+        '@type': 'SearchAction',
+        target: {
+            '@type': 'EntryPoint',
+            urlTemplate: `${SITE.href}${l('/blog')}?q={search_term_string}`,
+        },
+        'query-input': 'required name=search_term_string',
+    },
+}
+
+// Experience Timeline - Customize with your own experience
+type ExperienceItem = {
+    role: string
+    company: string
+    period: string
+    current?: boolean
+    icon: string
+    key: string
+}
+
+// Customize your experience here
+const experience: ExperienceItem[] = [
+    {
+        role: lang === 'en' ? 'Your Current Role' : '您的当前角色',
+        company: lang === 'en' ? 'Current Company' : '当前公司',
+        period: '2022 - Present',
+        current: true,
+        icon: 'lucide:briefcase',
+        key:
+            lang === 'en'
+                ? 'Brief description of your current role and key achievements • Add more details about your responsibilities and accomplishments'
+                : '当前角色的简短描述和主要成就 • 添加更多关于您的职责和成就的细节',
+    },
+    {
+        role: lang === 'en' ? 'Previous Role' : '上一个角色',
+        company: lang === 'en' ? 'Previous Company' : '上一个公司',
+        period: '2020 - 2022',
+        icon: 'lucide:server',
+        key:
+            lang === 'en'
+                ? 'Description of your previous role and achievements • Highlight key projects or responsibilities you had in this position'
+                : '上一个角色的描述和成就 • 突出您在该职位上的关键项目或职责',
+    },
+    {
+        role: lang === 'en' ? 'Earlier Role' : '更早的角色',
+        company: lang === 'en' ? 'Earlier Company' : '更早的公司',
+        period: '2018 - 2020',
+        icon: 'lucide:code',
+        key:
+            lang === 'en'
+                ? 'Description of your earlier role and achievements • Show your career progression and growth over time'
+                : '早期角色的描述和成就 • 展示您随时间的职业进展和成长',
+    },
+]
+---
+
+<Layout class="max-w-3xl" transition:persist="home-layout" lang={lang}>
+    <PageHead slot="head" title={SITE.title} fullTitle={true} />
+
+    <!-- Schema Markup for SEO -->
+    <script
+        type="application/ld+json"
+        set:html={JSON.stringify(personSchema)}
+    />
+    <script
+        type="application/ld+json"
+        set:html={JSON.stringify(organizationSchema)}
+    />
+    <script
+        type="application/ld+json"
+        set:html={JSON.stringify(websiteSchema)}
+    />
+
+    <!-- Hero Section -->
+    <section
+        class="relative overflow-hidden rounded-xl border"
+        style="min-height: clamp(280px, 40vh, 400px);"
+    >
+        <!-- Gradient Background -->
+        <div
+            class="from-primary/5 via-background to-background absolute inset-0 bg-gradient-to-br"
+            aria-hidden="true"
+        >
+        </div>
+
+        <!-- Content -->
+        <div class="relative z-10 p-8 md:p-12">
+            <div class="flex flex-col gap-8">
+                <!-- Main Content -->
+                <div class="min-w-0 flex-1 space-y-6">
+                    <!-- Heading -->
+                    <div
+                        class="space-y-4"
+                        style="min-height: clamp(120px, 20vh, 180px);"
+                    >
+                        <h1
+                            class="text-4xl leading-[1.1] font-bold tracking-tight sm:text-5xl md:text-6xl"
+                            style="font-variation-settings: 'wght' 700;"
+                        >
+                            {t('home.welcome')}<br class="hidden sm:block" />
+                            <span class="text-primary">{SITE.title}</span>
+                        </h1>
+                        <p
+                            class="text-muted-foreground mt-4 max-w-xl text-base leading-relaxed md:text-lg"
+                            style="min-height: 3rem;"
+                        >
+                            {t('home.description')}
+                        </p>
+                    </div>
+
+                    <!-- CTA Buttons -->
+                    <div class="flex flex-wrap items-center gap-3 pt-2">
+                        <Link
+                            href={l('/blog')}
+                            class={buttonVariants({
+                                variant: 'default',
+                                size: 'lg',
+                            })}
+                        >
+                            {t('home.read_blog')}
+                            <Icon name="lucide:arrow-right" class="size-4" />
+                        </Link>
+                        <Link
+                            href={l('/about')}
+                            class={buttonVariants({
+                                variant: 'outline',
+                                size: 'lg',
+                            })}
+                        >
+                            {t('home.about_me')}
+                        </Link>
+                    </div>
+
+                    <!-- Social Icons -->
+                    <div class="pt-2">
+                        <ul
+                            class="flex flex-wrap items-center gap-2"
+                            role="list"
+                        >
+                            {
+                                SOCIAL_LINKS.map(
+                                    ({ href, label }: SocialLink) => (
+                                        <li>
+                                            <Link
+                                                href={href}
+                                                aria-label={label}
+                                                title={label}
+                                                class={
+                                                    buttonVariants({
+                                                        variant: 'outline',
+                                                        size: 'icon',
+                                                    }) +
+                                                    ' bg-background/80 backdrop-blur-sm'
+                                                }
+                                                external={
+                                                    href.startsWith('http') ||
+                                                    href.startsWith('mailto:')
+                                                }
+                                            >
+                                                <Icon
+                                                    name={
+                                                        ICON_MAP[
+                                                            label as keyof typeof ICON_MAP
+                                                        ] ||
+                                                        'lucide:message-circle-question'
+                                                    }
+                                                    class="size-4"
+                                                />
+                                            </Link>
+                                        </li>
+                                    ),
+                                )
+                            }
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Experience Timeline -->
+    <section class="mt-8">
+        <div class="mb-6">
+            <h2 class="mb-2 text-2xl font-semibold">{t('home.experience')}</h2>
+            <p class="text-muted-foreground text-sm">
+                {t('home.experience_desc')}
+            </p>
+        </div>
+
+        <div class="space-y-6">
+            {
+                experience.map((exp, index) => (
+                    <div class="relative">
+                        {index < experience.length - 1 && (
+                            <div
+                                class="bg-border absolute top-8 bottom-0 left-[11px] w-px"
+                                aria-hidden="true"
+                            />
+                        )}
+
+                        <div class="flex gap-4">
+                            <div
+                                class={`ring-background relative z-10 flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full ring-4 ${
+                                    exp.current
+                                        ? 'bg-primary text-primary-foreground shadow-primary/20 shadow-lg'
+                                        : 'bg-muted text-muted-foreground'
+                                }`}
+                            >
+                                <Icon name={exp.icon} class="size-3.5" />
+                            </div>
+
+                            <div class="min-w-0 flex-1 pb-2">
+                                <div class="mb-1">
+                                    <h3 class="text-lg leading-tight font-semibold">
+                                        {exp.role}
+                                    </h3>
+                                    <p class="text-muted-foreground text-sm">
+                                        {exp.company} · {exp.period}
+                                    </p>
+                                </div>
+                                <p class="text-muted-foreground/90 mt-2 text-sm leading-relaxed">
+                                    {exp.key}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                ))
+            }
+        </div>
+    </section>
+
+    <!-- Skills & Technologies (Optional) -->
+    <section class="mt-12">
+        <div class="mb-6">
+            <h2 class="mb-2 text-2xl font-semibold">{t('home.skills')}</h2>
+            <p class="text-muted-foreground text-sm">
+                {t('home.skills_desc')}
+            </p>
+        </div>
+        <ErrorBoundary client:load transition:persist="skills-error-boundary">
+            <Skills client:load transition:persist="skills-section" />
+        </ErrorBoundary>
+    </section>
+
+    <!-- Latest from the blog -->
+    {
+        latestPosts && latestPosts.length > 0 && (
+            <section class="mt-12">
+                <div class="mb-6 flex items-center justify-between">
+                    <div>
+                        <h2 class="mb-2 text-2xl font-semibold">
+                            {t('home.latest_posts')}
+                        </h2>
+                        <p class="text-muted-foreground text-sm">
+                            {t('home.latest_posts_desc')}
+                        </p>
+                    </div>
+                    <Link
+                        href={l('/blog')}
+                        class={
+                            buttonVariants({ variant: 'ghost' }) +
+                            ' hidden items-center gap-1.5 sm:flex'
+                        }
+                    >
+                        {t('home.view_all')}
+                        <Icon name="lucide:arrow-right" class="size-4" />
+                    </Link>
+                </div>
+
+                <div class="space-y-2">
+                    {latestPosts.map((post) => (
+                        <article>
+                            <BlogCard entry={post} />
+                        </article>
+                    ))}
+                </div>
+
+                <article class="mt-2 sm:hidden">
+                    <Link
+                        href={l('/blog')}
+                        aria-label={t('home.view_all')}
+                        class="group border-border/50 bg-muted/20 hover:bg-muted/40 hover:border-primary/30 block rounded-md border px-2 py-3 transition-all duration-200"
+                    >
+                        <div class="flex items-center gap-3">
+                            <div
+                                class="bg-primary/10 dark:bg-primary/20 group-hover:bg-primary/20 dark:group-hover:bg-primary/30 flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg transition-colors"
+                                aria-hidden="true"
+                            >
+                                <Icon
+                                    name="lucide:library"
+                                    class="text-primary size-5"
+                                />
+                            </div>
+                            <div class="min-w-0 flex-1">
+                                <div class="flex items-center gap-2">
+                                    <span class="text-foreground group-hover:text-primary text-sm font-semibold transition-colors">
+                                        {t('home.view_all')}
+                                    </span>
+                                    <Icon
+                                        name="lucide:arrow-right"
+                                        class="text-primary/70 group-hover:text-primary size-4 shrink-0 transition-all group-hover:translate-x-0.5"
+                                        aria-hidden="true"
+                                    />
+                                </div>
+                            </div>
+                        </div>
+                    </Link>
+                </article>
+            </section>
+        )
+    }
+
+    <!-- CTA Section -->
+    <section class="mt-12 sm:mt-24">
+        <div class="mx-auto max-w-2xl">
+            <div class="relative mb-12">
+                <div
+                    class="absolute inset-0 flex items-center"
+                    aria-hidden="true"
+                >
+                    <div class="border-border w-full border-t"></div>
+                </div>
+                <div class="relative flex justify-center">
+                    <div
+                        class="bg-background border-border flex items-center gap-2.5 rounded-full border px-4 py-2 shadow-sm"
+                    >
+                        <span class="relative flex h-1.5 w-1.5">
+                            <span
+                                class="bg-primary absolute inline-flex h-full w-full animate-ping rounded-full opacity-75"
+                            ></span>
+                            <span
+                                class="bg-primary relative inline-flex h-1.5 w-1.5 rounded-full"
+                            ></span>
+                        </span>
+                        <span
+                            class="text-muted-foreground text-xs font-medium tracking-wider uppercase"
+                            >Available</span
+                        >
+                    </div>
+                </div>
+            </div>
+
+            <div class="space-y-6 text-center">
+                <div class="space-y-2">
+                    <h2
+                        class="text-foreground text-4xl leading-tight font-semibold tracking-tight sm:text-5xl md:text-6xl"
+                    >
+                        {t('home.connect')}
+                    </h2>
+                </div>
+                <p
+                    class="text-muted-foreground mx-auto max-w-xl text-lg leading-relaxed sm:text-xl"
+                >
+                    {t('home.connect_desc')}
+                </p>
+                <div class="pt-4">
+                    {
+                        SOCIAL_LINKS.find((link) => link.label === 'Email') && (
+                            <Link
+                                href={
+                                    SOCIAL_LINKS.find(
+                                        (link) => link.label === 'Email',
+                                    )!.href
+                                }
+                                class="group bg-foreground text-background hover:bg-foreground/90 focus-visible:ring-ring inline-flex items-center gap-2.5 rounded-lg px-7 py-3.5 text-base font-medium transition-all duration-200 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+                            >
+                                <Icon name="lucide:mail" class="size-4" />
+                                <span>{t('home.get_in_touch')}</span>
+                                <Icon
+                                    name="lucide:arrow-right"
+                                    class="size-4 transition-transform group-hover:translate-x-1"
+                                />
+                            </Link>
+                        )
+                    }
+                </div>
+            </div>
+        </div>
+    </section>
+</Layout>

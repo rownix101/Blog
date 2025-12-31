@@ -1,4 +1,4 @@
-import { defineConfig } from 'astro/config'
+import { defineConfig, passthroughImageService } from 'astro/config'
 
 import mdx from '@astrojs/mdx'
 import react from '@astrojs/react'
@@ -20,6 +20,16 @@ import tailwindcss from '@tailwindcss/vite'
 
 export default defineConfig({
   site: 'https://yourdomain.com', // Update with your domain
+  i18n: {
+    defaultLocale: 'zh-cn',
+    locales: ['zh-cn', 'en'],
+    routing: {
+      prefixDefaultLocale: true,
+    },
+  },
+  image: {
+    service: passthroughImageService(),
+  },
   // Static output - API routes are handled by Cloudflare Pages Functions in /functions folder
   integrations: [
     expressiveCode({
@@ -32,9 +42,9 @@ export default defineConfig({
         collapseStyle: 'collapsible-auto',
         overridesByLang: {
           'ansi,bat,bash,batch,cmd,console,powershell,ps,ps1,psd1,psm1,sh,shell,shellscript,shellsession,text,zsh':
-            {
-              showLineNumbers: false,
-            },
+          {
+            showLineNumbers: false,
+          },
         },
       },
       styleOverrides: {

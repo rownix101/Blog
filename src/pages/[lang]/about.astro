@@ -1,0 +1,97 @@
+---
+import Breadcrumbs from '@/components/Breadcrumbs.astro'
+import PageHead from '@/components/PageHead.astro'
+import { SITE } from '@/consts'
+import type { ui } from '@/i18n/ui'
+import { useTranslations } from '@/i18n/utils'
+import Layout from '@/layouts/Layout.astro'
+
+export function getStaticPaths() {
+    return [{ params: { lang: 'zh-cn' } }, { params: { lang: 'en' } }]
+}
+
+const { lang } = Astro.params
+const t = useTranslations(lang as keyof typeof ui)
+
+// Person Schema for About page
+const personSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'Person',
+    name: SITE.title,
+    url: SITE.href,
+    description: SITE.description,
+}
+---
+
+<Layout class="max-w-3xl" lang={lang}>
+    <PageHead slot="head" title={t('nav.about')} />
+
+    <!-- Person Schema for About page SEO -->
+    <script
+        type="application/ld+json"
+        set:html={JSON.stringify(personSchema)}
+    />
+
+    <Breadcrumbs items={[{ label: t('nav.about'), icon: 'lucide:user' }]} />
+
+    <section class="flex flex-col gap-8">
+        <!-- Header -->
+        <div class="flex flex-col gap-4">
+            <div>
+                <h1 class="text-3xl font-bold md:text-4xl">{t('nav.about')}</h1>
+                <p class="text-muted-foreground mt-1 font-mono text-sm">
+                    {
+                        lang === 'en'
+                            ? 'Learn more about this blog'
+                            : '了解更多关于本博客的信息'
+                    }
+                </p>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="prose prose-sm dark:prose-invert max-w-none space-y-6">
+            <p class="text-muted-foreground leading-relaxed">
+                {
+                    lang === 'en' ? (
+                        <>
+                            Welcome to{' '}
+                            <strong class="text-primary">{SITE.title}</strong>!
+                            This is a placeholder about page. Customize this
+                            content to tell your visitors about yourself, your
+                            blog, or your interests.
+                        </>
+                    ) : (
+                        <>
+                            欢迎来到{' '}
+                            <strong class="text-primary">{SITE.title}</strong>！
+                            这是一个关于页面的占位符。自定义此内容以向访问者讲述您自己、您的博客或您的兴趣。
+                        </>
+                    )
+                }
+            </p>
+
+            <p class="text-muted-foreground leading-relaxed">
+                {
+                    lang === 'en' ? (
+                        <>
+                            You can edit this page by modifying{' '}
+                            <code class="bg-muted rounded px-1.5 py-0.5 text-sm">
+                                src/pages/[lang]/about.astro
+                            </code>
+                            .
+                        </>
+                    ) : (
+                        <>
+                            您可以通过修改{' '}
+                            <code class="bg-muted rounded px-1.5 py-0.5 text-sm">
+                                src/pages/[lang]/about.astro
+                            </code>{' '}
+                            来编辑此页面。
+                        </>
+                    )
+                }
+            </p>
+        </div>
+    </section>
+</Layout>

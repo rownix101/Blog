@@ -5,19 +5,28 @@ export async function getAllAuthors(): Promise<CollectionEntry<'authors'>[]> {
   return await getCollection('authors')
 }
 
-export async function getAllPosts(): Promise<CollectionEntry<'blog'>[]> {
+export async function getAllPosts(lang?: string): Promise<CollectionEntry<'blog'>[]> {
   const posts = await getCollection('blog')
   return posts
-    .filter((post) => !post.data.draft && !isSubpost(post.id))
+    .filter((post) => {
+      const isDraft = post.data.draft
+      const isSub = isSubpost(post.id)
+      const matchesLang = lang ? post.id.startsWith(`${lang}/`) : true
+      return !isDraft && !isSub && matchesLang
+    })
     .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
 }
 
-export async function getAllPostsAndSubposts(): Promise<
+export async function getAllPostsAndSubposts(lang?: string): Promise<
   CollectionEntry<'blog'>[]
 > {
   const posts = await getCollection('blog')
   return posts
-    .filter((post) => !post.data.draft)
+    .filter((post) => {
+      const isDraft = post.data.draft
+      const matchesLang = lang ? post.id.startsWith(`${lang}/`) : true
+      return !isDraft && matchesLang
+    })
     .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
 }
 
@@ -30,8 +39,8 @@ export async function getAllProjects(): Promise<CollectionEntry<'projects'>[]> {
   })
 }
 
-export async function getAllTags(): Promise<Map<string, number>> {
-  const posts = await getAllPosts()
+export async function getAllTags(lang?: string): Promise<Map<string, number>> {
+  const posts = await getAllPosts(lang)
   return posts.reduce((acc, post) => {
     post.data.tags?.forEach((tag) => {
       acc.set(tag, (acc.get(tag) || 0) + 1)
@@ -101,29 +110,32 @@ export async function getAdjacentPosts(currentId: string): Promise<{
 
 export async function getPostsByAuthor(
   authorId: string,
+  lang?: string,
 ): Promise<CollectionEntry<'blog'>[]> {
-  const posts = await getAllPosts()
+  const posts = await getAllPosts(lang)
   return posts.filter((post) => post.data.authors?.includes(authorId))
 }
 
 export async function getPostsByTag(
   tag: string,
+  lang?: string,
 ): Promise<CollectionEntry<'blog'>[]> {
-  const posts = await getAllPosts()
+  const posts = await getAllPosts(lang)
   return posts.filter((post) => post.data.tags?.includes(tag))
 }
 
 export async function getRecentPosts(
   count: number,
+  lang?: string,
 ): Promise<CollectionEntry<'blog'>[]> {
-  const posts = await getAllPosts()
+  const posts = await getAllPosts(lang)
   return posts.slice(0, count)
 }
 
-export async function getSortedTags(): Promise<
+export async function getSortedTags(lang?: string): Promise<
   { tag: string; count: number }[]
 > {
-  const tagCounts = await getAllTags()
+  const tagCounts = await getAllTags(lang)
   return [...tagCounts.entries()]
     .map(([tag, count]) => ({ tag, count }))
     .sort((a, b) => {
@@ -133,7 +145,13 @@ export async function getSortedTags(): Promise<
 }
 
 export function getParentId(subpostId: string): string {
-  return subpostId.split('/')[0]
+  const parts = subpostId.split('/')
+  // If it's zh-cn/post/subpost, parts are ['zh-cn', 'post', 'subpost']
+  // Parent should be zh-cn/post
+  if (parts.length > 2) {
+    return parts.slice(0, -1).join('/')
+  }
+  return parts[0]
 }
 
 export async function getSubpostsForParent(
@@ -163,7 +181,7 @@ export function groupPostsByYear(
   return posts.reduce(
     (acc: Record<string, CollectionEntry<'blog'>[]>, post) => {
       const year = post.data.date.getFullYear().toString()
-      ;(acc[year] ??= []).push(post)
+        ; (acc[year] ??= []).push(post)
       return acc
     },
     {},
@@ -176,7 +194,10 @@ export async function hasSubposts(postId: string): Promise<boolean> {
 }
 
 export function isSubpost(postId: string): boolean {
-  return postId.includes('/')
+  const parts = postId.split('/')
+  // parts[0] is locale (zh-cn or en)
+  // If parts.length > 2, it's a subpost (e.g., zh-cn/parent/sub)
+  return parts.length > 2
 }
 
 export async function getParentPost(

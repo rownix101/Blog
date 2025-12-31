@@ -8,8 +8,7 @@ interface Props {
   class?: string
   underline?: boolean
   'aria-label'?: string
-  'data-testid'?: string
-  'data-astro-reload'?: boolean
+  reload?: boolean
   target?: '_blank' | '_self' | '_parent' | '_top'
   rel?: string
   // Allow standard HTML anchor attributes
@@ -20,7 +19,14 @@ interface Props {
   type?: string
 }
 
-const { href, external, class: className, underline, ...rest } = Astro.props
+const {
+  href,
+  external,
+  class: className,
+  underline,
+  reload,
+  ...rest
+} = Astro.props
 
 const isExternal = external || href.startsWith('http')
 ---
@@ -33,11 +39,11 @@ const isExternal = external || href.startsWith('http')
     'inline-block transition-colors duration-300 ease-in-out',
     underline &&
       'underline decoration-muted-foreground underline-offset-[3px] hover:decoration-foreground',
-    className
+    className,
   )}
   {...rest}
   data-internal-link={!isExternal ? 'true' : undefined}
-  data-astro-reload={Astro.props['data-astro-reload'] ? '' : undefined}
+  data-astro-reload={reload ? '' : undefined}
 >
   <slot />
 </a>
