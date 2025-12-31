@@ -49,7 +49,7 @@ const { commentId, initialLikes = 0, initialLiked = false } = Astro.props
   </div>
 </div>
 
-<script define:vars={{ commentId }}>
+<script is:inline define:vars={{ commentId }}>
   class LikeButton {
     constructor(commentId) {
       this.commentId = commentId
