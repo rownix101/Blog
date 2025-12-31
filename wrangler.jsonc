@@ -1,9 +1,0 @@
-{
-  "name": "merox-erudite",
-  "compatibility_date": "2025-12-31",
-  "pages": {
-    "assets": {
-      "directory": "./dist"
-    }
-  }
-}
