@@ -1,0 +1,52 @@
+---
+import BlogCard from '@/components/BlogCard.astro'
+import Breadcrumbs from '@/components/Breadcrumbs.astro'
+import PageHead from '@/components/PageHead.astro'
+import type { ui } from '@/i18n/ui'
+import { languages } from '@/i18n/ui'
+import { useLocalizedPath, useTranslations } from '@/i18n/utils'
+import Layout from '@/layouts/Layout.astro'
+import { getAllTags, getPostsByTag } from '@/lib/data-utils'
+
+export async function getStaticPaths() {
+    const paths = []
+    for (const lang of Object.keys(languages)) {
+        const tagsMap = await getAllTags(lang)
+        const tags = Array.from(tagsMap.keys())
+        for (const tag of tags) {
+            paths.push({
+                params: { lang, id: tag },
+                props: { tag },
+            })
+        }
+    }
+    return paths
+}
+
+const { tag } = Astro.props
+const { lang, id } = Astro.params
+const posts = await getPostsByTag(id as string, lang)
+
+const t = useTranslations(lang as keyof typeof ui)
+const l = useLocalizedPath(lang as keyof typeof ui)
+---
+
+<Layout class="max-w-3xl" lang={lang}>
+    <PageHead slot="head" title={`Tag: ${tag}`} />
+    <Breadcrumbs
+        items={[
+            { label: t('nav.tags'), href: l('/tags'), icon: 'lucide:hash' },
+            { label: tag, icon: 'lucide:tag' },
+        ]}
+    />
+
+    <section class="flex flex-col gap-y-4">
+        <div class="flex items-center gap-2">
+            <h1 class="text-3xl font-bold">Tag: {tag}</h1>
+        </div>
+
+        <div class="flex flex-col gap-y-2">
+            {posts.map((post) => <BlogCard entry={post} />)}
+        </div>
+    </section>
+</Layout>

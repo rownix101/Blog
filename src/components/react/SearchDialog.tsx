@@ -39,7 +39,7 @@ const INDEX_VERSION = '1.0'
 // Calculate relevance score
 function calculateRelevanceScore(
   result: SearchResult,
-  query: string,
+  _query: string,
   queryLower: string,
 ): number {
   let score = 0

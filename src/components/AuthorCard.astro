@@ -8,12 +8,14 @@ import SocialIcons from './SocialIcons.astro'
 
 interface Props {
   author: CollectionEntry<'authors'>
+  link?: string
 }
 
-const { author } = Astro.props
+const { author, link } = Astro.props
 const { name, avatar, bio, pronouns } = author.data
 const currentPath = Astro.url.pathname
-const isAuthorPage = currentPath === `/authors/${author.id}`
+const authorLink = link || `/authors/${author.id}`
+const isAuthorPage = currentPath === authorLink
 
 const socialLinks: SocialLink[] = [
   author.data.website && { href: author.data.website, label: 'Website' },
@@ -29,7 +31,7 @@ const socialLinks: SocialLink[] = [
 >
   <div class="flex flex-wrap gap-4">
     <Link
-      href={`/authors/${author.id}`}
+      href={authorLink}
       class={cn('block', isAuthorPage && 'pointer-events-none')}
     >
       <AvatarComponent

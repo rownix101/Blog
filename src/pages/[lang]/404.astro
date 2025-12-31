@@ -1,0 +1,52 @@
+---
+import Breadcrumbs from '@/components/Breadcrumbs.astro'
+import Link from '@/components/Link.astro'
+import PageHead from '@/components/PageHead.astro'
+import { buttonVariants } from '@/components/ui/button'
+import type { ui } from '@/i18n/ui'
+import { languages } from '@/i18n/ui'
+import { useLocalizedPath } from '@/i18n/utils'
+import Layout from '@/layouts/Layout.astro'
+import { cn } from '@/lib/utils'
+
+export function getStaticPaths() {
+    return Object.keys(languages).map((lang) => ({ params: { lang } }))
+}
+
+const { lang } = Astro.params
+const l = useLocalizedPath(lang as keyof typeof ui)
+---
+
+<Layout class="max-w-3xl" lang={lang}>
+    <PageHead slot="head" title="404" />
+    <Breadcrumbs items={[{ label: '???', icon: 'lucide:circle-help' }]} />
+
+    <section
+        class="flex flex-col items-center justify-center gap-y-4 text-center"
+    >
+        <div class="max-w-md">
+            <h1 class="mb-4 text-3xl font-medium">
+                404: {lang === 'en' ? 'Page not found' : '页面未找到'}
+            </h1>
+            <p class="prose">
+                {
+                    lang === 'en'
+                        ? "Oops! The page you're looking for doesn't exist."
+                        : '哎呀！您寻找的页面不存在。'
+                }
+            </p>
+        </div>
+        <Link
+            href={l('/')}
+            class={cn(
+                buttonVariants({ variant: 'outline' }),
+                'flex gap-x-1.5 group',
+            )}
+        >
+            <span class="transition-transform group-hover:-translate-x-1"
+                >&larr;</span
+            >
+            {lang === 'en' ? 'Go to home page' : '返回首页'}
+        </Link>
+    </section>
+</Layout>

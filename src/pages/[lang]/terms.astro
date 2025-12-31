@@ -1,0 +1,81 @@
+---
+import Breadcrumbs from '@/components/Breadcrumbs.astro'
+import PageHead from '@/components/PageHead.astro'
+import { SITE, SOCIAL_LINKS } from '@/consts'
+import type { ui } from '@/i18n/ui'
+import { useTranslations } from '@/i18n/utils'
+import Layout from '@/layouts/Layout.astro'
+import { Icon } from 'astro-icon/components'
+
+export function getStaticPaths() {
+    return [{ params: { lang: 'zh-cn' } }, { params: { lang: 'en' } }]
+}
+
+const { lang } = Astro.params
+const t = useTranslations(lang as keyof typeof ui)
+
+// Get contact email from social links or use placeholder
+const contactEmail =
+    SOCIAL_LINKS.find((link) => link.label === 'Email')?.href.replace(
+        'mailto:',
+        '',
+    ) || 'your@email.com'
+const siteName = SITE.title
+---
+
+<Layout class="max-w-3xl" lang={lang}>
+    <PageHead slot="head" title={t('footer.terms')} />
+    <Breadcrumbs
+        items={[{ label: t('footer.terms'), icon: 'lucide:file-text' }]}
+    />
+
+    <article class="prose prose-neutral dark:prose-invert max-w-none">
+        <div class="bg-card/50 mb-6 rounded-lg border p-6">
+            <div class="mb-2 flex items-center gap-3">
+                <Icon name="lucide:file-text" class="text-primary size-6" />
+                <h1 class="m-0 text-3xl font-bold">{t('footer.terms')}</h1>
+            </div>
+            <p class="text-muted-foreground m-0 text-sm">
+                {lang === 'en' ? 'Last updated' : '最后更新'}: {
+                    new Date().toLocaleDateString(
+                        lang === 'en' ? 'en-US' : 'zh-CN',
+                        { year: 'numeric', month: 'long', day: 'numeric' },
+                    )
+                }
+            </p>
+        </div>
+
+        {
+            lang === 'en' ? (
+                <section class="mb-8 space-y-4">
+                    <h2 class="text-2xl font-semibold">Acceptance of Terms</h2>
+                    <p>
+                        By accessing and using {siteName}, you accept and agree
+                        to be bound by these Terms & Conditions.
+                    </p>
+                </section>
+            ) : (
+                <section class="mb-8 space-y-4">
+                    <h2 class="text-2xl font-semibold">接受条款</h2>
+                    <p>
+                        通过访问和使用 {siteName}
+                        ，即表示您接受并同意受这些条款和条件的约束。
+                    </p>
+                </section>
+            )
+        }
+
+        <section class="mb-8 space-y-4">
+            <h2 class="text-2xl font-semibold">
+                {lang === 'en' ? 'Contact Information' : '联系信息'}
+            </h2>
+            <div class="bg-muted/30 rounded-lg border p-4">
+                <p class="m-0">
+                    <strong>Email:</strong>
+                    <a href={`mailto:${contactEmail}`} class="underline"
+                        >{contactEmail}</a>
+                </p>
+            </div>
+        </section>
+    </article>
+</Layout>
