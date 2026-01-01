@@ -30,6 +30,7 @@ const lang = getLangFromUrl(Astro.url)
                 Object.entries(languages).map(([code, label]) => (
                     <a
                         href={`/${code}/${Astro.url.pathname.split('/').slice(2).join('/')}`}
+                        onclick={`document.cookie = 'language=${code}; path=/; max-age=31536000; sameSite=Lax';`}
                         class={cn(
                             'hover:bg-accent hover:text-accent-foreground flex items-center justify-between rounded-sm px-2 py-1.5 text-xs transition-colors',
                             lang === code ? 'bg-accent/50 font-medium' : '',
@@ -49,4 +50,48 @@ const lang = getLangFromUrl(Astro.url)
     </div>
 </div>
 
-<script></script>
+<script>
+  // 添加客户端语言检测和重定向（仅在首次访问时）
+  if (!document.cookie.includes('language=')) {
+    const browserLang = navigator.language || navigator.languages?.[0]
+
+    // 将浏览器语言映射到支持的语言
+    let targetLang = 'zh-cn' // 默认
+
+    if (browserLang) {
+      const normalizedLang = browserLang.toLowerCase()
+
+      // 直接匹配
+      if (normalizedLang in {'zh-cn': true, 'en': true}) {
+        targetLang = normalizedLang
+      }
+      // 前缀匹配
+      else if (normalizedLang.startsWith('zh')) {
+        targetLang = 'zh-cn'
+      } else if (normalizedLang.startsWith('en')) {
+        targetLang = 'en'
+      }
+    }
+
+    // 获取当前路径，移除语言前缀
+    const currentPath = window.location.pathname
+    const pathSegments = currentPath.split('/').filter(Boolean)
+
+    // 检查当前是否有语言前缀
+    const langPrefix = pathSegments[0]
+    const supportedLangs = ['zh-cn', 'en']
+
+    if (!supportedLangs.includes(langPrefix)) {
+      // 没有语言前缀，重定向到检测到的语言
+      const newPath = `/${targetLang}${currentPath.startsWith('/') ? currentPath : '/' + currentPath}`
+      window.location.href = newPath
+    } else if (langPrefix !== targetLang) {
+      // 有语言前缀但与检测到的不同，可以选择是否重定向
+      // 这里我们选择不自动重定向，让用户手动选择
+      console.log(`Browser language is ${browserLang} but current page is in ${langPrefix}`)
+    }
+
+    // 设置语言 cookie
+    document.cookie = `language=${langPrefix || targetLang}; path=/; max-age=31536000; sameSite=Lax`
+  }
+</script>

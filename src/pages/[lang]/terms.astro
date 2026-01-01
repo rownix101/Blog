@@ -2,7 +2,7 @@
 import Breadcrumbs from '@/components/Breadcrumbs.astro'
 import PageHead from '@/components/PageHead.astro'
 import { SITE, SOCIAL_LINKS } from '@/consts'
-import type { ui } from '@/i18n/ui'
+import { ui } from '@/i18n/ui'
 import { useTranslations } from '@/i18n/utils'
 import Layout from '@/layouts/Layout.astro'
 import { Icon } from 'astro-icon/components'
@@ -73,7 +73,8 @@ const siteName = SITE.title
                 <p class="m-0">
                     <strong>Email:</strong>
                     <a href={`mailto:${contactEmail}`} class="underline"
-                        >{contactEmail}</a>
+                        >{contactEmail}</a
+                    >
                 </p>
             </div>
         </section>

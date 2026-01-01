@@ -54,11 +54,12 @@ export async function getAdjacentPosts(currentId: string): Promise<{
   older: CollectionEntry<'blog'> | null
   parent: CollectionEntry<'blog'> | null
 }> {
-  const allPosts = await getAllPosts()
+  // Extract language from currentId to ensure we only get posts in the same language
+  const lang = currentId.split('/')[0]
+  const allPosts = await getAllPosts(lang)
 
   if (isSubpost(currentId)) {
     const parentId = getParentId(currentId)
-    const allPosts = await getAllPosts()
     const parent = allPosts.find((post) => post.id === parentId) || null
 
     const posts = await getCollection('blog')
@@ -67,7 +68,8 @@ export async function getAdjacentPosts(currentId: string): Promise<{
         (post) =>
           isSubpost(post.id) &&
           getParentId(post.id) === parentId &&
-          !post.data.draft,
+          !post.data.draft &&
+          post.id.startsWith(`${lang}/`), // Only include subposts in the same language
       )
       .sort((a, b) => {
         const dateDiff = a.data.date.valueOf() - b.data.date.valueOf()

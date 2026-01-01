@@ -1,0 +1,121 @@
+---
+import { buttonVariants } from '@/components/ui/button'
+import { cn } from '@/lib/utils'
+import { Icon } from 'astro-icon/components'
+import { defaultLang, languages } from '../i18n/ui'
+import { getLangFromUrl } from '../i18n/utils'
+
+const currentLang = getLangFromUrl(Astro.url)
+const currentPath = Astro.url.pathname
+
+// 获取不带语言前缀的路径
+function getPathWithoutLang(pathname: string): string {
+  const segments = pathname.split('/').filter(Boolean)
+  if (segments.length > 0 && segments[0] in languages) {
+    return '/' + segments.slice(1).join('/')
+  }
+  return pathname
+}
+
+const basePath = getPathWithoutLang(currentPath)
+---
+
+<div class="flex items-center gap-1">
+  <div class="group relative">
+    <button
+      class={buttonVariants({ variant: 'ghost', size: 'sm' }) +
+        ' flex items-center gap-1.5 px-2'}
+      aria-label="选择语言"
+    >
+      <Icon name="lucide:globe" class="size-4" />
+      <span class="text-xs font-medium uppercase">{currentLang}</span>
+      <Icon
+        name="lucide:chevron-down"
+        class="size-3 opacity-50 transition-transform group-hover:rotate-180"
+      />
+    </button>
+
+    <div
+      class="bg-popover invisible absolute top-full right-0 z-50 mt-1 w-32 rounded-md border p-1 opacity-0 shadow-md transition-all duration-200 group-hover:visible group-hover:opacity-100"
+    >
+      {
+        Object.entries(languages).map(([code, label]) => {
+          const isActive = code === currentLang
+          const href = `/${code}${basePath}`
+
+          return (
+            <a
+              href={href}
+              onclick={`handleLanguageChange('${code}')`}
+              class={cn(
+                'hover:bg-accent hover:text-accent-foreground flex cursor-pointer items-center justify-between rounded-sm px-2 py-1.5 text-xs transition-colors',
+                isActive ? 'bg-accent/50 font-medium' : '',
+              )}
+            >
+              {label}
+              {isActive && (
+                <Icon name="lucide:check" class="text-primary size-3" />
+              )}
+            </a>
+          )
+        })
+      }
+    </div>
+  </div>
+</div>
+
+<script is:inline define:vars={{ languages, defaultLang }}>
+  // 处理语言切换
+  function handleLanguageChange(langCode) {
+    // 设置新的语言 Cookie
+    document.cookie = `language=${langCode}; path=/; max-age=31536000; sameSite=Lax`
+
+    // 可选：添加切换动画或提示
+    console.log(`语言已切换到: ${languages[langCode] || langCode}`)
+
+    // 页面会自动跳转，无需手动导航
+  }
+
+  // 确保页面加载时语言 Cookie 正确设置
+  document.addEventListener('DOMContentLoaded', () => {
+    // 从当前 URL 获取语言前缀
+    const pathSegments = window.location.pathname.split('/').filter(Boolean)
+    const currentLangFromPath = pathSegments[0]
+
+    // 如果路径中有有效的语言前缀且与 Cookie 不同，更新 Cookie
+    if (currentLangFromPath in languages) {
+      const cookieLang = getCookieLanguage()
+      if (cookieLang !== currentLangFromPath) {
+        document.cookie = `language=${currentLangFromPath}; path=/; max-age=31536000; sameSite=Lax`
+      }
+    }
+  })
+
+  // 获取当前 Cookie 中的语言
+  function getCookieLanguage() {
+    const cookies = document.cookie.split(';').reduce((acc, cookie) => {
+      const [key, value] = cookie.trim().split('=')
+      acc[key] = value
+      return acc
+    }, {})
+    return cookies['language']
+  }
+
+  // 监听浏览器语言变化（用于移动设备等场景）
+  if ('languages' in navigator) {
+    // 注意：浏览器的语言变化通常不会触发事件，这里仅作示例
+    console.log('当前浏览器语言设置:', navigator.languages)
+  }
+</script>
+
+<style>
+  /* 确保下拉菜单在移动设备上正常显示 */
+  @media (max-width: 768px) {
+    .group:hover .group-hover\:visible {
+      visibility: visible;
+    }
+    .group:hover .group-hover\:opacity-100 {
+      opacity: 1;
+    }
+  }
+</style>
