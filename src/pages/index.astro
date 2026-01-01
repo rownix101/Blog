@@ -1,15 +1,16 @@
 ---
-// 这个页面实际不会被渲染，因为 _middleware 会拦截请求
+// 这个页面实际不会被渲染，因为 Cloudflare Pages Function 会拦截请求
 // 但 Astro 需要它存在用于构建
 export const prerender = true
 ---
-<!DOCTYPE html>
+
+<!doctype html>
 <html>
-<head>
-  <meta charset="utf-8" />
-  <title>Redirecting...</title>
-</head>
-<body>
-  <p>Redirecting...</p>
-</body>
+  <head>
+    <meta charset="utf-8" />
+    <title>Redirecting...</title>
+  </head>
+  <body>
+    <p>Redirecting to your language...</p>
+  </body>
 </html>
