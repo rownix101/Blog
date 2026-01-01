@@ -1,13 +1,9 @@
 {
     "name": "blog",
-    "build": {
-        "command": "bun run build",
-        "output": "dist"
-    },
+    "buildCommand": "bun run build",
+    "entry": "dist/_worker.js/index.js",
     "assets": {
-        "directory": "dist"
-    },
-    "function": {
-        "entry": "dist/_worker.js/index.js"
+        "directory": "dist",
+        "notFoundStrategy": "404Page"
     }
 }
