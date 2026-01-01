@@ -106,10 +106,25 @@ PUBLIC_DISQUS_SHORTNAME=your-shortname
 - View transitions for smooth navigation
 - Optimized font loading and image handling
 
+### Language Detection & Routing
+- **Middleware**: `src/middleware.ts` handles automatic language redirection for root path
+- **Detection priority**: Cookie > Accept-Language header > default (zh-cn)
+- **Cookie behavior**: `language={locale}; Path=/; Max-Age=31536000; SameSite=Lax` (1 year persistence)
+- **Language utilities**: `src/lib/language-detector.ts` provides browser language parsing
+- **Root path handling**: HTTP 302 redirect from `/` to detected language (e.g., `/zh-cn/`)
+- **Accept-Language parsing**: Supports quality values and language prefix matching (en-US → en)
+
 ### Deployment
-- **Platform**: Netlify (configured via netlify.toml)
+- **Platform**: Cloudflare Pages (configured via `wrangler.jsonc`)
 - **Build command**: `bun run build`
 - **Publish directory**: `dist`
-- **Node version**: 22 (configured in netlify.toml)
-- **Static caching**: Headers configured for static assets (1-year cache)
-- **Security headers**: X-Frame-Options, X-XSS-Protection, X-Content-Type-Options, Referrer-Policy
+- **Node version**: 22+ (engines field in package.json)
+- **Runtime**: Bun-based development and build process
+- **Configuration**: `wrangler.jsonc` with assets directory pointing to `./dist`
+- **Observability**: Enabled via Cloudflare Pages analytics
+- **Static assets**: No additional caching configuration needed (handled by Cloudflare)
+
+### Additional Configuration
+- **Wrangler**: Version 4.0.0 in devDependencies for Cloudflare Pages validation
+- **Polyfills**: `src/polyfills.ts` imported in middleware for Cloudflare compatibility
+- **No server functions**: Pure static site generation with middleware for language routing
