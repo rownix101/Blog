@@ -88,9 +88,20 @@ export default defineConfig({
     // This is the recommended approach per Astro documentation for Vite plugins
     plugins: [tailwindcss() as any],
     build: {
+      minify: 'esbuild',
+      chunkSizeWarningLimit: 1000,
       rollupOptions: {
         external: ['sharp'],
+        output: {
+          manualChunks: {
+            'react-vendor': ['react', 'react-dom'],
+            'ui-vendor': ['@radix-ui/react-dialog', '@radix-ui/react-dropdown-menu'],
+          },
+        },
       },
+    },
+    optimizeDeps: {
+      include: ['react', 'react-dom', 'framer-motion'],
     },
   },
   server: {
