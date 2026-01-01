@@ -4,11 +4,10 @@
         "command": "bun run build",
         "output": "dist"
     },
-    "site": {
-        "public": "dist"
+    "assets": {
+        "directory": "dist"
     },
     "function": {
-        "name": "blog-worker",
-        "entrypoint": "dist/_worker.js/index.js"
+        "entry": "dist/_worker.js/index.js"
     }
 }
