@@ -1,9 +1,0 @@
-{
-    "name": "blog",
-    "buildCommand": "bun run build",
-    "entry": "dist/_worker.js/index.js",
-    "assets": {
-        "directory": "dist",
-        "notFoundStrategy": "404Page"
-    }
-}

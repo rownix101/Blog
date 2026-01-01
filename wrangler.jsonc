@@ -1,7 +1,0 @@
-{
-  "name": "blog",
-  "compatibility_date": "2025-12-31",
-  "assets": {
-    "directory": "./dist"
-  }
-}

@@ -32,9 +32,9 @@
   },
   "dependencies": {
     "@astrojs/check": "^0.9.5",
-    "@astrojs/cloudflare": "^12.6.12",
     "@astrojs/markdown-remark": "^6.3.8",
     "@astrojs/mdx": "^4.3.10",
+    "@astrojs/netlify": "^6.6.3",
     "@astrojs/react": "^4.4.2",
     "@astrojs/rss": "^4.0.13",
     "@astrojs/sitemap": "^3.6.0",

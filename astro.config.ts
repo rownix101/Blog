@@ -4,7 +4,7 @@ import mdx from '@astrojs/mdx'
 import react from '@astrojs/react'
 import sitemap from '@astrojs/sitemap'
 import icon from 'astro-icon'
-import cloudflare from '@astrojs/cloudflare'
+import netlify from '@astrojs/netlify'
 
 import { rehypeHeadingIds } from '@astrojs/markdown-remark'
 import expressiveCode from 'astro-expressive-code'
@@ -32,8 +32,8 @@ export default defineConfig({
     service: passthroughImageService(),
   },
   output: 'static',
-  adapter: cloudflare(),
-  // Static output - API routes are handled by Cloudflare Pages Functions in /functions folder
+  adapter: netlify(),
+  // Static output with Netlify Functions support
   integrations: [
     expressiveCode({
       themes: ['github-light', 'github-dark'],
