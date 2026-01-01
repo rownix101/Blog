@@ -6,7 +6,7 @@ import { ErrorBoundary } from '@/components/react/ErrorBoundary'
 import Skills from '@/components/react/Skills'
 import { buttonVariants } from '@/components/ui/button'
 import { ICON_MAP, SITE, SOCIAL_LINKS } from '@/consts'
-import type { ui } from '@/i18n/ui'
+import { ui } from '@/i18n/ui'
 import { useLocalizedPath, useTranslations } from '@/i18n/utils'
 import Layout from '@/layouts/Layout.astro'
 import { getRecentPosts } from '@/lib/data-utils'
@@ -64,51 +64,6 @@ const websiteSchema = {
         'query-input': 'required name=search_term_string',
     },
 }
-
-// Experience Timeline - Customize with your own experience
-type ExperienceItem = {
-    role: string
-    company: string
-    period: string
-    current?: boolean
-    icon: string
-    key: string
-}
-
-// Customize your experience here
-const experience: ExperienceItem[] = [
-    {
-        role: lang === 'en' ? 'Your Current Role' : '您的当前角色',
-        company: lang === 'en' ? 'Current Company' : '当前公司',
-        period: '2022 - Present',
-        current: true,
-        icon: 'lucide:briefcase',
-        key:
-            lang === 'en'
-                ? 'Brief description of your current role and key achievements • Add more details about your responsibilities and accomplishments'
-                : '当前角色的简短描述和主要成就 • 添加更多关于您的职责和成就的细节',
-    },
-    {
-        role: lang === 'en' ? 'Previous Role' : '上一个角色',
-        company: lang === 'en' ? 'Previous Company' : '上一个公司',
-        period: '2020 - 2022',
-        icon: 'lucide:server',
-        key:
-            lang === 'en'
-                ? 'Description of your previous role and achievements • Highlight key projects or responsibilities you had in this position'
-                : '上一个角色的描述和成就 • 突出您在该职位上的关键项目或职责',
-    },
-    {
-        role: lang === 'en' ? 'Earlier Role' : '更早的角色',
-        company: lang === 'en' ? 'Earlier Company' : '更早的公司',
-        period: '2018 - 2020',
-        icon: 'lucide:code',
-        key:
-            lang === 'en'
-                ? 'Description of your earlier role and achievements • Show your career progression and growth over time'
-                : '早期角色的描述和成就 • 展示您随时间的职业进展和成长',
-    },
-]
 ---
 
 <Layout class="max-w-3xl" transition:persist="home-layout" lang={lang}>
@@ -235,57 +190,6 @@ const experience: ExperienceItem[] = [
                     </div>
                 </div>
             </div>
-        </div>
-    </section>
-
-    <!-- Experience Timeline -->
-    <section class="mt-8">
-        <div class="mb-6">
-            <h2 class="mb-2 text-2xl font-semibold">{t('home.experience')}</h2>
-            <p class="text-muted-foreground text-sm">
-                {t('home.experience_desc')}
-            </p>
-        </div>
-
-        <div class="space-y-6">
-            {
-                experience.map((exp, index) => (
-                    <div class="relative">
-                        {index < experience.length - 1 && (
-                            <div
-                                class="bg-border absolute top-8 bottom-0 left-[11px] w-px"
-                                aria-hidden="true"
-                            />
-                        )}
-
-                        <div class="flex gap-4">
-                            <div
-                                class={`ring-background relative z-10 flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full ring-4 ${
-                                    exp.current
-                                        ? 'bg-primary text-primary-foreground shadow-primary/20 shadow-lg'
-                                        : 'bg-muted text-muted-foreground'
-                                }`}
-                            >
-                                <Icon name={exp.icon} class="size-3.5" />
-                            </div>
-
-                            <div class="min-w-0 flex-1 pb-2">
-                                <div class="mb-1">
-                                    <h3 class="text-lg leading-tight font-semibold">
-                                        {exp.role}
-                                    </h3>
-                                    <p class="text-muted-foreground text-sm">
-                                        {exp.company} · {exp.period}
-                                    </p>
-                                </div>
-                                <p class="text-muted-foreground/90 mt-2 text-sm leading-relaxed">
-                                    {exp.key}
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                ))
-            }
         </div>
     </section>
 

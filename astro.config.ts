@@ -4,6 +4,7 @@ import mdx from '@astrojs/mdx'
 import react from '@astrojs/react'
 import sitemap from '@astrojs/sitemap'
 import icon from 'astro-icon'
+import cloudflare from '@astrojs/cloudflare'
 
 import { rehypeHeadingIds } from '@astrojs/markdown-remark'
 import expressiveCode from 'astro-expressive-code'
@@ -19,7 +20,7 @@ import { pluginLineNumbers } from '@expressive-code/plugin-line-numbers'
 import tailwindcss from '@tailwindcss/vite'
 
 export default defineConfig({
-  site: 'https://yourdomain.com', // Update with your domain
+  site: 'https://www.rownix.dev', // Update with your domain
   i18n: {
     defaultLocale: 'zh-cn',
     locales: ['zh-cn', 'en'],
@@ -30,6 +31,8 @@ export default defineConfig({
   image: {
     service: passthroughImageService(),
   },
+  output: 'static',
+  adapter: cloudflare(),
   // Static output - API routes are handled by Cloudflare Pages Functions in /functions folder
   integrations: [
     expressiveCode({
@@ -84,6 +87,11 @@ export default defineConfig({
     // Type assertion needed due to Vite plugin type incompatibility between Astro and @tailwindcss/vite
     // This is the recommended approach per Astro documentation for Vite plugins
     plugins: [tailwindcss() as any],
+    build: {
+      rollupOptions: {
+        external: ['sharp'],
+      },
+    },
   },
   server: {
     port: 1234,

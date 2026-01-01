@@ -5,13 +5,13 @@ interface Props {
 
 const { lang = 'zh-cn' } = Astro.props as Props
 
-import LanguagePicker from '@/components/LanguagePicker.astro'
+import LanguageSwitcher from '@/components/LanguageSwitcher.astro'
 import Link from '@/components/Link.astro'
 import SearchButton from '@/components/react/SearchButton'
 import ThemeToggle from '@/components/ThemeToggle.astro'
 import MobileMenu from '@/components/ui/mobile-menu'
 import { NAV_LINKS } from '@/consts'
-import type { ui } from '@/i18n/ui'
+import { ui } from '@/i18n/ui'
 import { useLocalizedPath, useTranslations } from '@/i18n/utils'
 import { Icon } from 'astro-icon/components'
 
@@ -92,7 +92,7 @@ const isExternalLink = (href: string) => {
       <div class="bg-border/60 hidden h-6 w-px md:block" aria-hidden="true">
       </div>
       <SearchButton client:idle />
-      <LanguagePicker />
+      <LanguageSwitcher />
       <MobileMenu client:idle transition:persist />
       <ThemeToggle transition:persist />
     </div>

@@ -1,11 +1,11 @@
 import type { IconMap, SocialLink, Site } from '@/types'
 
 export const SITE: Site = {
-  title: 'Your Blog Name',
+  title: "Rownix's Blog",
   description:
     'A brief description of your blog. This will be used in meta tags and social sharing.',
-  href: 'https://yourdomain.com',
-  author: 'your-author-id',
+  href: 'https://www.rownix.dev',
+  author: 'rownix101',
   locale: 'en-US',
   featuredPostCount: 2,
   postsPerPage: 6,
@@ -55,15 +55,15 @@ export const NAV_LINKS: SocialLink[] = [
 
 export const SOCIAL_LINKS: SocialLink[] = [
   {
-    href: 'https://github.com/username',
+    href: 'https://github.com/rownix101',
     label: 'GitHub',
   },
   {
-    href: 'https://twitter.com/username',
-    label: 'Twitter',
+    href: 'https://x.com/rownix101',
+    label: 'X',
   },
   {
-    href: 'mailto:your@email.com',
+    href: 'mailto:rownix101@gmail.com',
     label: 'Email',
   },
   {
@@ -76,7 +76,8 @@ export const ICON_MAP: IconMap = {
   Website: 'lucide:globe',
   GitHub: 'lucide:github',
   LinkedIn: 'lucide:linkedin',
-  Twitter: 'lucide:twitter',
+  X: 'lucide:x',
+  Twitter: 'lucide:x',
   Email: 'lucide:mail',
   RSS: 'lucide:rss',
 }

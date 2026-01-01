@@ -9,17 +9,17 @@ This is **merox-erudite**, a customized Astro blog theme based on astro-erudite 
 ## Common Development Commands
 
 ### Development & Building
-- `npm run dev` - Start development server on port 1234
-- `npm run build` - Build the production site (includes Astro type checking)
-- `npm run preview` - Preview the production build
-- `npm run astro <command>` - Run any Astro CLI command
+- `bun dev` - Start development server on port 1234
+- `bun run --bun astro build` - Build the production site (includes Astro type checking)
+- `bun run --bun astro preview` - Preview the production build
+- `bun run --bun astro <command>` - Run any Astro CLI command
 
 ### Code Formatting
-- `npm run prettier` - Format all TypeScript, CSS, and Astro files
+- `bun run prettier` - Format all TypeScript, CSS, and Astro files
 - Uses Prettier with plugins for Astro, Tailwind, and import organization
 
 ### Post-install
-- `npm run postinstall` - Runs patch-package automatically
+- `bun run postinstall` - Runs patch-package automatically
 
 ## Architecture & Structure
 

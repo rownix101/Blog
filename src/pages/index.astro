@@ -1,4 +1,10 @@
 ---
-// This page is required for Astro i18n redirection when prefixDefaultLocale is true.
-// It will automatically redirect to the default locale (zh-cn).
+import { getBrowserLanguage } from '../lib/language-detector'
+
+export const prerender = false
+
+const targetLang = getBrowserLanguage(Astro.request)
+
+// Redirect to detected language
+return Astro.redirect(`/${targetLang}/`)
 ---

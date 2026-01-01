@@ -7,7 +7,7 @@ const { lang = 'zh-cn' } = Astro.props as Props
 
 import Link from '@/components/Link.astro'
 import { NAV_LINKS, SITE, SOCIAL_LINKS } from '@/consts'
-import type { ui } from '@/i18n/ui'
+import { ui } from '@/i18n/ui'
 import { useLocalizedPath, useTranslations } from '@/i18n/utils'
 import { Icon } from 'astro-icon/components'
 import { ErrorBoundary } from './react/ErrorBoundary'
