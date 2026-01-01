@@ -1,0 +1,9 @@
+name = "merox-erudite"
+compatibility_date = "2025-01-01"
+pages_build_output_dir = "dist"
+
+[env.production]
+name = "merox-erudite"
+
+[env.preview]
+name = "merox-erudite-preview"
