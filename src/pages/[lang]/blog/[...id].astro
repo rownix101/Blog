@@ -1,6 +1,5 @@
 ---
 import Breadcrumbs from '@/components/Breadcrumbs.astro'
-import Comments from '@/components/Comments.astro'
 import Link from '@/components/Link.astro'
 import PostHead from '@/components/PostHead.astro'
 import PostNavigation from '@/components/PostNavigation.astro'
@@ -308,17 +307,6 @@ try {
             olderPost={navigation.older}
             parentPost={isCurrentSubpost ? navigation.parent : undefined}
         />
-
-        {
-            !isCurrentSubpost && (
-                <div class="col-start-2 mt-12">
-                    <Comments
-                        postId={`blog-${fullPostId}`}
-                        title={post.data.title}
-                    />
-                </div>
-            )
-        }
     </section>
 
     <Button
