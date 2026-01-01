@@ -1,3 +1,6 @@
+// Import polyfills for Cloudflare Workers
+import '../src/polyfills.ts'
+
 export function onRequest(context) {
   const { request, url } = context
   const pathname = url.pathname
