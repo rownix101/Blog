@@ -1,43 +1,15 @@
 ---
-import { defaultLang } from '../i18n/ui'
-
-// 这个页面会由 Netlify Edge Functions 处理重定向
+// 这个页面实际不会被渲染，因为 _middleware 会拦截请求
+// 但 Astro 需要它存在用于构建
 export const prerender = true
 ---
-
-<!doctype html>
+<!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8" />
-    <title>Redirecting...</title>
-    <meta http-equiv="refresh" content={`0;url=/${defaultLang}/`} />
-    <script is:inline>
-      // 检测语言并重定向
-      const supportedLangs = ['zh-cn', 'en']
-      let targetLang = defaultLang
-
-      try {
-        // 1. 检查 cookie
-        const cookieMatch = document.cookie.match(/language=([^;]+)/)
-        if (cookieMatch && supportedLangs.includes(cookieMatch[1])) {
-          targetLang = cookieMatch[1]
-        } else {
-          // 2. 检查浏览器语言
-          const browserLang = navigator.language.toLowerCase()
-          if (browserLang.startsWith('en')) {
-            targetLang = 'en'
-          } else if (browserLang.startsWith('zh')) {
-            targetLang = 'zh-cn'
-          }
-        }
-      } catch (e) {
-        console.error('Language detection failed', e)
-      }
-
-      window.location.replace(`/${targetLang}/`)
-    </script>
-  </head>
-  <body>
-    <p>Redirecting to blog...</p>
-  </body>
+<head>
+  <meta charset="utf-8" />
+  <title>Redirecting...</title>
+</head>
+<body>
+  <p>Redirecting...</p>
+</body>
 </html>
