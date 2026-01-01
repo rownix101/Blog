@@ -4,9 +4,3 @@ pages_build_output_dir = "dist"
 
 # Pages Functions configuration
 compatibility_flags = ["nodejs_compat"]
-
-[env.production]
-name = "merox-erudite"
-
-[env.preview]
-name = "merox-erudite-preview"
