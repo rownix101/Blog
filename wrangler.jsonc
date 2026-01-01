@@ -1,0 +1,13 @@
+{
+    "$schema": "node_modules/wrangler/config-schema.json",
+    "name": "merox-erudite",
+    "main": "dist/_worker.js/index.js",
+    "compatibility_date": "2025-01-01",
+    "compatibility_flags": [
+        "nodejs_compat"
+    ],
+    "assets": {
+        "directory": "./dist",
+        "binding": "ASSETS"
+    }
+}
