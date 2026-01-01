@@ -2,6 +2,9 @@
   "name": "merox-erudite",
   "type": "module",
   "version": "1.0.0",
+  "engines": {
+    "node": ">=22.16.0"
+  },
   "description": "An enhanced version of astro-erudite with newsletter integration, analytics support, and additional features",
   "author": "merox",
   "license": "MIT",
