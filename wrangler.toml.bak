@@ -1,6 +1,0 @@
-name = "merox-erudite"
-compatibility_date = "2025-01-01"
-pages_build_output_dir = "dist"
-
-# Pages Functions configuration
-compatibility_flags = ["nodejs_compat"]
