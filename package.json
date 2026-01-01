@@ -2,7 +2,7 @@
   "name": "merox-erudite",
   "type": "module",
   "version": "1.0.0",
-  "description": "An enhanced version of astro-erudite with newsletter integration, Disqus comments, analytics support, and additional features",
+  "description": "An enhanced version of astro-erudite with newsletter integration, analytics support, and additional features",
   "author": "merox",
   "license": "MIT",
   "repository": {

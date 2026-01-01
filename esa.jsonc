@@ -1,0 +1,14 @@
+{
+    "name": "blog",
+    "build": {
+        "command": "bun run build",
+        "output": "dist"
+    },
+    "site": {
+        "public": "dist"
+    },
+    "function": {
+        "name": "blog-worker",
+        "entrypoint": "dist/_worker.js/index.js"
+    }
+}

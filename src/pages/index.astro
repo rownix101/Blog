@@ -1,10 +1,42 @@
 ---
-import { getBrowserLanguage } from '../lib/language-detector'
+import { defaultLang } from '../i18n/ui'
 
-export const prerender = false
-
-const targetLang = getBrowserLanguage(Astro.request)
-
-// Redirect to detected language
-return Astro.redirect(`/${targetLang}/`)
+// Ensure this page is static to generate dist/index.html
+export const prerender = true
 ---
+
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="refresh" content={`0;url=/${defaultLang}/`} />
+    <script is:inline define:vars={{ defaultLang }}>
+      // Detect language and redirect
+      const supportedLangs = ['zh-cn', 'en']
+      let targetLang = defaultLang
+
+      try {
+        // 1. Check cookie
+        const cookieMatch = document.cookie.match(/language=([^;]+)/)
+        if (cookieMatch && supportedLangs.includes(cookieMatch[1])) {
+          targetLang = cookieMatch[1]
+        } else {
+          // 2. Check browser language
+          const browserLang = navigator.language.toLowerCase()
+          if (browserLang.startsWith('en')) {
+            targetLang = 'en'
+          } else if (browserLang.startsWith('zh')) {
+            targetLang = 'zh-cn'
+          }
+        }
+      } catch (e) {
+        console.error('Language detection failed', e)
+      }
+
+      window.location.replace(`/${targetLang}/`)
+    </script>
+  </head>
+  <body>
+    <p>Redirecting to blog...</p>
+  </body>
+</html>

@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-This is **merox-erudite**, a customized Astro blog theme based on astro-erudite with enhanced features including newsletter integration, Disqus comments, analytics support, and internationalization (i18n) with Chinese (zh-cn) and English (en) support.
+This is **merox-erudite**, a customized Astro blog theme based on astro-erudite with enhanced features including newsletter integration, analytics support, and internationalization (i18n) with Chinese (zh-cn) and English (en) support.
 
 ## Common Development Commands
 
@@ -65,12 +65,10 @@ Core functions for content management:
 
 ### Enhanced Features
 - **Newsletter**: Brevo integration (configure via env: BREVO_API_KEY, BREVO_LIST_ID)
-- **Comments**: Custom Vercel Postgres comment system with JWT authentication (see COMMENT_SYSTEM_SETUP.md)
 - **Analytics**: Google Analytics and Umami support
 - **Code Blocks**: Expressive Code with collapsible sections and line numbers
 - **Math**: KaTeX for $\LaTeX$ rendering
 - **MDX**: Enhanced with remark-emoji and rehype-external-links
-- **Likes**: Vercel KV-based comment liking system
 
 ## Development Notes
 
@@ -90,25 +88,6 @@ BREVO_LIST_ID=your-list-id
 # Analytics
 PUBLIC_GOOGLE_ANALYTICS_ID=G-XXXXXXXXXX
 PUBLIC_UMAMI_WEBSITE_ID=your-umami-id
-
-# Comment System (Vercel Postgres)
-POSTGRES_URL=your-postgres-url
-POSTGRES_PRISMA_URL=your-postgres-prisma-url
-POSTGRES_URL_NON_POOLING=your-postgres-non-pooling-url
-POSTGRES_USER=your-postgres-user
-POSTGRES_HOST=your-postgres-host
-POSTGRES_PASSWORD=your-postgres-password
-POSTGRES_DATABASE=your-postgres-database
-
-# Comment System (Vercel KV for likes)
-KV_URL=your-kv-url
-KV_REST_API_TOKEN=your-kv-rest-api-token
-KV_REST_API_URL=your-kv-rest-api-url
-
-# Comment System (JWT)
-COMMENT_JWT_SECRET=your-secure-jwt-secret
-COMMENT_MODERATION_ENABLED=false
-COMMENT_MAX_LENGTH=2000
 ```
 
 ### Type Safety
@@ -118,8 +97,5 @@ COMMENT_MAX_LENGTH=2000
 
 ### Performance
 - Static site generation with Astro
-- Lazy loading for comments with API-based loading
 - View transitions for smooth navigation
 - Optimized font loading and image handling
-- Edge Functions for comment API endpoints
-- KV storage for millisecond-level like responses
