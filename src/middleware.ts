@@ -1,3 +1,4 @@
+import './polyfills'
 import { defineMiddleware } from 'astro:middleware'
 import { getBrowserLanguage, createLanguageCookie } from './lib/language-detector'
 
