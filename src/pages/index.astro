@@ -1,7 +1,7 @@
 ---
 import { defaultLang } from '../i18n/ui'
 
-// Ensure this page is static to generate dist/index.html
+// 这个页面会由 Netlify Edge Functions 处理重定向
 export const prerender = true
 ---
 
@@ -9,19 +9,20 @@ export const prerender = true
 <html>
   <head>
     <meta charset="utf-8" />
+    <title>Redirecting...</title>
     <meta http-equiv="refresh" content={`0;url=/${defaultLang}/`} />
-    <script is:inline define:vars={{ defaultLang }}>
-      // Detect language and redirect
+    <script is:inline>
+      // 检测语言并重定向
       const supportedLangs = ['zh-cn', 'en']
       let targetLang = defaultLang
 
       try {
-        // 1. Check cookie
+        // 1. 检查 cookie
         const cookieMatch = document.cookie.match(/language=([^;]+)/)
         if (cookieMatch && supportedLangs.includes(cookieMatch[1])) {
           targetLang = cookieMatch[1]
         } else {
-          // 2. Check browser language
+          // 2. 检查浏览器语言
           const browserLang = navigator.language.toLowerCase()
           if (browserLang.startsWith('en')) {
             targetLang = 'en'

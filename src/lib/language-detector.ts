@@ -55,7 +55,7 @@ export function getBrowserLanguage(request: Request): string {
 }
 
 export function createLanguageCookie(locale: string): string {
-  return `language=${locale}; Path=/; Max-Age=31536000; SameSite=Lax; HttpOnly`
+  return `language=${locale}; Path=/; Max-Age=31536000; SameSite=Lax`
 }
 
 export function shouldRedirect(request: Request): { should: boolean; to: string } | null {
