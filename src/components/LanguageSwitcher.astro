@@ -75,8 +75,11 @@ const basePath = getPathWithoutLang(currentPath)
 
     // 页面会自动跳转，无需手动导航
   }
-  // @ts-ignore
-  window.handleLanguageChange = handleLanguageChange
+
+  // Declare the function on window for global access
+  if (typeof window !== 'undefined') {
+    window.handleLanguageChange = handleLanguageChange
+  }
 
   // 确保页面加载时语言 Cookie 正确设置
   document.addEventListener('DOMContentLoaded', () => {
