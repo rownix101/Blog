@@ -10,9 +10,9 @@ This is **merox-erudite**, a customized Astro blog theme based on astro-erudite 
 
 ### Development & Building
 - `bun dev` - Start development server on port 1234
-- `bun run --bun astro build` - Build the production site (includes Astro type checking)
-- `bun run --bun astro preview` - Preview the production build
-- `bun run --bun astro <command>` - Run any Astro CLI command
+- `bun run build` - Build the production site (includes Astro type checking)
+- `bun run preview` - Preview the production build
+- `bun run astro <command>` - Run any Astro CLI command
 
 ### Code Formatting
 - `bun run prettier` - Format all TypeScript, CSS, and Astro files
@@ -65,6 +65,8 @@ Core functions for content management:
 
 ### Enhanced Features
 - **Newsletter**: Brevo integration (configure via env: BREVO_API_KEY, BREVO_LIST_ID)
+- **Comments**: Disqus integration (configure via env: PUBLIC_DISQUS_SHORTNAME)
+- **Monetization**: Google AdSense support (configure in src/components/AdSense.astro)
 - **Analytics**: Google Analytics and Umami support
 - **Code Blocks**: Expressive Code with collapsible sections and line numbers
 - **Math**: KaTeX for $\LaTeX$ rendering
@@ -84,10 +86,14 @@ Create `.env` file for optional features:
 # Newsletter
 BREVO_API_KEY=your-api-key
 BREVO_LIST_ID=your-list-id
+BREVO_TEMPLATE_ID=5
 
 # Analytics
 PUBLIC_GOOGLE_ANALYTICS_ID=G-XXXXXXXXXX
 PUBLIC_UMAMI_WEBSITE_ID=your-umami-id
+
+# Comments
+PUBLIC_DISQUS_SHORTNAME=your-shortname
 ```
 
 ### Type Safety
@@ -99,3 +105,11 @@ PUBLIC_UMAMI_WEBSITE_ID=your-umami-id
 - Static site generation with Astro
 - View transitions for smooth navigation
 - Optimized font loading and image handling
+
+### Deployment
+- **Platform**: Netlify (configured via netlify.toml)
+- **Build command**: `bun run build`
+- **Publish directory**: `dist`
+- **Node version**: 22 (configured in netlify.toml)
+- **Static caching**: Headers configured for static assets (1-year cache)
+- **Security headers**: X-Frame-Options, X-XSS-Protection, X-Content-Type-Options, Referrer-Policy
