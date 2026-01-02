@@ -1,6 +1,7 @@
 ---
 import { GISCUS } from '@/consts'
 import { useTranslations } from '@/i18n/utils'
+import { languages } from '@/i18n/ui'
 
 interface Props {
   lang: keyof typeof import('@/i18n/ui').ui
@@ -9,6 +10,26 @@ interface Props {
 
 const { lang, className = '' } = Astro.props
 const t = useTranslations(lang)
+
+// Map blog language to Giscus language codes
+const giscusLangMap = {
+  'zh-cn': 'zh-CN',
+  'en': 'en'
+}
+const giscusLang = giscusLangMap[lang] || 'en'
+
+// Create a unified identifier by removing language prefix from the pathname
+// This ensures all language versions share the same comment section
+function getUnifiedIdentifier(pathname: string): string {
+  const segments = pathname.split('/').filter(Boolean)
+  // Remove language prefix if it exists
+  if (segments.length > 0 && segments[0] in languages) {
+    return '/' + segments.slice(1).join('/')
+  }
+  return pathname
+}
+
+const unifiedId = getUnifiedIdentifier(Astro.url.pathname)
 
 // Always render the component section for debugging
 // Giscus will handle missing configuration gracefully
@@ -35,13 +56,14 @@ const t = useTranslations(lang)
       data-repo-id={GISCUS.repoId}
       data-category={GISCUS.category}
       data-category-id={GISCUS.categoryId}
-      data-mapping="pathname"
+      data-mapping="specific"
+      data-term={unifiedId}
       data-strict="1"
       data-reactions-enabled="1"
       data-emit-metadata="1"
       data-input-position="top"
       data-theme={GISCUS.theme}
-      data-lang={GISCUS.lang}
+      data-lang={giscusLang}
       data-loading={GISCUS.lazy ? 'lazy' : 'eager'}
       crossorigin="anonymous"
       async
@@ -81,9 +103,10 @@ const t = useTranslations(lang)
   :global(.giscus-frame) + .giscus-loading {
     display: none;
   }
-</style>
 
-<script>
+  </style>
+
+<script define:vars={{ GISCUS }}>
   // Listen for Giscus metadata events
   window.addEventListener('message', (event) => {
     if (event.origin !== 'https://giscus.app') return
@@ -98,7 +121,6 @@ const t = useTranslations(lang)
           break
         case 'commentPosted':
           console.log('New Giscus comment posted:', data.comment)
-          // You could trigger analytics or notifications here
           break
         case 'reactionAdded':
           console.log('Giscus reaction added:', data.reaction)
@@ -106,4 +128,91 @@ const t = useTranslations(lang)
       }
     }
   })
+
+  // Function to get unified identifier (same logic as server-side)
+  function getUnifiedIdentifier(pathname) {
+    const segments = pathname.split('/').filter(Boolean)
+    // Remove language prefix if it exists
+    const languages = { 'zh-cn': '中文', 'en': 'English' }
+    if (segments.length > 0 && segments[0] in languages) {
+      return '/' + segments.slice(1).join('/')
+    }
+    return pathname
+  }
+
+  // Function to reload Giscus with new language
+  function reloadGiscus() {
+    const container = document.querySelector('.giscus-container')
+    if (!container) return
+
+    // Remove existing Giscus iframe
+    const existingIframe = document.querySelector('.giscus-frame')
+    if (existingIframe) {
+      existingIframe.remove()
+    }
+
+    // Remove existing Giscus script to avoid duplicates
+    const existingScript = container.querySelector('script[src*="giscus.app"]')
+    if (existingScript) {
+      existingScript.remove()
+    }
+
+    // Create and append new Giscus script
+    const script = document.createElement('script')
+    script.src = 'https://giscus.app/client.js'
+    script.crossOrigin = 'anonymous'
+    script.async = true
+
+    // Get the current language from the page
+    const lang = document.documentElement.lang || 'zh-cn'
+    const giscusLangMap = {
+      'zh-cn': 'zh-CN',
+      'en': 'en'
+    }
+    const giscusLang = giscusLangMap[lang] || 'en'
+
+    // Get unified identifier for the current page
+    const unifiedId = getUnifiedIdentifier(window.location.pathname)
+
+    // Set all data attributes
+    script.setAttribute('data-repo', GISCUS.repo)
+    script.setAttribute('data-repo-id', GISCUS.repoId)
+    script.setAttribute('data-category', GISCUS.category)
+    script.setAttribute('data-category-id', GISCUS.categoryId)
+    script.setAttribute('data-mapping', 'specific')
+    script.setAttribute('data-term', unifiedId)
+    script.setAttribute('data-strict', '1')
+    script.setAttribute('data-reactions-enabled', '1')
+    script.setAttribute('data-emit-metadata', '1')
+    script.setAttribute('data-input-position', 'top')
+    script.setAttribute('data-theme', GISCUS.theme)
+    script.setAttribute('data-lang', giscusLang)
+    script.setAttribute('data-loading', GISCUS.lazy ? 'lazy' : 'eager')
+
+    container.appendChild(script)
+  }
+
+  
+  // Handle language switching with ViewTransitions
+  document.addEventListener('astro:after-preparation', () => {
+    setTimeout(reloadGiscus, 100)
+  })
+
+  // Handle page loads
+  document.addEventListener('DOMContentLoaded', () => {
+    const existingIframe = document.querySelector('.giscus-frame')
+    if (!existingIframe) {
+      reloadGiscus()
+    }
+  })
+
+  // Handle ViewTransitions page load
+  document.addEventListener('astro:page-load', () => {
+    reloadGiscus()
+  })
+
+  // Make functions globally available
+  if (typeof window !== 'undefined') {
+    window.reloadGiscus = reloadGiscus
+  }
 </script>
