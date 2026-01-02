@@ -7,31 +7,36 @@ import { Icon } from 'astro-icon/components'
 
 interface Props {
   links: SocialLink[]
+  lang?: string
 }
 
-const { links } = Astro.props
+const { links, lang = 'zh-cn' } = Astro.props
 ---
 
 <ul class="flex flex-wrap gap-2" role="list">
   {
-    links.map(({ href, label }) => (
-      <li>
-        <Link
-          href={href}
-          aria-label={label}
-          title={label}
-          class={buttonVariants({ variant: 'outline', size: 'icon' })}
-          external
-        >
-          <Icon
-            name={
-              ICON_MAP[label as keyof typeof ICON_MAP] ||
-              'lucide:message-circle-question'
-            }
-            class="size-4"
-          />
-        </Link>
-      </li>
-    ))
+    links.map(({ href, label }) => {
+      // Handle RSS link with language-specific path
+      const finalHref = label === 'RSS' ? `/${lang}/rss.xml` : href
+      return (
+        <li>
+          <Link
+            href={finalHref}
+            aria-label={label}
+            title={label}
+            class={buttonVariants({ variant: 'outline', size: 'icon' })}
+            external={finalHref.startsWith('http') || finalHref.startsWith('mailto:')}
+          >
+            <Icon
+              name={
+                ICON_MAP[label as keyof typeof ICON_MAP] ||
+                'lucide:message-circle-question'
+              }
+              class="size-4"
+            />
+          </Link>
+        </li>
+      )
+    })
   }
 </ul>

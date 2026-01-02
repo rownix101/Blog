@@ -23,7 +23,7 @@ const {
 
 <!doctype html>
 <html class="bg-background text-foreground scheme-light-dark" lang={lang}>
-  <Head>
+  <Head lang={lang}>
     <slot name="head" />
   </Head>
   <body
@@ -116,7 +116,7 @@ const {
     >
       <slot />
     </main>
-    {false && !hideFloatingSidebar && <FloatingSidebar />}
+    {false && !hideFloatingSidebar && <FloatingSidebar lang={lang} />}
     <Footer lang={lang} />
   </body>
 </html>
