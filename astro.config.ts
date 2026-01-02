@@ -30,6 +30,8 @@ export default defineConfig({
   },
   image: {
     service: passthroughImageService(),
+    // Configure for Cloudflare compatibility
+    domains: ['www.rownix.dev'],
   },
   output: 'static',
   adapter: cloudflare(),
