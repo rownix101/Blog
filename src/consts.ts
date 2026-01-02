@@ -42,6 +42,19 @@ export const BREVO = {
   templateId: import.meta.env.BREVO_TEMPLATE_ID || '5',
 }
 
+// Giscus Comments
+// Configure via environment variables: PUBLIC_GISCUS_REPO, PUBLIC_GISCUS_REPO_ID, PUBLIC_GISCUS_CATEGORY, PUBLIC_GISCUS_CATEGORY_ID
+// Get configuration from https://giscus.app/
+export const GISCUS = {
+  repo: import.meta.env.PUBLIC_GISCUS_REPO || 'rownix101/Blog',
+  repoId: import.meta.env.PUBLIC_GISCUS_REPO_ID || 'R_kgDOQwpn1g',
+  category: import.meta.env.PUBLIC_GISCUS_CATEGORY || 'Q&A',
+  categoryId: import.meta.env.PUBLIC_GISCUS_CATEGORY_ID || 'DIC_kwDOQwpn1s4C0d9L',
+  theme: SITE.href + '/giscus-theme.css', // Custom theme matching blog design
+  lang: 'zh-CN',
+  lazy: true,
+}
+
 export const NAV_LINKS: SocialLink[] = [
   {
     href: '/blog',

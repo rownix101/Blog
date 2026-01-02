@@ -30,6 +30,8 @@ export const ui = {
         'footer.privacy': '隐私政策',
         'footer.terms': '服务条款',
         'footer.rights': '版权所有。',
+        'comments.title': '评论',
+        'comments.loading': '评论加载中...',
     },
     en: {
         'nav.blog': 'Blog',
@@ -55,5 +57,7 @@ export const ui = {
         'footer.privacy': 'Privacy Policy',
         'footer.terms': 'Terms of Service',
         'footer.rights': 'All rights reserved.',
+        'comments.title': 'Comments',
+        'comments.loading': 'Loading comments...',
     },
 } as const

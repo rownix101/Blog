@@ -65,7 +65,7 @@ Core functions for content management:
 
 ### Enhanced Features
 - **Newsletter**: Brevo integration (configure via env: BREVO_API_KEY, BREVO_LIST_ID)
-- **Comments**: Disqus integration (configure via env: PUBLIC_DISQUS_SHORTNAME)
+- **Comments**: Giscus integration with custom theme (configure via env: PUBLIC_GISCUS_REPO, PUBLIC_GISCUS_REPO_ID, PUBLIC_GISCUS_CATEGORY, PUBLIC_GISCUS_CATEGORY_ID)
 - **Monetization**: Google AdSense support (configure in src/components/AdSense.astro)
 - **Analytics**: Google Analytics and Umami support
 - **Code Blocks**: Expressive Code with collapsible sections and line numbers
@@ -92,8 +92,11 @@ BREVO_TEMPLATE_ID=5
 PUBLIC_GOOGLE_ANALYTICS_ID=G-XXXXXXXXXX
 PUBLIC_UMAMI_WEBSITE_ID=your-umami-id
 
-# Comments
-PUBLIC_DISQUS_SHORTNAME=your-shortname
+# Comments - Giscus
+PUBLIC_GISCUS_REPO=your-username/your-repo
+PUBLIC_GISCUS_REPO_ID=your-repo-id
+PUBLIC_GISCUS_CATEGORY=General
+PUBLIC_GISCUS_CATEGORY_ID=your-category-id
 ```
 
 ### Type Safety
@@ -113,6 +116,14 @@ PUBLIC_DISQUS_SHORTNAME=your-shortname
 - **Language utilities**: `src/lib/language-detector.ts` provides browser language parsing
 - **Root path handling**: HTTP 302 redirect from `/` to detected language (e.g., `/zh-cn/`)
 - **Accept-Language parsing**: Supports quality values and language prefix matching (en-US → en)
+
+### Giscus Comments System
+- **Custom Theme**: `public/giscus-theme.css` provides seamless integration with blog design
+- **Advanced Features**: Strict mode (`data-strict="1"`) and metadata emission (`data-emit-metadata="1"`)
+- **Event Handling**: JavaScript listeners for comment and reaction events
+- **Responsive Design**: Mobile-optimized styling with proper breakpoints
+- **Theme Integration**: Uses blog's CSS custom properties for consistent appearance
+- **Backlink Support**: Custom meta tags for proper discussion attribution
 
 ### Deployment
 - **Platform**: Cloudflare Pages (configured via `wrangler.jsonc`)
