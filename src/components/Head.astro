@@ -7,12 +7,14 @@ interface Props {
   title?: string
   description?: string
   image?: string
+  lang?: string
 }
 
-const { 
-  title = SITE.title, 
+const {
+  title = SITE.title,
   description = SITE.description,
-  image
+  image,
+  lang = 'zh-cn'
 } = Astro.props
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site).href
@@ -95,8 +97,8 @@ const ogImage = image || (cleanPathname ? new URL(`/og${cleanPathname}.png`, Ast
   <link
     rel="alternate"
     type="application/rss+xml"
-    title={SITE.title}
-    href={new URL('rss.xml', Astro.site)}
+    title={`${SITE.title} (${lang})`}
+    href={new URL(`${lang}/rss.xml`, Astro.site)}
   />
 
   <Favicons />
