@@ -34,7 +34,10 @@ export default defineConfig({
     domains: ['www.rownix.dev'],
   },
   output: 'static',
-  adapter: cloudflare(),
+  adapter: cloudflare({
+    // Disable session features for static blog
+    enableSessions: false,
+  }),
   // Static output with Cloudflare Pages support
   integrations: [
     expressiveCode({
