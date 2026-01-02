@@ -50,8 +50,9 @@ export const GISCUS = {
   repoId: import.meta.env.PUBLIC_GISCUS_REPO_ID || 'R_kgDOQwpn1g',
   category: import.meta.env.PUBLIC_GISCUS_CATEGORY || 'Q&A',
   categoryId: import.meta.env.PUBLIC_GISCUS_CATEGORY_ID || 'DIC_kwDOQwpn1s4C0d9L',
-  theme: SITE.href + '/giscus-theme.css', // Custom theme matching blog design
-  lang: 'zh-CN',
+  theme: import.meta.env.MODE === 'development'
+    ? '/giscus-theme.css'  // Local development
+    : SITE.href + '/giscus-theme.css',  // Production
   lazy: true,
 }
 
