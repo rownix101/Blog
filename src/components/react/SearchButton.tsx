@@ -4,7 +4,11 @@ import { Button } from '@/components/ui/button'
 import SearchDialog from './SearchDialog'
 import { ErrorBoundary } from './ErrorBoundary'
 
-const SearchButton: React.FC = () => {
+interface SearchButtonProps {
+  lang?: string
+}
+
+const SearchButton: React.FC<SearchButtonProps> = ({ lang = 'zh-cn' }) => {
   const [isOpen, setIsOpen] = useState(false)
 
   // Keyboard shortcut: Cmd/Ctrl + K
@@ -42,7 +46,7 @@ const SearchButton: React.FC = () => {
         <span className="sr-only">Search</span>
       </Button>
       <ErrorBoundary>
-        <SearchDialog open={isOpen} onOpenChange={setIsOpen} />
+        <SearchDialog open={isOpen} onOpenChange={setIsOpen} lang={lang} />
       </ErrorBoundary>
     </ErrorBoundary>
   )

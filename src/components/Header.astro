@@ -91,7 +91,7 @@ const isExternalLink = (href: string) => {
       </nav>
       <div class="bg-border/60 hidden h-6 w-px md:block" aria-hidden="true">
       </div>
-      <SearchButton client:idle />
+      <SearchButton client:idle lang={lang} />
       <LanguageSwitcher />
       <MobileMenu client:idle transition:persist />
       <ThemeToggle transition:persist />

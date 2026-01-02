@@ -23,14 +23,15 @@ interface SearchResult {
 interface SearchDialogProps {
   open: boolean
   onOpenChange: (open: boolean) => void
+  lang?: string
 }
 
-// LocalStorage keys
-const STORAGE_KEYS = {
-  SEARCH_INDEX: 'search_index',
-  SEARCH_INDEX_VERSION: 'search_index_version',
-  SEARCH_HISTORY: 'search_history',
-} as const
+// Get language-specific localStorage keys
+const getStorageKeys = (lang: string) => ({
+  SEARCH_INDEX: `search_index_${lang}`,
+  SEARCH_INDEX_VERSION: `search_index_version_${lang}`,
+  SEARCH_HISTORY: `search_history_${lang}`,
+})
 
 // Cache version - increment when index structure changes
 const INDEX_VERSION = '1.0'
@@ -105,9 +106,10 @@ function calculateRelevanceScore(
 }
 
 // Get search history from localStorage
-function getSearchHistory(): string[] {
+function getSearchHistory(lang: string): string[] {
   try {
-    const history = localStorage.getItem(STORAGE_KEYS.SEARCH_HISTORY)
+    const keys = getStorageKeys(lang)
+    const history = localStorage.getItem(keys.SEARCH_HISTORY)
     return history ? JSON.parse(history) : []
   } catch {
     return []
@@ -115,25 +117,27 @@ function getSearchHistory(): string[] {
 }
 
 // Save search to history
-function saveSearchHistory(query: string): void {
+function saveSearchHistory(query: string, lang: string): void {
   if (!query.trim()) return
   try {
-    const history = getSearchHistory()
+    const history = getSearchHistory(lang)
     const normalizedQuery = query.trim().toLowerCase()
     // Remove if exists and add to front
     const filtered = history.filter((q) => q.toLowerCase() !== normalizedQuery)
     const updated = [normalizedQuery, ...filtered].slice(0, 10) // Keep last 10
-    localStorage.setItem(STORAGE_KEYS.SEARCH_HISTORY, JSON.stringify(updated))
+    const keys = getStorageKeys(lang)
+    localStorage.setItem(keys.SEARCH_HISTORY, JSON.stringify(updated))
   } catch {
     // Ignore localStorage errors
   }
 }
 
 // Get cached search index
-function getCachedIndex(): { data: SearchResult[]; version: string } | null {
+function getCachedIndex(lang: string): { data: SearchResult[]; version: string } | null {
   try {
-    const cached = localStorage.getItem(STORAGE_KEYS.SEARCH_INDEX)
-    const version = localStorage.getItem(STORAGE_KEYS.SEARCH_INDEX_VERSION)
+    const keys = getStorageKeys(lang)
+    const cached = localStorage.getItem(keys.SEARCH_INDEX)
+    const version = localStorage.getItem(keys.SEARCH_INDEX_VERSION)
     if (cached && version === INDEX_VERSION) {
       return { data: JSON.parse(cached), version }
     }
@@ -144,10 +148,11 @@ function getCachedIndex(): { data: SearchResult[]; version: string } | null {
 }
 
 // Cache search index
-function cacheIndex(data: SearchResult[]): void {
+function cacheIndex(data: SearchResult[], lang: string): void {
   try {
-    localStorage.setItem(STORAGE_KEYS.SEARCH_INDEX, JSON.stringify(data))
-    localStorage.setItem(STORAGE_KEYS.SEARCH_INDEX_VERSION, INDEX_VERSION)
+    const keys = getStorageKeys(lang)
+    localStorage.setItem(keys.SEARCH_INDEX, JSON.stringify(data))
+    localStorage.setItem(keys.SEARCH_INDEX_VERSION, INDEX_VERSION)
   } catch {
     // Ignore localStorage errors (quota exceeded, etc.)
   }
@@ -176,7 +181,7 @@ function extractSnippet(content: string, query: string, maxLength: number = 150)
   return snippet
 }
 
-const SearchDialog: React.FC<SearchDialogProps> = ({ open, onOpenChange }) => {
+const SearchDialog: React.FC<SearchDialogProps> = ({ open, onOpenChange, lang = 'zh-cn' }) => {
   const [query, setQuery] = useState('')
   const [results, setResults] = useState<SearchResult[]>([])
   const [isLoading, setIsLoading] = useState(false)
@@ -200,7 +205,7 @@ const SearchDialog: React.FC<SearchDialogProps> = ({ open, onOpenChange }) => {
 
     const loadSearchIndex = async () => {
       // Check cache first
-      const cached = getCachedIndex()
+      const cached = getCachedIndex(lang)
       if (cached && cached.data.length > 0) {
         setSearchIndex(cached.data)
         setIsLoadingIndex(false)
@@ -234,14 +239,14 @@ const SearchDialog: React.FC<SearchDialogProps> = ({ open, onOpenChange }) => {
       setError(null)
 
       try {
-        const response = await fetch('/api/search-index.json')
+        const response = await fetch(`/api/search-index/${lang}.json`)
         if (!response.ok) throw new Error('Failed to load search index')
         const data: SearchResult[] = await response.json()
-        
+
         if (cancelled) return
-        
+
         // Cache the index
-        cacheIndex(data)
+        cacheIndex(data, lang)
         
         setSearchIndex(data)
         setRecentPosts(data.slice(0, 5))
@@ -307,7 +312,7 @@ const SearchDialog: React.FC<SearchDialogProps> = ({ open, onOpenChange }) => {
 
       try {
         // Save to search history
-        saveSearchHistory(searchQuery)
+        saveSearchHistory(searchQuery, lang)
 
         // First try exact search
         let searchResults = index.search(normalizedQuery, {
@@ -495,7 +500,7 @@ const SearchDialog: React.FC<SearchDialogProps> = ({ open, onOpenChange }) => {
     }
   }
 
-  const searchHistory = getSearchHistory()
+  const searchHistory = getSearchHistory(lang)
   const hasMoreResults = results.length > displayedResults
   const visibleResults = results.slice(0, displayedResults)
 
