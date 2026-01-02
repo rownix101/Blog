@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-This is **merox-erudite**, a customized Astro blog theme based on astro-erudite with enhanced features including newsletter integration, analytics support, and internationalization (i18n) with Chinese (zh-cn) and English (en) support.
+This is **merox-erudite** (Rownix's Blog), a customized Astro blog theme based on astro-erudite with enhanced features including newsletter integration, analytics support, sponsorship system, and internationalization (i18n) with Chinese (zh-cn) and English (en) support.
 
 ## Common Development Commands
 
@@ -66,6 +66,7 @@ Core functions for content management:
 ### Enhanced Features
 - **Newsletter**: Brevo integration (configure via env: BREVO_API_KEY, BREVO_LIST_ID)
 - **Comments**: Giscus integration with custom theme (configure via env: PUBLIC_GISCUS_REPO, PUBLIC_GISCUS_REPO_ID, PUBLIC_GISCUS_CATEGORY, PUBLIC_GISCUS_CATEGORY_ID)
+- **Sponsorship System**: Multi-tier sponsorship page with payment methods (Alipay, WeChat Pay, cryptocurrencies)
 - **Monetization**: Google AdSense support (configure in src/components/AdSense.astro)
 - **Analytics**: Google Analytics and Umami support
 - **Code Blocks**: Expressive Code with collapsible sections and line numbers
@@ -79,6 +80,7 @@ Core functions for content management:
 - Author IDs reference filename without extension
 - Draft posts are excluded from builds
 - Tags support automatic counting and sorting
+- Sponsor page images: Place QR codes in `public/images/sponsor/` (alipay.png, wechat.png) and `public/images/sponsor/crypto/` (bitcoin.png, ethereum.png, etc.)
 
 ### Environment Variables
 Create `.env` file for optional features:
@@ -110,12 +112,20 @@ PUBLIC_GISCUS_CATEGORY_ID=your-category-id
 - Optimized font loading and image handling
 
 ### Language Detection & Routing
-- **Middleware**: `src/middleware.ts` handles automatic language redirection for root path
+- **Pages Functions**: `functions/index.ts` handles automatic language redirection for root path
 - **Detection priority**: Cookie > Accept-Language header > default (zh-cn)
 - **Cookie behavior**: `language={locale}; Path=/; Max-Age=31536000; SameSite=Lax` (1 year persistence)
 - **Language utilities**: `src/lib/language-detector.ts` provides browser language parsing
 - **Root path handling**: HTTP 302 redirect from `/` to detected language (e.g., `/zh-cn/`)
 - **Accept-Language parsing**: Supports quality values and language prefix matching (en-US → en)
+
+### Sponsorship System
+- **Multi-tier Structure**: Basic ($5-20), Supporter ($20-50, recommended), Sponsor ($50+)
+- **Payment Methods**: Alipay, WeChat Pay, Bitcoin, Ethereum, USDT (ERC-20/TRC-20/OMNI), Tron
+- **Form Handling**: Client-side form that opens email client with sponsorship details
+- **QR Code Fallback**: Graceful degradation when QR code images are missing
+- **Internationalization**: Full i18n support for sponsorship content
+- **Sponsor List**: Placeholder for displaying sponsor names and messages
 
 ### Giscus Comments System
 - **Custom Theme**: `public/giscus-theme.css` provides seamless integration with blog design
@@ -134,8 +144,19 @@ PUBLIC_GISCUS_CATEGORY_ID=your-category-id
 - **Configuration**: `wrangler.jsonc` with assets directory pointing to `./dist`
 - **Observability**: Enabled via Cloudflare Pages analytics
 - **Static assets**: No additional caching configuration needed (handled by Cloudflare)
+- **Compatibility**: Uses Wrangler v4.0.0 for validation and deployment
 
 ### Additional Configuration
 - **Wrangler**: Version 4.0.0 in devDependencies for Cloudflare Pages validation
 - **Polyfills**: `src/polyfills.ts` imported in middleware for Cloudflare compatibility
+- **Pages Functions**: Root path language detection via `functions/index.ts`
 - **No server functions**: Pure static site generation with middleware for language routing
+
+### Site Configuration
+- **Site Title**: "Rownix's Blog"
+- **Domain**: https://www.rownix.dev
+- **Author**: rownix101
+- **Navigation**: Blog, About, Sponsor (all fully internationalized)
+- **Default Posts per Page**: 6
+- **Featured Posts Count**: 2
+- **Giscus Config**: Pre-configured for rownix101/Blog repository
