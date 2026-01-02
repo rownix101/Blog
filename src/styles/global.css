@@ -194,7 +194,7 @@
   z-index: 0;
   pointer-events: none;
   /* Background image with WebP support and fallback */
-  background-image: url('/static/homelab.webp');
+  background-image: url('/static/preview-1.png');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -210,9 +210,9 @@
 }
 
 /* Fallback for browsers that don't support WebP */
-@supports not (background-image: url('/static/homelab.webp')) {
+@supports not (background-image: url('/static/preview-1.png')) {
   .hero-bg-container {
-    background-image: url('/static/homelab.png');
+    background-image: url('/static/preview-2.png');
   }
 }
 
