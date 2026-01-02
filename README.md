@@ -18,7 +18,7 @@ This theme includes several enhancements and customizations:
 ### ✨ New Features
 
 - **Newsletter Integration** - Brevo (formerly Sendinblue) newsletter subscription with GDPR-compliant consent
-- **Disqus Comments** - Integrated comment system with lazy loading and view transition support
+- **Giscus Comments** - Integrated comment system powered by GitHub discussions
 - **Google AdSense** - Built-in AdSense component with view transition support
 - **Analytics Support** - Google Analytics and Umami Analytics integration
 - **SEO Enhancements** - FAQ Schema and HowTo Schema components for better search visibility
@@ -58,7 +58,7 @@ All features from astro-erudite plus:
 - Author profiles and multi-author support
 - Project tags and categorization
 - **Newsletter subscription** (Brevo integration)
-- **Disqus comments** (optional)
+- **Giscus comments** (optional)
 - **Google AdSense** support (optional)
 - **Analytics** (Google Analytics & Umami)
 
@@ -89,8 +89,11 @@ All features from astro-erudite plus:
    PUBLIC_GOOGLE_ANALYTICS_ID=your-ga-id
    PUBLIC_UMAMI_WEBSITE_ID=your-umami-id
 
-   # Disqus
-   PUBLIC_DISQUS_SHORTNAME=your-shortname
+   # Giscus Comments
+   PUBLIC_GISCUS_REPO=your-username/your-repo
+   PUBLIC_GISCUS_REPO_ID=your-repo-id
+   PUBLIC_GISCUS_CATEGORY=General
+   PUBLIC_GISCUS_CATEGORY_ID=your-category-id
    ```
 
 5. **Start the development server:**
@@ -135,11 +138,16 @@ export const SOCIAL_LINKS: SocialLink[] = [
 3. Create a list and get the List ID
 4. Add environment variables to `.env`
 
-### Disqus Setup
+### Giscus Setup
 
-1. Create a [Disqus](https://disqus.com/) account
-2. Register your site to get a shortname
-3. Add `PUBLIC_DISQUS_SHORTNAME` to `.env`
+1. Install the [Giscus app](https://github.com/apps/giscus) on your GitHub repository
+2. Enable discussions on your repository (Settings → General → Features)
+3. Visit [giscus.app](https://giscus.app/) to generate configuration
+4. Add the environment variables to `.env`:
+   - `PUBLIC_GISCUS_REPO`: Your GitHub repository (username/repo)
+   - `PUBLIC_GISCUS_REPO_ID`: Repository ID (provided by Giscus)
+   - `PUBLIC_GISCUS_CATEGORY`: Discussion category (usually "General")
+   - `PUBLIC_GISCUS_CATEGORY_ID`: Category ID (provided by Giscus)
 
 ### AdSense Setup
 

@@ -1,5 +1,6 @@
 ---
 import Breadcrumbs from '@/components/Breadcrumbs.astro'
+import GiscusComments from '@/components/GiscusComments.astro'
 import Link from '@/components/Link.astro'
 import PostHead from '@/components/PostHead.astro'
 import PostNavigation from '@/components/PostNavigation.astro'
@@ -102,6 +103,7 @@ try {
 
 <Layout hideFloatingSidebar={hasChildPosts || isCurrentSubpost} lang={lang}>
     <PostHead slot="head" post={post} />
+    <meta name="giscus:backlink" content={Astro.url.origin + Astro.url.pathname} slot="head" />
     {
         (hasChildPosts || isCurrentSubpost) && (
             <SubpostsHeader
@@ -322,6 +324,12 @@ try {
             class="mx-auto size-4 transition-all group-hover:-translate-y-0.5"
         />
     </Button>
+
+    <div class="col-start-2 flex justify-center">
+  <div class="w-full max-w-3xl">
+    <GiscusComments lang={lang} />
+  </div>
+</div>
 
     <script>
         document.addEventListener('astro:page-load', () => {

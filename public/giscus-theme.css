@@ -1,0 +1,252 @@
+/* Giscus Custom Theme - merox-erudite integration */
+
+/* Light theme variables */
+:root {
+  --giscu-primary: hsl(var(--primary));
+  --giscu-primary-foreground: hsl(var(--primary-foreground));
+  --giscu-background: hsl(var(--background));
+  --giscu-foreground: hsl(var(--foreground));
+  --giscu-muted: hsl(var(--muted));
+  --giscu-muted-foreground: hsl(var(--muted-foreground));
+  --giscu-border: hsl(var(--border));
+  --giscu-card: hsl(var(--card));
+  --giscu-popover: hsl(var(--popover));
+  --giscu-ring: hsl(var(--ring));
+}
+
+/* Dark theme overrides */
+html[data-theme='dark'],
+.dark {
+  --giscu-primary: hsl(var(--primary));
+  --giscu-primary-foreground: hsl(var(--primary-foreground));
+  --giscu-background: hsl(var(--background));
+  --giscu-foreground: hsl(var(--foreground));
+  --giscu-muted: hsl(var(--muted));
+  --giscu-muted-foreground: hsl(var(--muted-foreground));
+  --giscu-border: hsl(var(--border));
+  --giscu-card: hsl(var(--card));
+  --giscu-popover: hsl(var(--popover));
+  --giscu-ring: hsl(var(--ring));
+}
+
+/* Main container */
+.gsc-main-content {
+  background-color: var(--giscu-background) !important;
+  color: var(--giscu-foreground) !important;
+  font-family: var(--font-sans, system-ui, -apple-system, sans-serif) !important;
+}
+
+/* Comments container */
+.gsc-comments {
+  background-color: var(--giscu-background) !important;
+}
+
+/* Individual comment */
+.gsc-comment {
+  background-color: var(--giscu-background) !important;
+  border: 1px solid var(--giscu-border) !important;
+  border-radius: 0.5rem !important;
+  color: var(--giscu-foreground) !important;
+  margin-bottom: 1rem !important;
+  padding: 1rem !important;
+}
+
+.gsc-comment-header {
+  border-bottom: 1px solid var(--giscu-border) !important;
+  color: var(--giscu-muted-foreground) !important;
+  font-size: 0.875rem !important;
+  padding-bottom: 0.5rem !important;
+  margin-bottom: 0.75rem !important;
+}
+
+.gsc-comment-body {
+  color: var(--giscu-foreground) !important;
+  line-height: 1.6 !important;
+  font-size: 0.9375rem !important;
+}
+
+.gsc-comment-metadata {
+  color: var(--giscu-muted-foreground) !important;
+  font-size: 0.8125rem !important;
+}
+
+/* Reply box */
+.gsc-reply-box {
+  background-color: var(--giscu-card) !important;
+  border: 1px solid var(--giscu-border) !important;
+  border-radius: 0.5rem !important;
+  color: var(--giscu-foreground) !important;
+  padding: 1rem !important;
+}
+
+/* Input fields */
+.gsc-reply-box textarea,
+.gsc-reply-box input {
+  background-color: var(--giscu-muted) / 0.5 !important;
+  border: 1px solid var(--giscu-border) !important;
+  border-radius: 0.375rem !important;
+  color: var(--giscu-foreground) !important;
+  font-family: var(--font-sans, system-ui, -apple-system, sans-serif) !important;
+  font-size: 0.9375rem !important;
+  padding: 0.75rem !important;
+  transition: all 0.2s ease !important;
+}
+
+.gsc-reply-box textarea:focus,
+.gsc-reply-box input:focus {
+  border-color: var(--giscu-primary) !important;
+  outline: 2px solid transparent !important;
+  outline-offset: 2px !important;
+  box-shadow: 0 0 0 2px var(--giscu-ring) !important;
+}
+
+/* Buttons */
+.gsc-button {
+  background-color: var(--giscu-primary) !important;
+  border: 1px solid var(--giscu-primary) !important;
+  border-radius: 0.375rem !important;
+  color: var(--giscu-primary-foreground) !important;
+  cursor: pointer !important;
+  font-family: var(--font-sans, system-ui, -apple-system, sans-serif) !important;
+  font-size: 0.875rem !important;
+  font-weight: 500 !important;
+  padding: 0.5rem 1rem !important;
+  transition: all 0.2s ease !important;
+}
+
+.gsc-button:hover {
+  background-color: color-mix(in srgb, var(--giscu-primary) 90%, black) !important;
+  border-color: color-mix(in srgb, var(--giscu-primary) 90%, black) !important;
+}
+
+.gsc-button:disabled {
+  background-color: var(--giscu-muted) !important;
+  border-color: var(--giscu-muted) !important;
+  color: var(--giscu-muted-foreground) !important;
+  cursor: not-allowed !important;
+}
+
+/* Secondary buttons */
+.gsc-button-secondary {
+  background-color: var(--giscu-muted) / 0.8 !important;
+  border: 1px solid var(--giscu-border) !important;
+  color: var(--giscu-foreground) !important;
+}
+
+.gsc-button-secondary:hover {
+  background-color: var(--giscu-muted) !important;
+}
+
+/* Links */
+.gsc-comment a,
+.gsc-reply-box a {
+  color: var(--giscu-primary) !important;
+  text-decoration: underline !important;
+  text-decoration-thickness: 1px !important;
+  text-underline-offset: 2px !important;
+}
+
+.gsc-comment a:hover,
+.gsc-reply-box a:hover {
+  color: color-mix(in srgb, var(--giscu-primary) 80%, black) !important;
+}
+
+/* Header */
+.gsc-header {
+  background-color: var(--giscu-background) !important;
+  border-bottom: 1px solid var(--giscu-border) !important;
+  color: var(--giscu-foreground) !important;
+  font-size: 1.125rem !important;
+  font-weight: 600 !important;
+  padding: 1rem 1rem 0.75rem !important;
+}
+
+/* Loading state */
+.gsc-loading {
+  background-color: var(--giscu-background) !important;
+  color: var(--giscu-muted-foreground) !important;
+}
+
+/* Emoji reactions */
+.gsc-reactions {
+  background-color: var(--giscu-background) !important;
+  border-top: 1px solid var(--giscu-border) !important;
+  padding: 0.75rem 1rem !important;
+}
+
+.gsc-reaction {
+  background-color: var(--giscu-muted) / 0.5 !important;
+  border: 1px solid var(--giscu-border) !important;
+  border-radius: 0.375rem !important;
+  color: var(--giscu-foreground) !important;
+  cursor: pointer !important;
+  font-size: 0.875rem !important;
+  padding: 0.375rem 0.75rem !important;
+  transition: all 0.2s ease !important;
+}
+
+.gsc-reaction:hover {
+  background-color: var(--giscu-muted) !important;
+  border-color: var(--giscu-primary) !important;
+}
+
+.gsc-reaction.active {
+  background-color: var(--giscu-primary) !important;
+  border-color: var(--giscu-primary) !important;
+  color: var(--giscu-primary-foreground) !important;
+}
+
+/* User avatars */
+.gsc-avatar {
+  border: 2px solid var(--giscu-border) !important;
+  border-radius: 50% !important;
+}
+
+/* Error messages */
+.gsc-error {
+  background-color: hsl(0 84% 60% / 0.1) !important;
+  border: 1px solid hsl(0 84% 60% / 0.3) !important;
+  border-radius: 0.375rem !important;
+  color: hsl(0 62% 30%) !important;
+  padding: 0.75rem !important;
+}
+
+/* Success messages */
+.gsc-success {
+  background-color: hsl(142 76% 36% / 0.1) !important;
+  border: 1px solid hsl(142 76% 36% / 0.3) !important;
+  border-radius: 0.375rem !important;
+  color: hsl(142 76% 25%) !important;
+  padding: 0.75rem !important;
+}
+
+/* Responsive design */
+@media (max-width: 640px) {
+  .gsc-comment {
+    padding: 0.75rem !important;
+  }
+
+  .gsc-reply-box {
+    padding: 0.75rem !important;
+  }
+
+  .gsc-header {
+    padding: 0.75rem 0.75rem 0.5rem !important;
+    font-size: 1rem !important;
+  }
+}
+
+/* Dark mode specific adjustments */
+@media (prefers-color-scheme: dark) {
+  .gsc-error {
+    background-color: hsl(0 84% 60% / 0.2) !important;
+    border-color: hsl(0 84% 60% / 0.4) !important;
+    color: hsl(0 62% 70%) !important;
+  }
+
+  .gsc-success {
+    background-color: hsl(142 76% 36% / 0.2) !important;
+    border-color: hsl(142 76% 36% / 0.4) !important;
+    color: hsl(142 76% 65%) !important;
+  }
+}

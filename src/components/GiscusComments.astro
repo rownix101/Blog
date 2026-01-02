@@ -1,0 +1,109 @@
+---
+import { GISCUS } from '@/consts'
+import { useTranslations } from '@/i18n/utils'
+
+interface Props {
+  lang: keyof typeof import('@/i18n/ui').ui
+  className?: string
+}
+
+const { lang, className = '' } = Astro.props
+const t = useTranslations(lang)
+
+// Always render the component section for debugging
+// Giscus will handle missing configuration gracefully
+---
+
+<section
+  class={`mt-12 pt-8 w-full ${className}`}
+  aria-labelledby="comments-title"
+>
+  <!-- Decorative separator -->
+  <div class="flex items-center justify-center mb-8">
+    <div class="h-px bg-border flex-1 max-w-32"></div>
+    <div class="px-4 text-muted-foreground text-sm">💬</div>
+    <div class="h-px bg-border flex-1 max-w-32"></div>
+  </div>
+  <h2 id="comments-title" class="mb-6 text-2xl font-medium text-center">
+    {t('comments.title') || 'Comments'}
+  </h2>
+
+  <div class="giscus-container">
+    <script
+      src="https://giscus.app/client.js"
+      data-repo={GISCUS.repo}
+      data-repo-id={GISCUS.repoId}
+      data-category={GISCUS.category}
+      data-category-id={GISCUS.categoryId}
+      data-mapping="pathname"
+      data-strict="1"
+      data-reactions-enabled="1"
+      data-emit-metadata="1"
+      data-input-position="top"
+      data-theme={GISCUS.theme}
+      data-lang={GISCUS.lang}
+      data-loading={GISCUS.lazy ? 'lazy' : 'eager'}
+      crossorigin="anonymous"
+      async
+    />
+  </div>
+</section>
+
+<style>
+  .giscus-container {
+    position: relative;
+    min-height: 200px;
+    width: 100%;
+  }
+
+  /* Simple loading state */
+  .giscus-container::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 20px;
+    height: 20px;
+    border: 2px solid hsl(var(--border));
+    border-top: 2px solid hsl(var(--primary));
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    z-index: 1;
+  }
+
+  @keyframes spin {
+    0% { transform: translate(-50%, -50%) rotate(0deg); }
+    100% { transform: translate(-50%, -50%) rotate(360deg); }
+  }
+
+  /* Hide loading spinner when Giscus is loaded */
+  :global(.giscus-frame) + .giscus-loading {
+    display: none;
+  }
+</style>
+
+<script>
+  // Listen for Giscus metadata events
+  window.addEventListener('message', (event) => {
+    if (event.origin !== 'https://giscus.app') return
+
+    const { data } = event
+
+    if (data.giscus) {
+      // Handle different Giscus events
+      switch (data.giscus) {
+        case 'discussionLoaded':
+          console.log('Giscus discussion loaded:', data.discussion)
+          break
+        case 'commentPosted':
+          console.log('New Giscus comment posted:', data.comment)
+          // You could trigger analytics or notifications here
+          break
+        case 'reactionAdded':
+          console.log('Giscus reaction added:', data.reaction)
+          break
+      }
+    }
+  })
+</script>

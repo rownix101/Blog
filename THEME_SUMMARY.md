@@ -40,7 +40,7 @@ merox-erudite/
 ## ✨ Features Included
 
 - ✅ Newsletter integration (Brevo)
-- ✅ Disqus comments
+- ✅ Giscus comments
 - ✅ Google Analytics & Umami support
 - ✅ SEO enhancements (FAQ & HowTo schemas)
 - ✅ Enhanced homepage
