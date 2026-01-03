@@ -107,6 +107,8 @@ const { headings } = Astro.props
     scrollArea: HTMLElement | null = null
     headings: HTMLElement[] = []
     regions: { id: string; start: number; end: number }[] = []
+    headingPositions: { id: string; top: number; bottom: number }[] = []
+    headingBottomById: Map<string, number> = new Map()
     activeIds: string[] = []
 
     reset() {
@@ -125,6 +127,8 @@ const { headings } = Astro.props
         tocContainer?.querySelector('[data-radix-scroll-area-viewport]') || null
       this.headings = []
       this.regions = []
+      this.headingPositions = []
+      this.headingBottomById = new Map()
       this.activeIds = []
 
       if (this.progressCircle) {
@@ -148,6 +152,8 @@ const { headings } = Astro.props
 
       if (state.headings.length === 0) {
         state.regions = []
+        state.headingPositions = []
+        state.headingBottomById = new Map()
         return
       }
 
@@ -159,10 +165,19 @@ const { headings } = Astro.props
           end: nextHeading ? nextHeading.offsetTop : document.body.scrollHeight,
         }
       })
+
+      state.headingPositions = state.headings.map((heading) => {
+        const top = heading.offsetTop
+        const bottom = top + heading.offsetHeight
+        return { id: heading.id, top, bottom }
+      })
+      state.headingBottomById = new Map(
+        state.headingPositions.map((pos) => [pos.id, pos.bottom]),
+      )
     }
 
     static getVisibleIds(): string[] {
-      if (state.headings.length === 0) return []
+      if (state.headingPositions.length === 0) return []
 
       const viewportTop = window.scrollY + HEADER_OFFSET
       const viewportBottom = window.scrollY + window.innerHeight
@@ -173,24 +188,21 @@ const { headings } = Astro.props
         (bottom >= viewportTop && bottom <= viewportBottom) ||
         (top <= viewportTop && bottom >= viewportBottom)
 
-      state.headings.forEach((heading) => {
-        const headingBottom = heading.offsetTop + heading.offsetHeight
-        if (isInViewport(heading.offsetTop, headingBottom)) {
+      state.headingPositions.forEach((heading) => {
+        if (isInViewport(heading.top, heading.bottom)) {
           visibleIds.add(heading.id)
         }
       })
 
       state.regions.forEach((region) => {
         if (region.start <= viewportBottom && region.end >= viewportTop) {
-          const heading = document.getElementById(region.id)
-          if (heading) {
-            const headingBottom = heading.offsetTop + heading.offsetHeight
-            if (
-              region.end > headingBottom &&
-              (headingBottom < viewportBottom || viewportTop < region.end)
-            ) {
-              visibleIds.add(region.id)
-            }
+          const headingBottom = state.headingBottomById.get(region.id)
+          if (
+            headingBottom &&
+            region.end > headingBottom &&
+            (headingBottom < viewportBottom || viewportTop < region.end)
+          ) {
+            visibleIds.add(region.id)
           }
         }
       })
@@ -330,10 +342,21 @@ const { headings } = Astro.props
   }
 
   class MobileTOCController {
+    static scrollListener: (() => void) | null = null
+    static ticking = false
+
+    static areSameIds(a: string[], b: string[]): boolean {
+      if (a.length !== b.length) return false
+      for (let i = 0; i < a.length; i += 1) {
+        if (a[i] !== b[i]) return false
+      }
+      return true
+    }
+
     static handleScroll() {
       const newActiveIds = HeadingRegions.getVisibleIds()
 
-      if (JSON.stringify(newActiveIds) !== JSON.stringify(state.activeIds)) {
+      if (!this.areSameIds(newActiveIds, state.activeIds)) {
         state.activeIds = newActiveIds
         MobileTOCLinks.update(state.activeIds)
       }
@@ -345,7 +368,7 @@ const { headings } = Astro.props
       HeadingRegions.build()
 
       const newActiveIds = HeadingRegions.getVisibleIds()
-      if (JSON.stringify(newActiveIds) !== JSON.stringify(state.activeIds)) {
+      if (!this.areSameIds(newActiveIds, state.activeIds)) {
         state.activeIds = newActiveIds
         MobileTOCLinks.update(state.activeIds)
       }
@@ -373,17 +396,31 @@ const { headings } = Astro.props
       ProgressCircle.update()
 
       MobileTOCLinks.setupInteraction()
-      window.addEventListener('scroll', this.handleScroll, { passive: true })
+      this.scrollListener = () => {
+        if (this.ticking) return
+        this.ticking = true
+        requestAnimationFrame(() => {
+          this.handleScroll()
+          this.ticking = false
+        })
+      }
+      window.addEventListener('scroll', this.scrollListener, { passive: true })
       window.addEventListener('resize', this.handleResize, { passive: true })
     }
 
     static cleanup() {
-      window.removeEventListener('scroll', this.handleScroll)
+      if (this.scrollListener) {
+        window.removeEventListener('scroll', this.scrollListener)
+      }
       window.removeEventListener('scroll', ProgressCircle.update)
       window.removeEventListener('resize', this.handleResize)
+      this.scrollListener = null
+      this.ticking = false
       state.activeIds = []
       state.headings = []
       state.regions = []
+      state.headingPositions = []
+      state.headingBottomById = new Map()
     }
   }
 
