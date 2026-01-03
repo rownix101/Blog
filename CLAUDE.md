@@ -66,6 +66,7 @@ Core functions for content management:
 ### Enhanced Features
 - **Newsletter**: Brevo integration (configure via env: BREVO_API_KEY, BREVO_LIST_ID)
 - **Comments**: Giscus integration with custom theme (configure via env: PUBLIC_GISCUS_REPO, PUBLIC_GISCUS_REPO_ID, PUBLIC_GISCUS_CATEGORY, PUBLIC_GISCUS_CATEGORY_ID)
+- **Friend Links System**: Automated friend link management with YAML-based configuration, category support, and PR-based application process
 - **Sponsorship System**: Multi-tier sponsorship page with payment methods (Alipay, WeChat Pay, cryptocurrencies)
 - **Monetization**: Google AdSense support (configure in src/components/AdSense.astro)
 - **Analytics**: Google Analytics and Umami support
@@ -80,6 +81,7 @@ Core functions for content management:
 - Author IDs reference filename without extension
 - Draft posts are excluded from builds
 - Tags support automatic counting and sorting
+- Friend Links: Managed via `src/data/friends/friends.yaml` with automated build process generating `friends-data.ts`
 - Sponsor page images: Place QR codes in `public/images/sponsor/` (alipay.png, wechat.png) and `public/images/sponsor/crypto/` (bitcoin.png, ethereum.png, etc.)
 
 ### Environment Variables
