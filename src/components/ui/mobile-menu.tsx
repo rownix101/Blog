@@ -9,7 +9,11 @@ import {
 import { NAV_LINKS } from '@/consts'
 import { Menu, ExternalLink } from 'lucide-react'
 
-const MobileMenu = () => {
+interface MobileMenuProps {
+  lang?: string
+}
+
+const MobileMenu = ({ lang = 'zh-cn' }: MobileMenuProps) => {
   const [isOpen, setIsOpen] = useState(false)
 
   useEffect(() => {
@@ -26,6 +30,27 @@ const MobileMenu = () => {
     return href.startsWith('http')
   }
 
+  const getTranslation = (key: string) => {
+    const translations = {
+      'zh-cn': {
+        'nav.blog': '博客',
+        'nav.about': '关于',
+        'nav.sponsor': '赞助',
+      },
+      en: {
+        'nav.blog': 'Blog',
+        'nav.about': 'About',
+        'nav.sponsor': 'Sponsor',
+      },
+    }
+    return translations[lang as keyof typeof translations]?.[key] || key
+  }
+
+  const getLocalizedHref = (href: string) => {
+    if (isExternalLink(href)) return href
+    return `/${lang}${href}`
+  }
+
   return (
     <DropdownMenu open={isOpen} onOpenChange={(val) => setIsOpen(val)}>
       <DropdownMenuTrigger asChild onClick={() => setIsOpen((val) => !val)}>
@@ -38,10 +63,12 @@ const MobileMenu = () => {
         {NAV_LINKS.map((item) => {
           const isExternal = isExternalLink(item.href)
           const isInsideLink = item.label.toLowerCase() === 'inside'
+          const translatedLabel = getTranslation(`nav.${item.label.toLowerCase()}`)
+          const localizedHref = getLocalizedHref(item.href)
           return (
             <DropdownMenuItem key={item.href} asChild>
               <a
-                href={item.href}
+                href={localizedHref}
                 target={isExternal ? '_blank' : '_self'}
                 rel={isExternal ? 'noopener noreferrer' : undefined}
                 className={`w-full text-lg font-medium capitalize flex items-center gap-2 ${
@@ -49,7 +76,7 @@ const MobileMenu = () => {
                 }`}
                 onClick={() => setIsOpen(false)}
               >
-                <span>{item.label}</span>
+                <span>{translatedLabel}</span>
                 {isExternal && (
                   <ExternalLink className={`h-4 w-4 opacity-80 flex-shrink-0 ${isInsideLink ? 'text-primary' : ''}`} aria-hidden="true" />
                 )}
