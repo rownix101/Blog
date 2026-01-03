@@ -17,8 +17,9 @@ const { lang } = Astro.params
 const t = ui[lang as Lang]
 const allFriends = getApprovedFriends()
 const categories = getFriendCategories()
-const selectedCategory = Astro.url.searchParams.get('category') || ''
-const filteredFriends = selectedCategory ? getFriendsByCategory(selectedCategory) : allFriends
+
+// Simply show all friends, no filtering
+const filteredFriends = allFriends
 
 // SEO
 const title = `${t['nav.friends'] || 'Friends'} - ${SITE.title}`
@@ -66,48 +67,7 @@ const description = t['friends.page_desc'] || 'Discover amazing blogs and websit
       </div>
     </header>
 
-    <!-- Category Filter -->
-    {categories.length > 0 && (
-      <div class="mb-8">
-        <div class="flex flex-wrap gap-2 justify-center">
-          <a
-            href={`/${lang}/friends`}
-            class={`px-4 py-2 rounded-full text-sm transition-colors ${
-              !selectedCategory
-                ? 'bg-primary text-primary-foreground'
-                : 'bg-muted text-muted-foreground hover:bg-muted/80'
-            }`}
-          >
-            {t['friends.all_categories'] || 'All'}
-          </a>
-          {categories.map(category => {
-            // Map Chinese categories to English keys for translation
-            const categoryMap = {
-              '技术': 'tech',
-              '生活': 'life',
-              '学习': 'study',
-              '设计': 'design',
-              '其他': 'other'
-            }
-            const categoryKey = `friends.category.${categoryMap[category] || category}`
-            const translatedCategory = t[categoryKey] || category
-            return (
-              <a
-                href={`/${lang}/friends?category=${encodeURIComponent(category)}`}
-                class={`px-4 py-2 rounded-full text-sm transition-colors ${
-                  selectedCategory === category
-                    ? 'bg-primary text-primary-foreground'
-                    : 'bg-muted text-muted-foreground hover:bg-muted/80'
-                }`}
-              >
-                {translatedCategory}
-              </a>
-            )
-          })}
-        </div>
-      </div>
-    )}
-
+    
     <!-- Friends Grid -->
     {filteredFriends.length > 0 ? (
       <div class="grid gap-4 md:grid-cols-2">
