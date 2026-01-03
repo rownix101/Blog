@@ -2,7 +2,7 @@
  * Optimized icon loader for Skills component
  * This helps with tree-shaking by importing icons only when needed
  */
-import { type IconType } from 'react-icons'
+import type { ComponentType, SVGProps } from 'react'
 import { FaQuestionCircle } from 'react-icons/fa'
 import {
   SiLinux,
@@ -46,8 +46,11 @@ import {
   Box,
 } from 'lucide-react'
 
+// Common icon type that works for both react-icons and lucide-react
+type IconComponent = ComponentType<{ className?: string } & SVGProps<SVGSVGElement>>
+
 // Icon mapping - using direct imports for better tree-shaking
-export const iconMap: { [key: string]: IconType } = {
+export const iconMap: Record<string, IconComponent> = {
   'simple-icons:linux': SiLinux,
   'mdi:ubuntu': SiUbuntu,
   'simple-icons:debian': SiDebian,
@@ -88,7 +91,6 @@ export const iconMap: { [key: string]: IconType } = {
   'simple-icons:cpanel': SiCpanel,
 }
 
-export function getIcon(logo: string): IconType {
+export function getIcon(logo: string): IconComponent {
   return iconMap[logo] || FaQuestionCircle
 }
-

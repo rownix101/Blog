@@ -185,11 +185,6 @@
   will-change: auto;
 }
 
-.tech-badge-visible {
-  /* Just ensure visibility, no transform conflicts */
-  opacity: 1;
-}
-
 /* Background effects */
 .parallax-bg {
   width: 100%;

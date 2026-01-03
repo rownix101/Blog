@@ -1,4 +1,3 @@
-import { useEffect } from 'react'
 import { InfiniteScroll } from './InfiniteScroll'
 import { getIcon } from './SkillsIconLoader'
 
@@ -79,12 +78,6 @@ const categoryGroups = [
 ]
 
 const Skills: React.FC = () => {
-  useEffect(() => {
-    document.querySelectorAll('.tech-badge').forEach((badge) => {
-      badge.classList.add('tech-badge-visible')
-    })
-  }, [])
-
   return (
     <div className="z-30 mt-12 flex w-full flex-col max-w-[calc(100vw-5rem)] mx-auto lg:max-w-full">
       <div className="space-y-2">
