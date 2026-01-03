@@ -1,8 +1,10 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, lazy, Suspense } from 'react'
 import { Search } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import SearchDialog from './SearchDialog'
 import { ErrorBoundary } from './ErrorBoundary'
+
+// Lazy load the heavy SearchDialog component (includes flexsearch ~20KB)
+const SearchDialog = lazy(() => import('./SearchDialog'))
 
 interface SearchButtonProps {
   lang?: string
@@ -10,6 +12,7 @@ interface SearchButtonProps {
 
 const SearchButton: React.FC<SearchButtonProps> = ({ lang = 'zh-cn' }) => {
   const [isOpen, setIsOpen] = useState(false)
+  const [hasOpened, setHasOpened] = useState(false)
 
   // Keyboard shortcut: Cmd/Ctrl + K
   useEffect(() => {
@@ -23,6 +26,7 @@ const SearchButton: React.FC<SearchButtonProps> = ({ lang = 'zh-cn' }) => {
       if ((e.metaKey || e.ctrlKey) && e.key === 'k' && !isInput) {
         e.preventDefault()
         setIsOpen(true)
+        setHasOpened(true)
       }
     }
 
@@ -30,12 +34,17 @@ const SearchButton: React.FC<SearchButtonProps> = ({ lang = 'zh-cn' }) => {
     return () => window.removeEventListener('keydown', handleKeyDown)
   }, [])
 
+  const handleOpen = () => {
+    setIsOpen(true)
+    setHasOpened(true)
+  }
+
   return (
     <ErrorBoundary>
       <Button
         variant="outline"
         size="icon"
-        onClick={() => setIsOpen(true)}
+        onClick={handleOpen}
         className="size-9 border md:border-0 md:bg-transparent md:hover:bg-muted md:-my-2 md:-me-2 md:size-8"
         title="Search (⌘K)"
         aria-label="Search blog posts"
@@ -45,12 +54,16 @@ const SearchButton: React.FC<SearchButtonProps> = ({ lang = 'zh-cn' }) => {
         <Search className="h-5 w-5 md:h-4 md:w-4" />
         <span className="sr-only">Search</span>
       </Button>
-      <ErrorBoundary>
-        <SearchDialog open={isOpen} onOpenChange={setIsOpen} lang={lang} />
-      </ErrorBoundary>
+      {/* Only load SearchDialog after first open to save initial bundle */}
+      {hasOpened && (
+        <ErrorBoundary>
+          <Suspense fallback={null}>
+            <SearchDialog open={isOpen} onOpenChange={setIsOpen} lang={lang} />
+          </Suspense>
+        </ErrorBoundary>
+      )}
     </ErrorBoundary>
   )
 }
 
 export default SearchButton
-

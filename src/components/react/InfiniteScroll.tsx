@@ -1,7 +1,6 @@
 'use client'
 
-import React, { useRef, useEffect, useState } from 'react'
-import { motion, useAnimationControls } from 'framer-motion'
+import React, { useRef, useState, useId } from 'react'
 import { cn } from '@/lib/utils'
 
 interface InfiniteScrollProps {
@@ -23,73 +22,19 @@ export function InfiniteScroll({
   children,
   pauseOnHover = true,
 }: InfiniteScrollProps) {
-  const [contentWidth, setContentWidth] = useState<number>(0)
   const [isPaused, setIsPaused] = useState(false)
   const scrollerRef = useRef<HTMLDivElement>(null)
-  const contentRef = useRef<HTMLDivElement>(null)
-  const controls = useAnimationControls()
-  const elapsedTimeRef = useRef(0)
-  const lastTimeRef = useRef(0)
-
-  useEffect(() => {
-    const content = contentRef.current
-    if (!content) return
-
-    const updateWidth = () => {
-      const width = content.offsetWidth
-      setContentWidth(width)
-    }
-
-    updateWidth()
-    window.addEventListener('resize', updateWidth)
-    return () => window.removeEventListener('resize', updateWidth)
-  }, [children])
-
-  useEffect(() => {
-    if (!contentWidth) return
-
-    const startX = direction === 'normal' ? 0 : -contentWidth
-    const endX = direction === 'normal' ? -contentWidth : 0
-
-    if (!isPaused) {
-      const remainingDuration = duration - elapsedTimeRef.current
-      const progress = elapsedTimeRef.current / duration
-      const currentX =
-        direction === 'normal'
-          ? startX + (endX - startX) * progress
-          : endX + (startX - endX) * (1 - progress)
-
-      controls.set({ x: currentX })
-      controls.start({
-        x: endX,
-        transition: {
-          duration: remainingDuration / 1000,
-          ease: 'linear',
-          repeat: Infinity,
-          repeatType: 'loop',
-          repeatDelay: 0,
-        },
-      })
-
-      lastTimeRef.current = Date.now()
-    }
-  }, [controls, direction, duration, contentWidth, isPaused])
+  
+  // Use React's useId for stable SSR-compatible ID
+  const id = useId().replace(/:/g, '')
+  const animationName = `scroll-${id}`
 
   const handleMouseEnter = () => {
-    if (!pauseOnHover) return
-
-    const currentTime = Date.now()
-    const deltaTime = currentTime - lastTimeRef.current
-    elapsedTimeRef.current = (elapsedTimeRef.current + deltaTime) % duration
-
-    setIsPaused(true)
-    controls.stop()
+    if (pauseOnHover) setIsPaused(true)
   }
 
   const handleMouseLeave = () => {
-    if (!pauseOnHover) return
-    lastTimeRef.current = Date.now()
-    setIsPaused(false)
+    if (pauseOnHover) setIsPaused(false)
   }
 
   return (
@@ -101,18 +46,29 @@ export function InfiniteScroll({
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
+      {/* Scoped keyframes for this instance */}
+      <style>
+        {`
+          @keyframes ${animationName} {
+            from { transform: translateX(0); }
+            to { transform: translateX(-33.333%); }
+          }
+        `}
+      </style>
       <div className="flex">
-        <motion.div
+        <div
           ref={scrollerRef}
           className="flex shrink-0"
-          animate={controls}
+          style={{
+            animation: `${animationName} ${duration}ms linear infinite`,
+            animationDirection: direction === 'reverse' ? 'reverse' : 'normal',
+            animationPlayState: isPaused ? 'paused' : 'running',
+          }}
         >
-          <div ref={contentRef} className="flex shrink-0">
-            {children}
-          </div>
           <div className="flex shrink-0">{children}</div>
           <div className="flex shrink-0">{children}</div>
-        </motion.div>
+          <div className="flex shrink-0">{children}</div>
+        </div>
       </div>
       {showFade && (
         <div
