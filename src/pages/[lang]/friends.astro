@@ -1,0 +1,161 @@
+---
+import Layout from '@/layouts/Layout.astro'
+import { getStaticPaths } from 'astro'
+import { ui, type Lang } from '@/i18n/ui'
+import { getApprovedFriends, getFriendCategories, getFriendsByCategory } from '@/lib/friends-utils'
+import FriendCard from '@/components/FriendCard'
+import { SITE } from '@/consts'
+
+export async function getStaticPaths() {
+  return [
+    { params: { lang: 'zh-cn' } },
+    { params: { lang: 'en' } }
+  ]
+}
+
+const { lang } = Astro.params
+const t = ui[lang as Lang]
+const allFriends = getApprovedFriends()
+const categories = getFriendCategories()
+const selectedCategory = Astro.url.searchParams.get('category') || ''
+const filteredFriends = selectedCategory ? getFriendsByCategory(selectedCategory) : allFriends
+
+// SEO
+const title = `${t['nav.friends'] || 'Friends'} - ${SITE.title}`
+const description = t['friends.page_desc'] || 'Discover amazing blogs and websites from our friends'
+---
+
+<Layout title={title} description={description}>
+  <div class="container max-w-4xl mx-auto px-4 py-12">
+    <!-- Header -->
+    <header class="text-center mb-12">
+      <h1 class="text-4xl font-bold mb-4">
+        {t['friends.title'] || 'Friends'}
+      </h1>
+      <p class="text-xl text-muted-foreground mb-8">
+        {t['friends.page_desc'] || 'Discover amazing blogs and websites from our friends'}
+      </p>
+
+      <!-- Stats -->
+      <div class="flex justify-center gap-8 mb-8">
+        <div class="text-center">
+          <div class="text-2xl font-bold text-primary">{allFriends.length}</div>
+          <div class="text-sm text-muted-foreground">
+            {t['friends.total_friends'] || 'Total Friends'}
+          </div>
+        </div>
+        <div class="text-center">
+          <div class="text-2xl font-bold text-primary">{categories.length}</div>
+          <div class="text-sm text-muted-foreground">
+            {t['friends.categories'] || 'Categories'}
+          </div>
+        </div>
+      </div>
+
+      <!-- Apply Button -->
+      <div class="mb-8">
+        <a
+          href={`/${lang}/friends/apply`}
+          class="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors"
+        >
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width={2} d="M12 4v16m8-8H4" />
+          </svg>
+          {t['friends.apply_button'] || 'Apply for Friend Link'}
+        </a>
+      </div>
+    </header>
+
+    <!-- Category Filter -->
+    {categories.length > 0 && (
+      <div class="mb-8">
+        <div class="flex flex-wrap gap-2 justify-center">
+          <a
+            href={`/${lang}/friends`}
+            class={`px-4 py-2 rounded-full text-sm transition-colors ${
+              !selectedCategory
+                ? 'bg-primary text-primary-foreground'
+                : 'bg-muted text-muted-foreground hover:bg-muted/80'
+            }`}
+          >
+            {t['friends.all_categories'] || 'All'}
+          </a>
+          {categories.map(category => {
+            // Map Chinese categories to English keys for translation
+            const categoryMap = {
+              '技术': 'tech',
+              '生活': 'life',
+              '学习': 'study',
+              '设计': 'design',
+              '其他': 'other'
+            }
+            const categoryKey = `friends.category.${categoryMap[category] || category}`
+            const translatedCategory = t[categoryKey] || category
+            return (
+              <a
+                href={`/${lang}/friends?category=${encodeURIComponent(category)}`}
+                class={`px-4 py-2 rounded-full text-sm transition-colors ${
+                  selectedCategory === category
+                    ? 'bg-primary text-primary-foreground'
+                    : 'bg-muted text-muted-foreground hover:bg-muted/80'
+                }`}
+              >
+                {translatedCategory}
+              </a>
+            )
+          })}
+        </div>
+      </div>
+    )}
+
+    <!-- Friends Grid -->
+    {filteredFriends.length > 0 ? (
+      <div class="grid gap-4 md:grid-cols-2">
+        {filteredFriends.map(friend => (
+          <FriendCard friend={friend} client:load />
+        ))}
+      </div>
+    ) : (
+      <div class="text-center py-12">
+        <div class="text-muted-foreground mb-4">
+          {selectedCategory
+            ? (t['friends.no_friends_in_category'] || 'No friends found in this category')
+            : (t['friends.no_friends_yet'] || 'No friends added yet')
+          }
+        </div>
+        {!selectedCategory && (
+          <a
+            href={`/${lang}/friends/apply`}
+            class="text-primary hover:underline"
+          >
+            {t['friends.be_first'] || 'Be the first to apply!'}
+          </a>
+        )}
+      </div>
+    )}
+
+    <!-- How to Apply Section -->
+    <section class="mt-16 p-6 bg-muted/50 rounded-lg">
+      <h2 class="text-xl font-semibold mb-4">
+        {t['friends.how_to_apply_title'] || 'How to Apply'}
+      </h2>
+      <ol class="space-y-2 text-sm text-muted-foreground">
+        <li>
+          1. {t['friends.step1'] || 'Click the "Apply for Friend Link" button above'}
+        </li>
+        <li>
+          2. {t['friends.step2'] || 'Fill in your website information'}
+        </li>
+        <li>
+          3. {t['friends.step3'] || 'Submit a Pull Request with your information'}
+        </li>
+        <li>
+          4. {t['friends.step4'] || 'Wait for automatic review and approval'}
+        </li>
+      </ol>
+      <p class="mt-4 text-sm">
+        <strong>{t['friends.requirement_title'] || 'Requirements'}:</strong> {t['friends.requirement_desc'] || 'Your website should be active, high-quality, and already link back to this blog.'}
+      </p>
+    </section>
+  </div>
+</Layout>

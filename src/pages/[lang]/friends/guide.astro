@@ -1,0 +1,433 @@
+---
+import Layout from '@/layouts/Layout.astro'
+import { getStaticPaths } from 'astro'
+import { ui, type Lang } from '@/i18n/ui'
+import { SITE } from '@/consts'
+
+export async function getStaticPaths() {
+  return [
+    { params: { lang: 'zh-cn' } },
+    { params: { lang: 'en' } }
+  ]
+}
+
+const { lang } = Astro.params
+const t = ui[lang as Lang]
+const title = `${t['friends.guide_title'] || 'Friend Application Guide'} - ${SITE.title}`
+const description = t['friends.guide_desc'] || 'Step-by-step guide to submit friend link application'
+
+// Get template content
+const templateContent = await fetch(
+  new URL('../../../.github/FRIEND_APPLICATION_TEMPLATE.md', Astro.url)
+).then(res => res.text()).catch(() => '')
+---
+
+<Layout title={title} description={description}>
+  <div class="container max-w-4xl mx-auto px-4 py-12">
+    <header class="text-center mb-12">
+      <h1 class="text-4xl font-bold mb-4">
+        {t['friends.guide_title'] || 'Friend Application Guide'}
+      </h1>
+      <p class="text-xl text-muted-foreground">
+        {t['friends.guide_subtitle'] || 'Follow these steps to successfully submit your friend link application'}
+      </p>
+    </header>
+
+    <!-- Hidden data for JavaScript -->
+    <div id="copySuccessText" class="hidden">{t["friends.copied"] || "Copied!"}</div>
+
+    <div class="grid gap-8 lg:grid-cols-3">
+      <!-- Main Content -->
+      <div class="lg:col-span-2 space-y-8">
+        <!-- Step 1: Copy Template -->
+        <section class="bg-card rounded-lg p-6 border">
+          <div class="flex items-center gap-3 mb-4">
+            <div class="w-8 h-8 bg-primary text-primary-foreground rounded-full flex items-center justify-center font-semibold">1</div>
+            <h2 class="text-xl font-semibold">
+              {t['friends.guide.step1.title'] || 'Copy Application Template'}
+            </h2>
+          </div>
+          <p class="text-muted-foreground mb-4">
+            {t['friends.guide.step1.desc'] || 'First, copy the application template below. You will need to fill in your information.'}
+          </p>
+
+          <div class="bg-muted/50 rounded-lg p-4">
+            <div class="flex items-center justify-between mb-2">
+              <h3 class="font-semibold text-sm">
+                {t['friends.guide.template_title'] || 'Application Template'}
+              </h3>
+              <button
+                id="copyTemplateBtn"
+                class="px-3 py-1 bg-primary text-primary-foreground rounded text-sm hover:bg-primary/90 transition-colors"
+              >
+                {t['friends.copy'] || 'Copy'}
+              </button>
+            </div>
+            <pre class="bg-background border rounded p-3 text-sm overflow-x-auto"><code id="templateContent">- id: [自动生成的唯一ID]
+  name: [你的网站名称]
+  url: [你的网站地址]
+  description: [网站描述]
+  avatar: [头像链接，可选]
+  category: [分类]
+  contact: [联系邮箱]
+  submittedAt: [提交时间，ISO格式]
+  status: pending
+  applicantGithub: [GitHub用户名，可选]</code></pre>
+            {lang === 'zh-cn' && (
+              <div id="prefilledTemplate" class="hidden">
+                <p class="text-sm text-muted-foreground mb-2">
+                  {t['friends.guide.your_data'] || '你的申请数据已预填充：'}
+                </p>
+                <pre class="bg-green-50 border border-green-200 rounded p-3 text-sm overflow-x-auto"><code id="userYamlEntry"></code></pre>
+              </div>
+            )}
+          </div>
+        </section>
+
+        <!-- Step 2: Fork Repository -->
+        <section class="bg-card rounded-lg p-6 border">
+          <div class="flex items-center gap-3 mb-4">
+            <div class="w-8 h-8 bg-primary text-primary-foreground rounded-full flex items-center justify-center font-semibold">2</div>
+            <h2 class="text-xl font-semibold">
+              {t['friends.guide.step2.title'] || 'Fork the Repository'}
+            </h2>
+          </div>
+          <p class="text-muted-foreground mb-4">
+            {t['friends.guide.step2.desc'] || 'Fork this blog repository to your GitHub account.'}
+          </p>
+          <a
+            href="https://github.com/rownix101/Blog/fork"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="inline-flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors"
+          >
+            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+            </svg>
+            {t['friends.guide.fork_btn'] || 'Fork Repository'}
+          </a>
+        </section>
+
+        <!-- Step 3: Edit File -->
+        <section class="bg-card rounded-lg p-6 border">
+          <div class="flex items-center gap-3 mb-4">
+            <div class="w-8 h-8 bg-primary text-primary-foreground rounded-full flex items-center justify-center font-semibold">3</div>
+            <h2 class="text-xl font-semibold">
+              {t['friends.guide.step3.title'] || 'Edit pending.yaml'}
+            </h2>
+          </div>
+          <div class="space-y-4 text-muted-foreground">
+            <p>
+              {t['friends.guide.step3.desc1'] || 'In your forked repository, navigate to and edit the file:'}
+            </p>
+            <div class="bg-muted/50 rounded p-3 font-mono text-sm">
+              src/data/friends/pending.yaml
+            </div>
+            <p>
+              {t['friends.guide.step3.desc2'] || 'Paste the template you copied and fill in your information.'}
+            </p>
+            <div class="bg-amber-50 border border-amber-200 rounded-lg p-4 text-amber-800 text-sm">
+              <strong>{t['friends.guide.note'] || 'Note:'}</strong> {t['friends.guide.step3.note'] || 'Make sure to maintain proper YAML formatting. Use spaces for indentation, not tabs.'}
+            </div>
+          </div>
+        </section>
+
+        <!-- Step 4: Submit PR -->
+        <section class="bg-card rounded-lg p-6 border">
+          <div class="flex items-center gap-3 mb-4">
+            <div class="w-8 h-8 bg-primary text-primary-foreground rounded-full flex items-center justify-center font-semibold">4</div>
+            <h2 class="text-xl font-semibold">
+              {t['friends.guide.step4.title'] || 'Submit Pull Request'}
+            </h2>
+          </div>
+          <div class="space-y-4 text-muted-foreground">
+            <p>{t['friends.guide.step4.desc'] || 'Commit your changes and create a Pull Request:'}</p>
+            <ul class="space-y-2 list-disc list-inside">
+              <li>{t['friends.guide.step4.commit'] || 'Commit message: `Add friend link: [Your Website Name]`'}</li>
+              <li>{t['friends.guide.step4.pr_title'] || 'PR title: `Add friend link: [Your Website Name]`'}</li>
+              <li>{t['friends.guide.step4.pr_desc'] || 'PR description: Brief introduction of your website'}</li>
+            </ul>
+          </div>
+        </section>
+
+        <!-- PR Description Preview -->
+        {lang === 'zh-cn' && (
+        <section id="prPreviewSection" class="hidden bg-card rounded-lg p-6 border">
+          <div class="flex items-center gap-3 mb-4">
+            <div class="w-8 h-8 bg-green-600 text-white rounded-full flex items-center justify-center font-semibold">📝</div>
+            <h2 class="text-xl font-semibold">
+              PR 描述预览
+            </h2>
+          </div>
+          <p class="text-muted-foreground mb-4">
+            这是将自动生成的 Pull Request 描述，包含您的所有申请信息：
+          </p>
+          <div class="bg-muted/50 rounded-lg p-4">
+            <pre id="prDescriptionPreview" class="bg-background border rounded p-4 text-sm whitespace-pre-wrap overflow-x-auto"></pre>
+            <button
+              id="copyPRDescriptionBtn"
+              class="mt-3 px-4 py-2 bg-secondary text-secondary-foreground rounded-lg hover:bg-secondary/90 transition-colors text-sm"
+            >
+              复制 PR 描述
+            </button>
+          </div>
+        </section>
+        )}
+      </div>
+
+      <!-- Sidebar -->
+      <div class="space-y-6">
+        <!-- Requirements Card -->
+        <div class="bg-card rounded-lg p-6 border">
+          <h3 class="font-semibold mb-4">
+            {t['friends.requirements_title'] || 'Requirements'}
+          </h3>
+          <ul class="space-y-2 text-sm text-muted-foreground">
+            <li>✓ {t['friends.req.active'] || 'Website must be active and accessible'}</li>
+            <li>✓ {t['friends.req.quality'] || 'High-quality content and design'}</li>
+            <li>✓ {t['friends.req.reciprocal'] || 'Must link back to this blog'}</li>
+            <li>✓ {t['friends.req.appropriate'] || 'Appropriate and safe content'}</li>
+          </ul>
+        </div>
+
+        <!-- Reciprocal Link -->
+        <div class="bg-blue-50 border border-blue-200 rounded-lg p-6">
+          <h3 class="font-semibold text-blue-900 mb-3">
+            {t['friends.reciprocal_title'] || 'Add Our Link'}
+          </h3>
+          <p class="text-sm text-blue-800 mb-3">
+            {t['friends.reciprocal_desc'] || 'Please add this link to your website:'}
+          </p>
+          <code class="block bg-blue-100 p-2 rounded text-xs text-blue-900">
+            &lt;a href="https://www.rownix.dev" target="_blank" rel="noopener"&gt;Rownix's Blog&lt;/a&gt;
+          </code>
+        </div>
+
+        <!-- Review Timeline -->
+        <div class="bg-amber-50 border border-amber-200 rounded-lg p-6">
+          <h3 class="font-semibold text-amber-900 mb-3">
+            {t['friends.review_timeline'] || 'Review Timeline'}
+          </h3>
+          <div class="space-y-2 text-sm text-amber-800">
+            <div className="flex items-center gap-2">
+              <div class="w-2 h-2 bg-amber-600 rounded-full"></div>
+              <span>{t['friends.timeline.automated'] || 'Automated checks: Instant'}</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <div class="w-2 h-2 bg-amber-600 rounded-full"></div>
+              <span>{t['friends.timeline.manual'] || 'Manual review: 24 hours'}</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <div class="w-2 h-2 bg-amber-600 rounded-full"></div>
+              <span>{t['friends.timeline.approval'] || 'Approval: Added to friends list'}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Help -->
+        <div class="bg-muted/50 rounded-lg p-6">
+          <h3 class="font-semibold mb-3">
+            {t['friends.need_help'] || 'Need Help?'}
+          </h3>
+          <div class="space-y-2 text-sm">
+            <a
+              href="https://github.com/rownix101/Blog/issues/new?assignees=&labels=friend-application&template=friend-application.md"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="block text-primary hover:underline"
+            >
+              {t['friends.create_issue'] || 'Create an Issue'}
+            </a>
+            <a
+              href={`/${lang}/friends/apply`}
+              class="block text-primary hover:underline"
+            >
+              {t['friends.back_to_apply'] || 'Back to Application Form'}
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Check for application data from sessionStorage
+    const storedData = sessionStorage.getItem('friendApplicationData')
+    const storedPrepared = sessionStorage.getItem('friendApplicationPrepared')
+    const storedInstructions = sessionStorage.getItem('friendApplicationInstructions')
+
+    if (storedData && storedPrepared && storedInstructions) {
+      try {
+        const applicationData = JSON.parse(storedData)
+        const preparedContent = JSON.parse(storedPrepared)
+        const instructions = JSON.parse(storedInstructions)
+
+        // Update page title to show it's for their application
+        const titleElement = document.querySelector('h1')
+        if (titleElement) {
+          titleElement.textContent = titleElement.textContent.replace(
+            '{t["friends.guide_title"] || "Friend Application Guide"}',
+            applicationData.name ? `${applicationData.name} - 申请指南` : '友链申请指南'
+          )
+        }
+
+        // Update Step 1 to show their prepared content
+        const prefilledSection = document.getElementById('prefilledTemplate')
+        const userYamlEntry = document.getElementById('userYamlEntry')
+        const templateSection = document.querySelector('#templateContent').closest('section')
+
+        if (prefilledSection && userYamlEntry && templateSection) {
+          // Hide the generic template section
+          templateSection.style.display = 'none'
+
+          // Show their prepared content section
+          prefilledSection.classList.remove('hidden')
+          userYamlEntry.textContent = preparedContent
+
+          // Update the section title
+          const sectionTitle = templateSection.querySelector('h2')
+          if (sectionTitle) {
+            sectionTitle.textContent = '1. 您的申请已准备好'
+          }
+
+          // Update description
+          const sectionDesc = templateSection.querySelector('.text-muted-foreground')
+          if (sectionDesc) {
+            sectionDesc.textContent = `您的友链申请信息已自动生成，直接复制下方内容即可。网站：${applicationData.name}`
+          }
+        }
+
+        // Update Step 2 with direct fork link
+        const forkBtn = document.querySelector('a[href*="github.com/fork"]')
+        if (forkBtn && instructions.forkUrl) {
+          forkBtn.href = instructions.forkUrl
+        }
+
+        // Update Step 3 with file path and edit link
+        const filePathElement = document.querySelector('.font-mono')
+        if (filePathElement && instructions.filePath) {
+          filePathElement.textContent = instructions.filePath
+        }
+
+        // Add direct edit button
+        const step3Section = Array.from(document.querySelectorAll('section')).find(section =>
+          section.querySelector('h2')?.textContent.includes('Edit pending.yaml')
+        )
+        if (step3Section && instructions.editUrl) {
+          const editBtn = document.createElement('a')
+          editBtn.href = instructions.editUrl
+          editBtn.target = '_blank'
+          editBtn.className = 'inline-flex items-center gap-2 px-4 py-2 bg-secondary text-secondary-foreground rounded-lg hover:bg-secondary/90 transition-colors mt-3'
+          editBtn.innerHTML = `
+            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/>
+            </svg>
+            直接编辑文件
+          `
+          step3Section.querySelector('.space-y-4').appendChild(editBtn)
+        }
+
+        // Update Step 4 with PR template
+        const step4Section = Array.from(document.querySelectorAll('section')).find(section =>
+          section.querySelector('h2')?.textContent.includes('Submit Pull Request')
+        )
+        if (step4Section) {
+          const commitLi = step4Section.querySelector('li:nth-child(1)')
+          const titleLi = step4Section.querySelector('li:nth-child(2)')
+
+          if (commitLi) commitLi.textContent = `提交信息：\`${instructions.commitMessage}\``
+          if (titleLi) titleLi.textContent = `PR 标题：\`${instructions.prTitle}\``
+
+          // Add PR description with preview
+          if (instructions.prBody) {
+            const descLi = document.createElement('li')
+            descLi.innerHTML = `PR 描述：<div class="mt-2 p-3 bg-muted/50 rounded text-sm">${instructions.prBody.substring(0, 200)}${instructions.prBody.length > 200 ? '...' : ''}</div>`
+            step4Section.querySelector('ul').appendChild(descLi)
+          }
+
+          // Add create PR button
+          if (instructions.prUrl) {
+            const prBtn = document.createElement('a')
+            prBtn.href = instructions.prUrl
+            prBtn.target = '_blank'
+            prBtn.className = 'inline-flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors mt-4'
+            prBtn.innerHTML = `
+              <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"/>
+              </svg>
+              创建 Pull Request
+            `
+            step4Section.querySelector('.space-y-4').appendChild(prBtn)
+          }
+        }
+
+        // Show PR preview section with full description
+        const prPreviewSection = document.getElementById('prPreviewSection')
+        const prDescriptionPreview = document.getElementById('prDescriptionPreview')
+        if (prPreviewSection && prDescriptionPreview && instructions.prBody) {
+          prPreviewSection.classList.remove('hidden')
+          prDescriptionPreview.textContent = instructions.prBody
+        }
+
+        // Clear sessionStorage after use
+        sessionStorage.removeItem('friendApplicationData')
+        sessionStorage.removeItem('friendApplicationPrepared')
+        sessionStorage.removeItem('friendApplicationInstructions')
+
+      } catch (error) {
+        console.error('Error processing application data:', error)
+      }
+    }
+
+    // Copy template functionality
+    document.getElementById('copyTemplateBtn')?.addEventListener('click', async function() {
+      // Prioritize user's prepared content if available
+      const userYamlEntry = document.getElementById('userYamlEntry')
+      const templateContent = userYamlEntry && !userYamlEntry.parentElement.classList.contains('hidden')
+        ? userYamlEntry.textContent
+        : document.getElementById('templateContent').textContent
+
+      const originalText = this.textContent
+
+      try {
+        await navigator.clipboard.writeText(templateContent)
+        const copySuccessText = document.getElementById('copySuccessText')?.textContent || 'Copied!'
+        this.textContent = copySuccessText
+        this.classList.add('bg-green-600', 'hover:bg-green-700')
+        this.classList.remove('bg-primary', 'hover:bg-primary/90')
+
+        setTimeout(() => {
+          this.textContent = originalText
+          this.classList.remove('bg-green-600', 'hover:bg-green-700')
+          this.classList.add('bg-primary', 'hover:bg-primary/90')
+        }, 2000)
+      } catch (err) {
+        console.error('Failed to copy template:', err)
+      }
+    })
+
+    // Copy PR description functionality
+    document.getElementById('copyPRDescriptionBtn')?.addEventListener('click', async function() {
+      const prDescription = document.getElementById('prDescriptionPreview')?.textContent
+      if (!prDescription) return
+
+      const originalText = this.textContent
+
+      try {
+        await navigator.clipboard.writeText(prDescription)
+        const copySuccessText = document.getElementById('copySuccessText').textContent
+        this.textContent = copySuccessText
+        this.classList.add('bg-green-600', 'hover:bg-green-700')
+        this.classList.remove('bg-secondary', 'hover:bg-secondary/90')
+
+        setTimeout(() => {
+          this.textContent = originalText
+          this.classList.remove('bg-green-600', 'hover:bg-green-700')
+          this.classList.add('bg-secondary', 'hover:bg-secondary/90')
+        }, 2000)
+      } catch (err) {
+        console.error('Failed to copy PR description:', err)
+      }
+    })
+  </script>
+</Layout>
