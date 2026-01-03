@@ -17,26 +17,6 @@ export const POST: APIRoute = async ({ request }) => {
       )
     }
 
-    // Generate the application data
-    const fileName = `friend-application-${application.id}.json`
-    const filePath = `src/data/friend-applications/${fileName}`
-    const fileContent = JSON.stringify(application, null, 2)
-
-    // Generate the complete updated friends.yaml content
-    const fs = await import('fs')
-    const path = await import('path')
-
-    // Read existing friends.yaml (or approved.yaml as base)
-    let existingFriends = []
-    try {
-      const approvedPath = path.join(process.cwd(), 'src/data/friends/approved.yaml')
-      const approvedContent = fs.readFileSync(approvedPath, 'utf-8')
-      const yaml = await import('js-yaml')
-      existingFriends = yaml.load(approvedContent) || []
-    } catch (error) {
-      existingFriends = []
-    }
-
     // Convert application to friend format
     const newFriend = {
       id: application.id,
@@ -51,20 +31,15 @@ export const POST: APIRoute = async ({ request }) => {
       rel: 'friend'
     }
 
-    // Add to friends list
-    existingFriends.push(newFriend)
-
-    // Sort by addedAt (newest first)
-    existingFriends.sort((a, b) => new Date(b.addedAt).getTime() - new Date(a.addedAt).getTime())
-
-    // Generate YAML content
+    // Generate YAML content for the new friend only
+    // Since we can't read/write files on Cloudflare Pages, we'll generate the YAML entry
     const yaml = await import('js-yaml')
-    const updatedYamlContent = yaml.dump(existingFriends, {
+    const newFriendYaml = yaml.dump([newFriend], {
       indent: 2,
       lineWidth: -1,
       noRefs: true,
       sortKeys: false
-    })
+    }).trim()
 
     // Generate GitHub URLs and instructions
     const githubRepo = 'rownix101/Blog'
@@ -80,7 +55,7 @@ export const POST: APIRoute = async ({ request }) => {
         success: true,
         redirect: guideUrl,
         applicationData: application,
-        preparedContent: updatedYamlContent,
+        preparedContent: newFriendYaml,
         instructions: {
           forkUrl,
           editUrl,
@@ -89,7 +64,8 @@ export const POST: APIRoute = async ({ request }) => {
           filePath: 'src/data/friends/friends.yaml',
           commitMessage: `Add friend link: ${application.name}`,
           prTitle: `Add friend link: ${application.name}`,
-          prBody: generatePersonalizedPRBody(application, lang)
+          prBody: generatePersonalizedPRBody(application, lang),
+          note: 'This is a YAML entry for the new friend. Please add it to the friends.yaml file manually.'
         }
       }),
       {
