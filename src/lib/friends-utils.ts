@@ -1,61 +1,7 @@
-import type { Friend, FriendApplication, FriendsData } from '@/types/friend'
-import yaml from 'js-yaml'
-import fs from 'fs'
-import path from 'path'
-
-const friendsDataDir = path.join(process.cwd(), 'src/data/friends')
-
-function loadFriendsData(): FriendsData {
-  try {
-    // Try to read friends.yaml first (the file users will edit)
-    let friendsPath = path.join(friendsDataDir, 'friends.yaml')
-    let approved: Friend[] = []
-
-    if (fs.existsSync(friendsPath)) {
-      const friendsContent = fs.readFileSync(friendsPath, 'utf-8')
-      const friends = yaml.load(friendsContent) as Friend[]
-      approved = (friends || []).filter(friend => friend.status === 'active')
-    } else {
-      // Fallback to approved.yaml if friends.yaml doesn't exist
-      const approvedPath = path.join(friendsDataDir, 'approved.yaml')
-      const approvedContent = fs.readFileSync(approvedPath, 'utf-8')
-      approved = yaml.load(approvedContent) as Friend[]
-    }
-
-    const pendingPath = path.join(friendsDataDir, 'pending.yaml')
-    const rejectedPath = path.join(friendsDataDir, 'rejected.yaml')
-
-    const pendingContent = fs.readFileSync(pendingPath, 'utf-8')
-    const rejectedContent = fs.readFileSync(rejectedPath, 'utf-8')
-
-    const pending = yaml.load(pendingContent) as FriendApplication[]
-    const rejected = yaml.load(rejectedContent) as Array<{
-      id: string
-      name: string
-      url: string
-      description: string
-      contact: string
-      rejectedAt: string
-      reason?: string
-    }>
-
-    return {
-      approved: approved || [],
-      pending: pending || [],
-      rejected: rejected || []
-    }
-  } catch (error) {
-    console.error('Error loading friends data:', error)
-    return {
-      approved: [],
-      pending: [],
-      rejected: []
-    }
-  }
-}
+import type { Friend, FriendApplication } from '@/types/friend'
+import { friendsData } from './friends-data'
 
 export function getApprovedFriends(): Friend[] {
-  const friendsData = loadFriendsData()
   return friendsData.approved
     .filter(friend => friend.status === 'active')
     .sort((a, b) => new Date(b.addedAt).getTime() - new Date(a.addedAt).getTime())
