@@ -106,7 +106,7 @@ export default defineConfig({
       },
     },
     optimizeDeps: {
-      include: ['react', 'react-dom', 'framer-motion'],
+      include: ['react', 'react-dom'],
     },
   },
   server: {

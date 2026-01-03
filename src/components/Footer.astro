@@ -39,8 +39,8 @@ const isExternalLink = (href: string) => {
           </p>
         </div>
         <div class="w-full md:w-auto md:flex-shrink-0">
-          <ErrorBoundary client:load>
-            <Newsletter client:load />
+          <ErrorBoundary client:visible>
+            <Newsletter client:visible />
           </ErrorBoundary>
         </div>
       </div>

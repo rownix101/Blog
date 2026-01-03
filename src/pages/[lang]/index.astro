@@ -205,8 +205,8 @@ const websiteSchema = {
                 {t('home.skills_desc')}
             </p>
         </div>
-        <ErrorBoundary client:load transition:persist="skills-error-boundary">
-            <Skills client:load transition:persist="skills-section" />
+        <ErrorBoundary client:visible transition:persist="skills-error-boundary">
+            <Skills client:visible transition:persist="skills-section" />
         </ErrorBoundary>
     </section>
 
