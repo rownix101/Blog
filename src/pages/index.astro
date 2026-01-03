@@ -1,16 +1,60 @@
 ---
-// 这个页面实际不会被渲染，因为 Cloudflare Pages Function 会拦截请求
-// 但 Astro 需要它存在用于构建
-export const prerender = true
----
+// 动态处理语言重定向
+export const prerender = false
 
-<!doctype html>
-<html>
-  <head>
-    <meta charset="utf-8" />
-    <title>Redirecting...</title>
-  </head>
-  <body>
-    <p>Redirecting to your language...</p>
-  </body>
-</html>
+const supportedLanguages = ['zh-cn', 'en']
+const defaultLanguage = 'zh-cn'
+
+// 1. 检查 Cookie
+const cookieHeader = Astro.request.headers.get('Cookie')
+let targetLang = defaultLanguage
+
+if (cookieHeader) {
+  const cookies = cookieHeader.split(';').reduce((acc, cookie) => {
+    const [key, value] = cookie.trim().split('=')
+    if (key && value) {
+      acc[key] = value
+    }
+    return acc
+  }, {} as Record<string, string>)
+
+  const cookieLang = cookies['language']
+  if (cookieLang && supportedLanguages.includes(cookieLang)) {
+    targetLang = cookieLang
+  }
+} else {
+  // 2. 检查 Accept-Language
+  const acceptLanguage = Astro.request.headers.get('Accept-Language')
+  
+  if (acceptLanguage) {
+    const languages = acceptLanguage.split(',')
+      .map(lang => {
+        const [tag, weight] = lang.split(';q=')
+        return {
+          tag: tag.trim().toLowerCase(),
+          weight: weight ? parseFloat(weight) : 1.0
+        }
+      })
+      .sort((a, b) => b.weight - a.weight)
+
+    for (const { tag } of languages) {
+      if (supportedLanguages.includes(tag)) {
+        targetLang = tag
+        break
+      }
+      const prefix = tag.split('-')[0]
+      if (supportedLanguages.includes(prefix)) {
+        targetLang = prefix
+        break
+      }
+      if (prefix === 'zh') {
+        targetLang = 'zh-cn'
+        break
+      }
+    }
+  }
+}
+
+// 设置 Cookie 并重定向
+return Astro.redirect(`/${targetLang}/`, 302)
+---
