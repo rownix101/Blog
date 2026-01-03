@@ -16,6 +16,10 @@ import SocialIcons from './SocialIcons.astro'
 
 const t = useTranslations(lang as keyof typeof ui)
 const l = useLocalizedPath(lang as keyof typeof ui)
+const statusPageHref =
+  lang === 'en'
+    ? 'https://uptimeflare.rownix.dev/en'
+    : 'https://uptimeflare.rownix.dev/zh-cn'
 
 const isExternalLink = (href: string) => {
   return href.startsWith('http')
@@ -120,7 +124,7 @@ const isExternalLink = (href: string) => {
           </h4>
           <nav class="flex flex-col gap-2">
             <Link
-              href="https://uptimeflare.rownix.dev/"
+              href={statusPageHref}
               class="text-muted-foreground hover:text-primary text-sm transition-colors"
               target="_blank"
               rel="noopener noreferrer"
