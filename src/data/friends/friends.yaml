@@ -8,3 +8,14 @@
   addedAt: 2026-01-03T09:52:00.218Z
   status: active
   rel: friend
+
+- id: '------cold04-com-1767450421984'
+  name: 酷丁的主页
+  url: https://cold04.com
+  description: 电脑小白，请多包涵~
+  avatar: https://cold04.com/avatar.png
+  category: 技术
+  contact: your@mail.com
+  addedAt: '2026-01-03T14:27:01.997Z'
+  status: active
+  rel: friend
