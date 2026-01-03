@@ -1,13 +1,12 @@
 'use client'
 
-import React, { useRef, useState, useId } from 'react'
+import React, { useState, useId } from 'react'
 import { cn } from '@/lib/utils'
 
 interface InfiniteScrollProps {
   className?: string
   duration?: number
   direction?: 'normal' | 'reverse'
-  containerColor?: string
   showFade?: boolean
   children: React.ReactNode
   pauseOnHover?: boolean
@@ -17,13 +16,11 @@ export function InfiniteScroll({
   className,
   duration = 15000,
   direction = 'normal',
-  containerColor = '#ffffff',
   showFade = true,
   children,
   pauseOnHover = true,
 }: InfiniteScrollProps) {
   const [isPaused, setIsPaused] = useState(false)
-  const scrollerRef = useRef<HTMLDivElement>(null)
   
   // Use React's useId for stable SSR-compatible ID
   const id = useId().replace(/:/g, '')
@@ -57,7 +54,6 @@ export function InfiniteScroll({
       </style>
       <div className="flex">
         <div
-          ref={scrollerRef}
           className="flex shrink-0"
           style={{
             animation: `${animationName} ${duration}ms linear infinite`,
@@ -73,7 +69,6 @@ export function InfiniteScroll({
       {showFade && (
         <div
           className="from-background to-background pointer-events-none absolute inset-0 bg-linear-to-r via-transparent sm:bg-gradient-to-r"
-          style={{ '--container-color': containerColor } as React.CSSProperties}
         />
       )}
     </div>
