@@ -153,7 +153,7 @@ const description = t['friends.apply_desc'] || 'Apply to have your website featu
           </button>
         </form>
 
-        <div id="errorMessage" class="hidden mt-4 p-4 bg-destructive/10 border border-destructive/20 rounded-lg text-destructive text-sm"></div>
+        <div id="errorMessage" class="hidden mt-4 p-4 bg-destructive/10 border border-destructive/20 rounded-lg text-destructive text-sm whitespace-pre-line"></div>
         <div id="successMessage" class="hidden mt-4 p-4 bg-green-50 border border-green-200 rounded-lg text-green-800 text-sm">{t["friends.success_message"] || "Application prepared successfully! Please follow the steps below."}</div>
 
         <!-- Hidden data for JavaScript -->
@@ -258,11 +258,26 @@ const description = t['friends.apply_desc'] || 'Apply to have your website featu
     </div>
   </div>
 
-  <script define:vars={{ lang }}>
+  <script define:vars={{ 
+    lang,
+    textSubmitting: t['friends.form.submitting'] || (lang === 'zh-cn' ? '正在提交...' : 'Submitting...'),
+    textSubmit: t['friends.form.submit'] || (lang === 'zh-cn' ? '提交申请' : 'Submit Application'),
+    textError: t['friends.form.error'] || (lang === 'zh-cn' ? '提交失败，请重试。' : 'Submission failed, please try again.'),
+    errorName: t['friends.form.error_name'] || (lang === 'zh-cn' ? '站点名称至少需要2个字符' : 'Website name must be at least 2 characters'),
+    errorUrl: t['friends.form.error_url'] || (lang === 'zh-cn' ? '请输入有效的网站地址' : 'Please enter a valid website URL'),
+    errorDescription: t['friends.form.error_description'] || (lang === 'zh-cn' ? '站点描述至少需要10个字符' : 'Description must be at least 10 characters'),
+    errorContact: t['friends.form.error_contact'] || (lang === 'zh-cn' ? '请输入有效的联系邮箱' : 'Please enter a valid contact email'),
+    errorReciprocal: t['friends.form.error_reciprocal'] || (lang === 'zh-cn' ? '请确认已添加本站友链' : 'Please confirm you have added this blog link')
+  }}>
     const translations = {
-      submitting: `正在提交...`,
-      submit: `提交申请`,
-      error: `提交失败，请重试。`
+      submitting: textSubmitting,
+      submit: textSubmit,
+      error: textError,
+      errorName,
+      errorUrl,
+      errorDescription,
+      errorContact,
+      errorReciprocal
     };
 
     // 全局函数处理表单提交
@@ -289,25 +304,30 @@ const description = t['friends.apply_desc'] || 'Apply to have your website featu
           category: formData.get('category') || '',
           contact: formData.get('contact'),
           github: formData.get('github') || '',
+          reciprocal: formData.get('reciprocal') === 'on',
         }
 
         // Client-side validation
         const errors = []
 
         if (!data.name || data.name.trim().length < 2) {
-          errors.push('站点名称至少需要2个字符')
+          errors.push(translations.errorName)
         }
 
         if (!data.url || !isValidUrl(data.url)) {
-          errors.push('请输入有效的网站地址')
+          errors.push(translations.errorUrl)
         }
 
         if (!data.description || data.description.trim().length < 10) {
-          errors.push('站点描述至少需要10个字符')
+          errors.push(translations.errorDescription)
         }
 
         if (!data.contact || !isValidEmail(data.contact)) {
-          errors.push('请输入有效的联系邮箱')
+          errors.push(translations.errorContact)
+        }
+
+        if (!data.reciprocal) {
+          errors.push(translations.errorReciprocal)
         }
 
         if (errors.length > 0) {
