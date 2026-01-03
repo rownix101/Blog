@@ -18,8 +18,8 @@
 - ✅ 已添加本站友链
 - ✅ 内容健康向上
 
-### 2. 添加到 pending.yaml
-在你的 Fork 中，编辑 `src/data/friends/pending.yaml` 文件，添加以下内容：
+### 2. 添加到 friends.yaml
+在你的 Fork 中，编辑 `src/data/friends/friends.yaml` 文件，添加以下内容：
 
 ```yaml
 - id: [自动生成的唯一ID]

@@ -113,7 +113,7 @@ const templateContent = await fetch(
           <div class="flex items-center gap-3 mb-4">
             <div class="w-8 h-8 bg-primary text-primary-foreground rounded-full flex items-center justify-center font-semibold">3</div>
             <h2 class="text-xl font-semibold">
-              {t['friends.guide.step3.title'] || 'Edit pending.yaml'}
+              {t['friends.guide.step3.title'] || 'Edit friends.yaml'}
             </h2>
           </div>
           <div class="space-y-4 text-muted-foreground">
@@ -121,7 +121,7 @@ const templateContent = await fetch(
               {t['friends.guide.step3.desc1'] || 'In your forked repository, navigate to and edit the file:'}
             </p>
             <div class="bg-muted/50 rounded p-3 font-mono text-sm">
-              src/data/friends/pending.yaml
+              src/data/friends/friends.yaml
             </div>
             <p>
               {t['friends.guide.step3.desc2'] || 'Paste the template you copied and fill in your information.'}
@@ -311,7 +311,7 @@ const templateContent = await fetch(
 
         // Add direct edit button
         const step3Section = Array.from(document.querySelectorAll('section')).find(section =>
-          section.querySelector('h2')?.textContent.includes('Edit pending.yaml')
+          section.querySelector('h2')?.textContent.includes('Edit friends.yaml')
         )
         if (step3Section && instructions.editUrl) {
           const editBtn = document.createElement('a')
