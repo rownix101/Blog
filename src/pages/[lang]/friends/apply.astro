@@ -1,0 +1,445 @@
+---
+import Layout from '@/layouts/Layout.astro'
+import { getStaticPaths } from 'astro'
+import { ui, type Lang } from '@/i18n/ui'
+import { SITE } from '@/consts'
+
+export async function getStaticPaths() {
+  return [
+    { params: { lang: 'zh-cn' } },
+    { params: { lang: 'en' } }
+  ]
+}
+
+const { lang } = Astro.params
+const t = ui[lang as Lang]
+const title = `${t['friends.apply_title'] || 'Apply for Friend Link'} - ${SITE.title}`
+const description = t['friends.apply_desc'] || 'Apply to have your website featured in our friends list'
+---
+
+<Layout title={title} description={description}>
+  <div class="container max-w-2xl mx-auto px-4 py-12">
+    <header class="text-center mb-12">
+      <h1 class="text-4xl font-bold mb-4">
+        {t['friends.apply_title'] || 'Apply for Friend Link'}
+      </h1>
+      <p class="text-xl text-muted-foreground">
+        {t['friends.apply_desc'] || 'Apply to have your website featured in our friends list'}
+      </p>
+    </header>
+
+    <div class="grid gap-8 lg:grid-cols-2">
+      <!-- Application Form -->
+      <div>
+        <form id="friendApplicationForm" class="space-y-6" novalidate onsubmit="return handleFormSubmit(event)">
+          <div>
+            <label for="name" class="block text-sm font-medium mb-2">
+              {t['friends.form.name'] || 'Website Name'} *
+            </label>
+            <input
+              type="text"
+              id="name"
+              name="name"
+              required
+              class="w-full px-4 py-2 bg-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+              placeholder={t['friends.form.name_placeholder'] || 'Your website name'}
+            />
+          </div>
+
+          <div>
+            <label for="url" class="block text-sm font-medium mb-2">
+              {t['friends.form.url'] || 'Website URL'} *
+            </label>
+            <input
+              type="url"
+              id="url"
+              name="url"
+              required
+              class="w-full px-4 py-2 bg-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+              placeholder="https://example.com"
+            />
+          </div>
+
+          <div>
+            <label for="description" class="block text-sm font-medium mb-2">
+              {t['friends.form.description'] || 'Description'} *
+            </label>
+            <textarea
+              id="description"
+              name="description"
+              required
+              rows={3}
+              class="w-full px-4 py-2 bg-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+              placeholder={t['friends.form.description_placeholder'] || 'Brief description of your website'}
+            />
+          </div>
+
+          <div>
+            <label for="avatar" class="block text-sm font-medium mb-2">
+              {t['friends.form.avatar'] || 'Avatar URL'}
+            </label>
+            <input
+              type="url"
+              id="avatar"
+              name="avatar"
+              class="w-full px-4 py-2 bg-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+              placeholder="https://example.com/avatar.png"
+            />
+          </div>
+
+          <div>
+            <label for="category" class="block text-sm font-medium mb-2">
+              {t['friends.form.category'] || 'Category'}
+            </label>
+            <select
+              id="category"
+              name="category"
+              class="w-full px-4 py-2 bg-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+            >
+              <option value="">{t['friends.form.select_category'] || 'Select category'}</option>
+              <option value="技术">{t['friends.category.tech'] || 'Technology'}</option>
+              <option value="生活">{t['friends.category.life'] || 'Life'}</option>
+              <option value="学习">{t['friends.category.study'] || 'Learning'}</option>
+              <option value="设计">{t['friends.category.design'] || 'Design'}</option>
+              <option value="其他">{t['friends.category.other'] || 'Other'}</option>
+            </select>
+          </div>
+
+          <div>
+            <label for="contact" class="block text-sm font-medium mb-2">
+              {t['friends.form.contact'] || 'Contact Email'} *
+            </label>
+            <input
+              type="email"
+              id="contact"
+              name="contact"
+              required
+              class="w-full px-4 py-2 bg-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+              placeholder="your@email.com"
+            />
+          </div>
+
+          <div>
+            <label for="github" class="block text-sm font-medium mb-2">
+              {t['friends.form.github'] || 'GitHub Username'}
+            </label>
+            <input
+              type="text"
+              id="github"
+              name="github"
+              class="w-full px-4 py-2 bg-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+              placeholder="username"
+            />
+          </div>
+
+          <div class="flex items-start gap-2">
+            <input
+              type="checkbox"
+              id="reciprocal"
+              name="reciprocal"
+              required
+              class="mt-1"
+            />
+            <label for="reciprocal" class="text-sm text-muted-foreground">
+              {t['friends.form.reciprocal'] || 'I have added a link to this blog on my website'}
+            </label>
+          </div>
+
+          <button
+            type="submit"
+            class="w-full px-6 py-3 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {t['friends.form.submit'] || 'Submit Application'}
+          </button>
+        </form>
+
+        <div id="errorMessage" class="hidden mt-4 p-4 bg-destructive/10 border border-destructive/20 rounded-lg text-destructive text-sm"></div>
+        <div id="successMessage" class="hidden mt-4 p-4 bg-green-50 border border-green-200 rounded-lg text-green-800 text-sm">{t["friends.success_message"] || "Application prepared successfully! Please follow the steps below."}</div>
+
+        <!-- Hidden data for JavaScript -->
+        <div id="copySuccessText" class="hidden">{t["friends.copied"] || "Copied!"}</div>
+
+        <!-- YAML Preview Section -->
+        <div id="yamlPreview" class="hidden mt-6 p-6 bg-muted/50 border rounded-lg">
+          <h3 class="text-lg font-semibold mb-4 flex items-center gap-2">
+            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z" clip-rule="evenodd"/>
+            </svg>
+            {t['friends.yaml_preview.title'] || 'Your Application Data'}
+          </h3>
+          <p class="text-sm text-muted-foreground mb-4">
+            {t['friends.yaml_preview.desc'] || 'Here is your complete application data in YAML format. You can copy this and replace the entire content of friends.yaml file:'}
+          </p>
+          <div class="relative">
+            <pre id="yamlContent" class="bg-background border rounded-lg p-4 text-sm overflow-x-auto whitespace-pre-wrap font-mono"></pre>
+            <button
+              id="copyYamlBtn"
+              onclick="copyYaml()"
+              class="absolute top-2 right-2 px-3 py-1 bg-secondary text-secondary-foreground rounded text-sm hover:bg-secondary/90 transition-colors"
+            >
+              {t['friends.copy'] || 'Copy'}
+            </button>
+          </div>
+          <div class="mt-4 flex items-center gap-3">
+            <a
+              id="proceedToGuideBtn"
+              href=""
+              class="inline-flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors text-sm"
+            >
+              {t['friends.proceed_guide'] || 'Proceed to Guide'}
+              <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd"/>
+              </svg>
+            </a>
+            <button
+              id="editApplicationBtn"
+              onclick="editApplication()"
+              class="px-4 py-2 bg-secondary text-secondary-foreground rounded-lg hover:bg-secondary/90 transition-colors text-sm"
+            >
+              {t['friends.edit_application'] || 'Edit Application'}
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Instructions -->
+      <div>
+        <div class="sticky top-4 space-y-6">
+          <div class="p-6 bg-muted/50 rounded-lg">
+            <h2 class="text-lg font-semibold mb-4">
+              {t['friends.instructions_title'] || 'Application Instructions'}
+            </h2>
+            <ol class="space-y-3 text-sm text-muted-foreground">
+              <li class="flex gap-2">
+                <span class="flex-shrink-0 w-6 h-6 bg-primary text-primary-foreground rounded-full flex items-center justify-center text-xs font-semibold">1</span>
+                <span>{t['friends.instruction1'] || 'Fill in the form with your website information'}</span>
+              </li>
+              <li class="flex gap-2">
+                <span class="flex-shrink-0 w-6 h-6 bg-primary text-primary-foreground rounded-full flex items-center justify-center text-xs font-semibold">2</span>
+                <span>{t['friends.instruction2'] || 'Make sure you have linked back to this blog'}</span>
+              </li>
+              <li class="flex gap-2">
+                <span class="flex-shrink-0 w-6 h-6 bg-primary text-primary-foreground rounded-full flex items-center justify-center text-xs font-semibold">3</span>
+                <span>{t['friends.instruction3'] || 'Click submit to get detailed instructions'}</span>
+              </li>
+              <li class="flex gap-2">
+                <span class="flex-shrink-0 w-6 h-6 bg-primary text-primary-foreground rounded-full flex items-center justify-center text-xs font-semibold">4</span>
+                <span>{t['friends.instruction4'] || 'Fork the repository and create a Pull Request'}</span>
+              </li>
+            </ol>
+          </div>
+
+          <div class="p-6 bg-blue-50 border border-blue-200 rounded-lg">
+            <h3 class="text-sm font-semibold text-blue-900 mb-2">
+              {t['friends.requirements_title'] || 'Requirements'}
+            </h3>
+            <ul class="space-y-2 text-sm text-blue-800">
+              <li>✓ {t['friends.req.active'] || 'Website must be active and accessible'}</li>
+              <li>✓ {t['friends.req.quality'] || 'High-quality content and design'}</li>
+              <li>✓ {t['friends.req.reciprocal'] || 'Must link back to this blog'}</li>
+              <li>✓ {t['friends.req.appropriate'] || 'Appropriate and safe content'}</li>
+            </ul>
+          </div>
+
+          <div class="p-6 bg-amber-50 border border-amber-200 rounded-lg">
+            <h3 class="text-sm font-semibold text-amber-900 mb-2">
+              {t['friends.review_process_title'] || 'Review Process'}
+            </h3>
+            <p class="text-sm text-amber-800 mb-3">
+              {t['friends.review_process_desc'] || 'Applications are automatically reviewed by our systems. Most applications are processed within 24 hours.'}
+            </p>
+            <div class="text-xs text-amber-700">
+              <strong>{t['friends.alternative_title'] || 'Alternative Method:'}</strong><br>
+              {t['friends.alternative_desc'] || 'If you prefer not to fork, you can also'} <a href="https://github.com/rownix101/Blog/issues/new?assignees=&labels=friend-application&template=friend-application.md" target="_blank" class="text-amber-900 underline hover:no-underline">{t['friends.create_issue'] || 'create an issue'}</a> {t['friends.with_your_info'] || 'with your information'}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script define:vars={{ lang }}>
+    const translations = {
+      submitting: `正在提交...`,
+      submit: `提交申请`,
+      error: `提交失败，请重试。`
+    };
+
+    // 全局函数处理表单提交
+    window.handleFormSubmit = async function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+
+      const errorDiv = document.getElementById('errorMessage');
+      const successDiv = document.getElementById('successMessage');
+      const submitBtn = e.target.querySelector('button[type="submit"]');
+
+      errorDiv.classList.add('hidden');
+      successDiv.classList.add('hidden');
+      submitBtn.disabled = true;
+      submitBtn.textContent = translations.submitting;
+
+      try {
+        const formData = new FormData(e.target)
+        const data = {
+          name: formData.get('name'),
+          url: formData.get('url'),
+          description: formData.get('description'),
+          avatar: formData.get('avatar') || '',
+          category: formData.get('category') || '',
+          contact: formData.get('contact'),
+          github: formData.get('github') || '',
+        }
+
+        // Client-side validation
+        const errors = []
+
+        if (!data.name || data.name.trim().length < 2) {
+          errors.push('站点名称至少需要2个字符')
+        }
+
+        if (!data.url || !isValidUrl(data.url)) {
+          errors.push('请输入有效的网站地址')
+        }
+
+        if (!data.description || data.description.trim().length < 10) {
+          errors.push('站点描述至少需要10个字符')
+        }
+
+        if (!data.contact || !isValidEmail(data.contact)) {
+          errors.push('请输入有效的联系邮箱')
+        }
+
+        if (errors.length > 0) {
+          throw new Error(errors.join('\n'))
+        }
+
+        // Generate PR data
+        const friendId = generateFriendId(data.name, data.url)
+        const timestamp = new Date().toISOString()
+
+        const prData = {
+          id: friendId,
+          ...data,
+          submittedAt: timestamp,
+          status: 'pending',
+          applicantGithub: data.github
+        }
+
+        // Create GitHub PR
+        const response = await fetch('/api/friends/submit', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            application: prData,
+            lang: `${lang}` // Pass current language to API
+          })
+        })
+
+        if (!response.ok) {
+          throw new Error('Failed to create pull request')
+        }
+
+        const result = await response.json()
+
+        // Store all necessary data for the guide page
+        sessionStorage.setItem('friendApplicationData', JSON.stringify(result.applicationData))
+        sessionStorage.setItem('friendApplicationPrepared', JSON.stringify(result.preparedContent))
+        sessionStorage.setItem('friendApplicationInstructions', JSON.stringify(result.instructions))
+
+        // Show success message and YAML preview
+        successDiv.classList.remove('hidden')
+
+        // Show YAML preview
+        const yamlPreview = document.getElementById('yamlPreview')
+        const yamlContent = document.getElementById('yamlContent')
+        const proceedBtn = document.getElementById('proceedToGuideBtn')
+
+        if (yamlPreview && yamlContent && proceedBtn) {
+          yamlContent.textContent = result.preparedContent
+          proceedBtn.href = result.redirect
+          yamlPreview.classList.remove('hidden')
+        }
+
+        // Hide the form
+        e.target.style.display = 'none'
+
+      } catch (error) {
+        errorDiv.textContent = error.message || translations.error
+        errorDiv.classList.remove('hidden')
+      } finally {
+        submitBtn.disabled = false
+        submitBtn.textContent = translations.submit
+      }
+    };
+
+    // Helper functions
+    function generateFriendId(name, url) {
+      const timestamp = Date.now()
+      const nameSlug = name.toLowerCase().replace(/[^a-z0-9]/g, '-')
+      const urlSlug = new URL(url).hostname.replace(/[^a-z0-9]/g, '-')
+      return `${nameSlug}-${urlSlug}-${timestamp}`
+    }
+
+    function isValidUrl(url) {
+      try {
+        new URL(url)
+        return true
+      } catch {
+        return false
+      }
+    }
+
+    function isValidEmail(email) {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+      return emailRegex.test(email)
+    }
+
+    // Copy YAML functionality
+    window.copyYaml = async function() {
+      const yamlContent = document.getElementById('yamlContent')?.textContent
+      if (!yamlContent) return
+
+      const btn = document.getElementById('copyYamlBtn')
+      const originalText = btn.textContent
+
+      try {
+        await navigator.clipboard.writeText(yamlContent)
+        const copySuccessText = document.getElementById('copySuccessText').textContent
+        btn.textContent = copySuccessText
+        btn.classList.add('bg-green-600', 'hover:bg-green-700')
+        btn.classList.remove('bg-secondary', 'hover:bg-secondary/90')
+
+        setTimeout(() => {
+          btn.textContent = originalText
+          btn.classList.remove('bg-green-600', 'hover:bg-green-700')
+          btn.classList.add('bg-secondary', 'hover:bg-secondary/90')
+        }, 2000)
+      } catch (err) {
+        console.error('Failed to copy YAML:', err)
+      }
+    };
+
+    // Edit application functionality
+    window.editApplication = function() {
+      const form = document.getElementById('friendApplicationForm')
+      const yamlPreview = document.getElementById('yamlPreview')
+      const successDiv = document.getElementById('successMessage')
+
+      if (form && yamlPreview && successDiv) {
+        form.style.display = 'block'
+        yamlPreview.classList.add('hidden')
+        successDiv.classList.add('hidden')
+
+        // Reset submit button
+        const submitBtn = form.querySelector('button[type="submit"]')
+        if (submitBtn) {
+          submitBtn.disabled = false
+          submitBtn.textContent = translations.submit
+        }
+      }
+    };
+  </script>
+</Layout>
