@@ -121,7 +121,7 @@ const ogImage = image || (cleanPathname ? new URL(`/og${cleanPathname}.png`, Ast
     </>
   )}
   <!-- Prefetch search index for faster search -->
-  <link rel="prefetch" href="/api/search-index.json" as="fetch" crossorigin="anonymous" />
+  <link rel="prefetch" href="/api/search-index.json" crossorigin="anonymous" />
   
   <!-- Google Analytics -->
   {ANALYTICS.google && (
