@@ -33,7 +33,7 @@ export default defineConfig({
     // Configure for Cloudflare compatibility
     domains: ['www.rownix.dev'],
   },
-  output: 'static',
+  output: 'hybrid',
   adapter: cloudflare({
     // Disable session features for static blog
     enableSessions: false,
