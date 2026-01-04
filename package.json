@@ -22,15 +22,16 @@
     "shadcn-ui"
   ],
   "scripts": {
-    "dev": "npm run build-friends-data && astro dev",
-    "start": "npm run build-friends-data && astro dev",
-    "build": "npm run build-friends-data && astro build",
+    "dev": "bun run build-friends-data && astro dev",
+    "start": "bun run build-friends-data && astro dev",
+    "build": "bun run build-friends-data && astro build",
     "preview": "astro preview",
     "astro": "astro",
     "prettier": "prettier --write **/*.{ts,tsx,css,astro} --ignore-path .gitignore",
     "postinstall": "patch-package",
     "build-friends-data": "node scripts/build-friends-data.js"
   },
+  "packageManager": "bun@1.1.38",
   "dependencies": {
     "@astrojs/check": "^0.9.5",
     "@astrojs/cloudflare": "^12.6.12",
