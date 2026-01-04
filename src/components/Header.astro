@@ -7,9 +7,9 @@ const { lang = 'zh-cn' } = Astro.props as Props
 
 import LanguageSwitcher from '@/components/LanguageSwitcher.astro'
 import Link from '@/components/Link.astro'
-import SearchButton from '@/components/react/SearchButton'
+import SearchButton from '@/components/SearchButton.astro'
 import ThemeToggle from '@/components/ThemeToggle.astro'
-import MobileMenu from '@/components/ui/mobile-menu'
+import MobileMenu from '@/components/MobileMenu.astro'
 import { NAV_LINKS } from '@/consts'
 import { ui } from '@/i18n/ui'
 import { useLocalizedPath, useTranslations } from '@/i18n/utils'
@@ -91,9 +91,9 @@ const isExternalLink = (href: string) => {
       </nav>
       <div class="bg-border/60 hidden h-6 w-px md:block" aria-hidden="true">
       </div>
-      <SearchButton client:idle lang={lang} />
+      <SearchButton lang={lang} />
       <LanguageSwitcher />
-      <MobileMenu client:idle lang={lang} transition:persist />
+      <MobileMenu lang={lang} />
       <ThemeToggle transition:persist />
     </div>
   </div>

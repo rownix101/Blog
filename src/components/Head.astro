@@ -17,6 +17,10 @@ const {
   lang = 'zh-cn'
 } = Astro.props
 
+const enableViewTransitions =
+  import.meta.env.DEV ||
+  import.meta.env.PUBLIC_ENABLE_VIEW_TRANSITIONS === 'true'
+
 const canonicalURL = new URL(Astro.url.pathname, Astro.site).href
 const cleanPathname = Astro.url.pathname.replace(/\/$/, '')
 const ogImage = image || (cleanPathname ? new URL(`/og${cleanPathname}.png`, Astro.site).href : new URL('/og-default.png', Astro.site).href)
@@ -133,7 +137,7 @@ const ogImage = image || (cleanPathname ? new URL(`/og${cleanPathname}.png`, Ast
     </>
   )}
   
-  <ClientRouter />
+  {enableViewTransitions && <ClientRouter />}
   <!-- Umami Analytics -->
   {UMAMI.websiteId && (
     <script is:inline defer src="https://cloud.umami.is/script.js" define:vars={{ websiteId: UMAMI.websiteId }} data-website-id={UMAMI.websiteId}></script>

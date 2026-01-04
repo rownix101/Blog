@@ -103,6 +103,8 @@ try {
 
 <Layout hideFloatingSidebar={hasChildPosts || isCurrentSubpost} lang={lang}>
     <PostHead slot="head" post={post} />
+    <link rel="dns-prefetch" href="https://giscus.app" slot="head" />
+    <link rel="preconnect" href="https://giscus.app" crossorigin slot="head" />
     <meta name="giscus:backlink" content={Astro.url.origin + Astro.url.pathname} slot="head" />
     {
         (hasChildPosts || isCurrentSubpost) && (

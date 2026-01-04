@@ -1,0 +1,72 @@
+---
+import { buttonVariants } from '@/components/ui/button'
+import { Icon } from 'astro-icon/components'
+
+interface Props {
+  lang?: string
+}
+
+const { lang = 'zh-cn' } = Astro.props
+const buttonClass =
+  buttonVariants({ variant: 'outline', size: 'icon' }) +
+  ' size-9 border md:border-0 md:bg-transparent md:hover:bg-muted md:-my-2 md:-me-2 md:size-8'
+---
+
+<button
+  type="button"
+  class={buttonClass}
+  data-search-button
+  title="Search (⌘K)"
+  aria-label="Search blog posts"
+  aria-haspopup="dialog"
+>
+  <Icon name="lucide:search" class="h-5 w-5 md:h-4 md:w-4" />
+  <span class="sr-only">Search</span>
+</button>
+
+<script is:inline define:vars={{ lang }}>
+  ;(function () {
+    let searchApiPromise
+    const isTypingTarget = (target) =>
+      target &&
+      (target.tagName === 'INPUT' ||
+        target.tagName === 'TEXTAREA' ||
+        target.isContentEditable)
+
+    const openSearch = async () => {
+      if (!searchApiPromise) {
+        searchApiPromise = import('@/components/react/search-client').then(
+          (mod) => mod.initSearchDialog({ lang }),
+        )
+      }
+      const api = await searchApiPromise
+      api.open()
+    }
+
+    const bindButton = () => {
+      const button = document.querySelector('[data-search-button]')
+      if (!button || button.dataset.searchBound) return
+      button.dataset.searchBound = 'true'
+      button.addEventListener('click', () => {
+        openSearch()
+      })
+    }
+
+    bindButton()
+    document.addEventListener('astro:after-swap', bindButton)
+
+    if (!window.__searchDialogInit) {
+      window.__searchDialogInit = true
+      window.addEventListener('keydown', (e) => {
+        if (
+          (e.metaKey || e.ctrlKey) &&
+          e.key === 'k' &&
+          !isTypingTarget(e.target)
+        ) {
+          e.preventDefault()
+          openSearch()
+        }
+      })
+    }
+  })()
+</script>
