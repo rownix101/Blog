@@ -24,7 +24,7 @@ const buttonClass =
   <span class="sr-only">Search</span>
 </button>
 
-<script is:inline define:vars={{ lang }}>
+<script define:vars={{ lang }}>
   ;(function () {
     let searchApiPromise
     const isTypingTarget = (target) =>
@@ -35,7 +35,7 @@ const buttonClass =
 
     const openSearch = async () => {
       if (!searchApiPromise) {
-        searchApiPromise = import('@/components/react/search-client').then(
+        searchApiPromise = import('/src/components/react/search-client').then(
           (mod) => mod.initSearchDialog({ lang }),
         )
       }

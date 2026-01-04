@@ -143,5 +143,70 @@ const ogImage = image || (cleanPathname ? new URL(`/og${cleanPathname}.png`, Ast
     <script is:inline defer src="https://cloud.umami.is/script.js" define:vars={{ websiteId: UMAMI.websiteId }} data-website-id={UMAMI.websiteId}></script>
   )}
 
+  <script is:inline>
+    ;(() => {
+      if (
+        !('HTMLScriptElement' in window) ||
+        typeof HTMLScriptElement.supports !== 'function' ||
+        !HTMLScriptElement.supports('speculationrules')
+      ) {
+        return
+      }
+
+      const rules = { prerender: [{ source: 'list', urls: [] }] }
+      let rulesScript
+
+      const applyRules = () => {
+        if (rulesScript) rulesScript.remove()
+        rulesScript = document.createElement('script')
+        rulesScript.type = 'speculationrules'
+        rulesScript.textContent = JSON.stringify(rules)
+        document.head.appendChild(rulesScript)
+      }
+
+      applyRules()
+
+      const seen = new Set()
+      const dnsPrefetchOrigins = new Set()
+      const currentPath = window.location.pathname + window.location.search
+
+      const addUrl = (url) => {
+        if (!url || seen.has(url) || url === currentPath) return
+        seen.add(url)
+        rules.prerender[0].urls.push(url)
+        applyRules()
+      }
+
+      document.addEventListener('pointerover', (event) => {
+        const target = event.target
+        if (!(target instanceof Element)) return
+
+        const link = target.closest('a')
+        if (!link) return
+        if (link.hasAttribute('download')) return
+        if (link.target && link.target !== '_self') return
+
+        const href = link.getAttribute('href')
+        if (!href || href.startsWith('#')) return
+
+        const url = new URL(link.href, window.location.href)
+        if (url.origin === window.location.origin) {
+          addUrl(url.pathname + url.search)
+          return
+        }
+
+        if ((link.getAttribute('rel') || '').split(/\s+/).includes('friend')) {
+          if (!dnsPrefetchOrigins.has(url.origin)) {
+            dnsPrefetchOrigins.add(url.origin)
+            const hint = document.createElement('link')
+            hint.rel = 'dns-prefetch'
+            hint.href = url.origin
+            document.head.appendChild(hint)
+          }
+        }
+      })
+    })()
+  </script>
+
   <slot />
 </head>
