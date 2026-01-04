@@ -24,6 +24,7 @@
   "scripts": {
     "dev": "bun run build-friends-data && astro dev",
     "start": "bun run build-friends-data && astro dev",
+    "prebuild": "bun install --frozen-lockfile",
     "build": "bun run build-friends-data && astro build",
     "preview": "astro preview",
     "astro": "astro",
