@@ -63,24 +63,33 @@ const templateContent = await fetch(
                 {t['friends.copy'] || 'Copy'}
               </button>
             </div>
-            <pre class="bg-background border rounded p-3 text-sm overflow-x-auto"><code id="templateContent">- id: [自动生成的唯一ID]
+            <pre class="bg-background border rounded p-3 text-sm overflow-x-auto"><code id="templateContent">{lang === 'zh-cn'
+  ? `- id: [自动生成的唯一ID]
   name: [你的网站名称]
   url: [你的网站地址]
   description: [网站描述]
   avatar: [头像链接，可选]
-  category: [分类]
+  category: [分类，可选]
   contact: [联系邮箱]
-  submittedAt: [提交时间，ISO格式]
-  status: pending
-  applicantGithub: [GitHub用户名，可选]</code></pre>
-            {lang === 'zh-cn' && (
-              <div id="prefilledTemplate" class="hidden">
-                <p class="text-sm text-muted-foreground mb-2">
-                  {t['friends.guide.your_data'] || '你的申请数据已预填充：'}
-                </p>
-                <pre class="bg-green-50 border border-green-200 rounded p-3 text-sm overflow-x-auto"><code id="userYamlEntry"></code></pre>
-              </div>
-            )}
+  addedAt: [ISO 时间]
+  status: active
+  rel: friend`
+  : `- id: [auto-generated-unique-id]
+  name: [your website name]
+  url: [your website url]
+  description: [short description]
+  avatar: [avatar url, optional]
+  category: [category, optional]
+  contact: [contact email]
+  addedAt: [ISO timestamp]
+  status: active
+  rel: friend`}</code></pre>
+            <div id="prefilledTemplate" class="hidden">
+              <p class="text-sm text-muted-foreground mb-2">
+                {t['friends.guide.your_data'] || (lang === 'zh-cn' ? '你的申请数据已预填充：' : 'Your application data is ready:')}
+              </p>
+              <pre class="bg-emerald-50 border border-emerald-200 text-emerald-900 dark:bg-emerald-950/40 dark:border-emerald-900/60 dark:text-emerald-100 rounded p-3 text-sm overflow-x-auto"><code id="userYamlEntry"></code></pre>
+            </div>
           </div>
         </section>
 
@@ -145,8 +154,32 @@ const templateContent = await fetch(
             <ul class="space-y-2 list-disc list-inside">
               <li>{t['friends.guide.step4.commit'] || 'Commit message: `Add friend link: [Your Website Name]`'}</li>
               <li>{t['friends.guide.step4.pr_title'] || 'PR title: `Add friend link: [Your Website Name]`'}</li>
-              <li>{t['friends.guide.step4.pr_desc'] || 'PR description: Brief introduction of your website'}</li>
             </ul>
+            <div id="prCopyBlock" class="hidden bg-muted/50 rounded-lg p-4 text-sm">
+              <div class="flex items-center justify-between mb-2">
+                <span class="font-medium">{lang === 'zh-cn' ? '可直接复制的 PR 内容' : 'Copy-ready PR content'}</span>
+              </div>
+              <div class="space-y-3">
+                <div>
+                  <div class="text-xs text-muted-foreground mb-1">PR Title</div>
+                  <div class="flex items-start gap-2">
+                    <pre id="prTitleText" class="flex-1 bg-background border rounded p-2 text-xs whitespace-pre-wrap"></pre>
+                    <button id="copyPrTitleBtn" class="px-2 py-1 bg-secondary text-secondary-foreground rounded text-xs hover:bg-secondary/90 transition-colors">
+                      {t['friends.copy'] || 'Copy'}
+                    </button>
+                  </div>
+                </div>
+                <div>
+                  <div class="text-xs text-muted-foreground mb-1">PR Body</div>
+                  <div class="flex items-start gap-2">
+                    <pre id="prBodyText" class="flex-1 bg-background border rounded p-2 text-xs whitespace-pre-wrap"></pre>
+                    <button id="copyPrBodyBtn" class="px-2 py-1 bg-secondary text-secondary-foreground rounded text-xs hover:bg-secondary/90 transition-colors">
+                      {t['friends.copy'] || 'Copy'}
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </section>
 
@@ -238,12 +271,6 @@ const templateContent = await fetch(
             >
               {t['friends.create_issue'] || 'Create an Issue'}
             </a>
-            <a
-              href={`/${lang}/friends/apply`}
-              class="block text-primary hover:underline"
-            >
-              {t['friends.back_to_apply'] || 'Back to Application Form'}
-            </a>
           </div>
         </div>
       </div>
@@ -254,13 +281,11 @@ const templateContent = await fetch(
     // Check for application data from sessionStorage
     const storedData = sessionStorage.getItem('friendApplicationData')
     const storedPrepared = sessionStorage.getItem('friendApplicationPrepared')
-    const storedInstructions = sessionStorage.getItem('friendApplicationInstructions')
 
-    if (storedData && storedPrepared && storedInstructions) {
+    if (storedData && storedPrepared) {
       try {
         const applicationData = JSON.parse(storedData)
         const preparedContent = JSON.parse(storedPrepared)
-        const instructions = JSON.parse(storedInstructions)
 
         // Update page title to show it's for their application
         const titleElement = document.querySelector('h1')
@@ -274,11 +299,11 @@ const templateContent = await fetch(
         // Update Step 1 to show their prepared content
         const prefilledSection = document.getElementById('prefilledTemplate')
         const userYamlEntry = document.getElementById('userYamlEntry')
-        const templateSection = document.querySelector('#templateContent').closest('section')
+        const templateBlock = document.getElementById('templateContent')?.closest('pre')
+        const templateSection = document.querySelector('#templateContent')?.closest('section')
 
         if (prefilledSection && userYamlEntry && templateSection) {
-          // Hide the generic template section
-          templateSection.style.display = 'none'
+          if (templateBlock) templateBlock.style.display = 'none'
 
           // Show their prepared content section
           prefilledSection.classList.remove('hidden')
@@ -297,82 +322,50 @@ const templateContent = await fetch(
           }
         }
 
-        // Update Step 2 with direct fork link
-        const forkBtn = document.querySelector('a[href*="github.com/fork"]')
-        if (forkBtn && instructions.forkUrl) {
-          forkBtn.href = instructions.forkUrl
-        }
+        // Build PR title/body for copy
+        const prCopyBlock = document.getElementById('prCopyBlock')
+        const prTitleText = document.getElementById('prTitleText')
+        const prBodyText = document.getElementById('prBodyText')
+        const copyTitleBtn = document.getElementById('copyPrTitleBtn')
+        const copyBodyBtn = document.getElementById('copyPrBodyBtn')
 
-        // Update Step 3 with file path and edit link
-        const filePathElement = document.querySelector('.font-mono')
-        if (filePathElement && instructions.filePath) {
-          filePathElement.textContent = instructions.filePath
-        }
+        if (prCopyBlock && prTitleText && prBodyText) {
+          prCopyBlock.classList.remove('hidden')
+          const siteName = applicationData.name || 'My Site'
+          const prTitle = `Add friend link: ${siteName}`
+          const prBody = [
+            '## Friend Link Application',
+            '',
+            `- Website: ${applicationData.name || ''}`,
+            `- URL: ${applicationData.url || ''}`,
+            `- Description: ${applicationData.description || ''}`,
+            `- Category: ${applicationData.category || ''}`,
+            `- Contact: ${applicationData.contact || ''}`,
+            '',
+            '```yaml',
+            preparedContent,
+            '```',
+          ].join('\n')
 
-        // Add direct edit button
-        const step3Section = Array.from(document.querySelectorAll('section')).find(section =>
-          section.querySelector('h2')?.textContent.includes('Edit friends.yaml')
-        )
-        if (step3Section && instructions.editUrl) {
-          const editBtn = document.createElement('a')
-          editBtn.href = instructions.editUrl
-          editBtn.target = '_blank'
-          editBtn.className = 'inline-flex items-center gap-2 px-4 py-2 bg-secondary text-secondary-foreground rounded-lg hover:bg-secondary/90 transition-colors mt-3'
-          editBtn.innerHTML = `
-            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/>
-            </svg>
-            直接编辑文件
-          `
-          step3Section.querySelector('.space-y-4').appendChild(editBtn)
-        }
+          prTitleText.textContent = prTitle
+          prBodyText.textContent = prBody
 
-        // Update Step 4 with PR template
-        const step4Section = Array.from(document.querySelectorAll('section')).find(section =>
-          section.querySelector('h2')?.textContent.includes('Submit Pull Request')
-        )
-        if (step4Section) {
-          const commitLi = step4Section.querySelector('li:nth-child(1)')
-          const titleLi = step4Section.querySelector('li:nth-child(2)')
-
-          if (commitLi) commitLi.textContent = `提交信息：\`${instructions.commitMessage}\``
-          if (titleLi) titleLi.textContent = `PR 标题：\`${instructions.prTitle}\``
-
-          // Add PR description with preview
-          if (instructions.prBody) {
-            const descLi = document.createElement('li')
-            descLi.innerHTML = `PR 描述：<div class="mt-2 p-3 bg-muted/50 rounded text-sm">${instructions.prBody.substring(0, 200)}${instructions.prBody.length > 200 ? '...' : ''}</div>`
-            step4Section.querySelector('ul').appendChild(descLi)
+          if (copyTitleBtn) {
+            copyTitleBtn.addEventListener('click', async () => {
+              await navigator.clipboard.writeText(prTitle)
+            })
           }
 
-          // Add create PR button
-          if (instructions.prUrl) {
-            const prBtn = document.createElement('a')
-            prBtn.href = instructions.prUrl
-            prBtn.target = '_blank'
-            prBtn.className = 'inline-flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors mt-4'
-            prBtn.innerHTML = `
-              <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"/>
-              </svg>
-              创建 Pull Request
-            `
-            step4Section.querySelector('.space-y-4').appendChild(prBtn)
+          if (copyBodyBtn) {
+            copyBodyBtn.addEventListener('click', async () => {
+              await navigator.clipboard.writeText(prBody)
+            })
           }
-        }
-
-        // Show PR preview section with full description
-        const prPreviewSection = document.getElementById('prPreviewSection')
-        const prDescriptionPreview = document.getElementById('prDescriptionPreview')
-        if (prPreviewSection && prDescriptionPreview && instructions.prBody) {
-          prPreviewSection.classList.remove('hidden')
-          prDescriptionPreview.textContent = instructions.prBody
         }
 
         // Clear sessionStorage after use
         sessionStorage.removeItem('friendApplicationData')
         sessionStorage.removeItem('friendApplicationPrepared')
-        sessionStorage.removeItem('friendApplicationInstructions')
 
       } catch (error) {
         console.error('Error processing application data:', error)

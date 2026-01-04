@@ -3,6 +3,8 @@ import { getAllPosts } from '@/lib/data-utils'
 
 export const prerender = true
 
+const MAX_CONTENT_CHARS = 800
+
 export const GET: APIRoute = async () => {
   try {
     const posts = await getAllPosts()
@@ -15,6 +17,7 @@ export const GET: APIRoute = async () => {
         .replace(/<[^>]+>/g, ' ')
         .replace(/\s+/g, ' ')
         .trim()
+        .slice(0, MAX_CONTENT_CHARS)
 
       return {
         id: post.id || '',
@@ -24,8 +27,8 @@ export const GET: APIRoute = async () => {
         tags: post.data.tags || [],
         authors: post.data.authors || [],
         url: `/blog/${post.id}`,
-        // Include full content for better search results
-        content: textContent, // Full content for indexing
+        // Include trimmed content to keep the index lightweight
+        content: textContent,
       }
     })
 
@@ -48,4 +51,3 @@ export const GET: APIRoute = async () => {
     })
   }
 }
-

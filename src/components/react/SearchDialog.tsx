@@ -239,7 +239,7 @@ const SearchDialog: React.FC<SearchDialogProps> = ({ open, onOpenChange, lang = 
       setError(null)
 
       try {
-        const response = await fetch(`/api/search-index/${lang}.json`)
+        const response = await fetch('/api/search-index.json')
         if (!response.ok) throw new Error('Failed to load search index')
         const data: SearchResult[] = await response.json()
 
