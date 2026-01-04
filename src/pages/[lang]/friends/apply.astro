@@ -31,7 +31,7 @@ const description = t['friends.apply_desc'] || 'Apply to have your website featu
     <div class="grid gap-8 lg:grid-cols-2">
       <!-- Application Form -->
       <div>
-        <form id="friendApplicationForm" class="space-y-6" novalidate onsubmit="return handleFormSubmit(event)">
+        <form id="friendApplicationForm" class="space-y-6" novalidate>
           <div>
             <label for="name" class="block text-sm font-medium mb-2">
               {t['friends.form.name'] || 'Website Name'} *
@@ -146,60 +146,21 @@ const description = t['friends.apply_desc'] || 'Apply to have your website featu
           </div>
 
           <button
-            type="submit"
+            type="button"
+            id="copyYamlBtn"
+            onclick="copyYaml()"
             class="w-full px-6 py-3 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {t['friends.form.submit'] || 'Submit Application'}
+            {t['friends.copy_yaml'] || (lang === 'zh-cn' ? '一键复制 YAML' : 'Copy YAML')}
           </button>
         </form>
 
         <div id="errorMessage" class="hidden mt-4 p-4 bg-destructive/10 border border-destructive/20 rounded-lg text-destructive text-sm whitespace-pre-line"></div>
-        <div id="successMessage" class="hidden mt-4 p-4 bg-green-50 border border-green-200 rounded-lg text-green-800 text-sm">{t["friends.success_message"] || "Application prepared successfully! Please follow the steps below."}</div>
+        <div id="successMessage" class="hidden mt-4 p-4 bg-green-50 border border-green-200 rounded-lg text-green-800 text-sm">{t["friends.success_message"] || (lang === 'zh-cn' ? '已复制到剪贴板。下一步请添加到 friends.yaml 并提交 PR。' : 'Copied to clipboard. Next, add to friends.yaml and open a PR.')}</div>
 
         <!-- Hidden data for JavaScript -->
         <div id="copySuccessText" class="hidden">{t["friends.copied"] || "Copied!"}</div>
 
-        <!-- YAML Preview Section -->
-        <div id="yamlPreview" class="hidden mt-6 p-6 bg-muted/50 border rounded-lg">
-          <h3 class="text-lg font-semibold mb-4 flex items-center gap-2">
-            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-              <path fill-rule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4z" clip-rule="evenodd"/>
-            </svg>
-            {t['friends.yaml_preview.title'] || 'Your Application Data'}
-          </h3>
-          <p class="text-sm text-muted-foreground mb-4">
-            {t['friends.yaml_preview.desc'] || 'Here is your complete application data in YAML format. You can copy this and replace the entire content of friends.yaml file:'}
-          </p>
-          <div class="relative">
-            <pre id="yamlContent" class="bg-background border rounded-lg p-4 text-sm overflow-x-auto whitespace-pre-wrap font-mono"></pre>
-            <button
-              id="copyYamlBtn"
-              onclick="copyYaml()"
-              class="absolute top-2 right-2 px-3 py-1 bg-secondary text-secondary-foreground rounded text-sm hover:bg-secondary/90 transition-colors"
-            >
-              {t['friends.copy'] || 'Copy'}
-            </button>
-          </div>
-          <div class="mt-4 flex items-center gap-3">
-            <a
-              id="proceedToGuideBtn"
-              href=""
-              class="inline-flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors text-sm"
-            >
-              {t['friends.proceed_guide'] || 'Proceed to Guide'}
-              <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                <path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd"/>
-              </svg>
-            </a>
-            <button
-              id="editApplicationBtn"
-              onclick="editApplication()"
-              class="px-4 py-2 bg-secondary text-secondary-foreground rounded-lg hover:bg-secondary/90 transition-colors text-sm"
-            >
-              {t['friends.edit_application'] || 'Edit Application'}
-            </button>
-          </div>
-        </div>
       </div>
 
       <!-- Instructions -->
@@ -220,11 +181,11 @@ const description = t['friends.apply_desc'] || 'Apply to have your website featu
               </li>
               <li class="flex gap-2">
                 <span class="flex-shrink-0 w-6 h-6 bg-primary text-primary-foreground rounded-full flex items-center justify-center text-xs font-semibold">3</span>
-                <span>{t['friends.instruction3'] || 'Click submit to get detailed instructions'}</span>
+                <span>{t['friends.instruction3'] || (lang === 'zh-cn' ? '复制 YAML 片段并检查预览' : 'Copy the YAML snippet and review the preview')}</span>
               </li>
               <li class="flex gap-2">
                 <span class="flex-shrink-0 w-6 h-6 bg-primary text-primary-foreground rounded-full flex items-center justify-center text-xs font-semibold">4</span>
-                <span>{t['friends.instruction4'] || 'Fork the repository and create a Pull Request'}</span>
+                <span>{t['friends.instruction4'] || (lang === 'zh-cn' ? '将 YAML 添加到 friends.yaml 并提交 PR' : 'Add it to friends.yaml and open a PR')}</span>
               </li>
             </ol>
           </div>
@@ -260,153 +221,115 @@ const description = t['friends.apply_desc'] || 'Apply to have your website featu
 
   <script define:vars={{ 
     lang,
-    textSubmitting: t['friends.form.submitting'] || (lang === 'zh-cn' ? '正在提交...' : 'Submitting...'),
-    textSubmit: t['friends.form.submit'] || (lang === 'zh-cn' ? '提交申请' : 'Submit Application'),
-    textError: t['friends.form.error'] || (lang === 'zh-cn' ? '提交失败，请重试。' : 'Submission failed, please try again.'),
     errorName: t['friends.form.error_name'] || (lang === 'zh-cn' ? '站点名称至少需要2个字符' : 'Website name must be at least 2 characters'),
     errorUrl: t['friends.form.error_url'] || (lang === 'zh-cn' ? '请输入有效的网站地址' : 'Please enter a valid website URL'),
     errorDescription: t['friends.form.error_description'] || (lang === 'zh-cn' ? '站点描述至少需要10个字符' : 'Description must be at least 10 characters'),
     errorContact: t['friends.form.error_contact'] || (lang === 'zh-cn' ? '请输入有效的联系邮箱' : 'Please enter a valid contact email'),
-    errorReciprocal: t['friends.form.error_reciprocal'] || (lang === 'zh-cn' ? '请确认已添加本站友链' : 'Please confirm you have added this blog link')
+    errorReciprocal: t['friends.form.error_reciprocal'] || (lang === 'zh-cn' ? '请确认已添加本站友链' : 'Please confirm you have added this blog link'),
+    errorAvatar: t['friends.form.error_avatar'] || (lang === 'zh-cn' ? '头像链接格式无效' : 'Avatar URL is invalid'),
+    previewEmpty: t['friends.yaml_preview.empty'] || (lang === 'zh-cn' ? '填写表单以生成 YAML 预览。' : 'Fill in the form to generate the YAML preview.')
   }}>
     const translations = {
-      submitting: textSubmitting,
-      submit: textSubmit,
-      error: textError,
       errorName,
       errorUrl,
       errorDescription,
       errorContact,
-      errorReciprocal
-    };
+      errorReciprocal,
+      errorAvatar,
+      previewEmpty
+    }
 
-    // 全局函数处理表单提交
-    window.handleFormSubmit = async function(e) {
-      e.preventDefault();
-      e.stopPropagation();
-
-      const errorDiv = document.getElementById('errorMessage');
-      const successDiv = document.getElementById('successMessage');
-      const submitBtn = e.target.querySelector('button[type="submit"]');
-
-      errorDiv.classList.add('hidden');
-      successDiv.classList.add('hidden');
-      submitBtn.disabled = true;
-      submitBtn.textContent = translations.submitting;
-
-      try {
-        const formData = new FormData(e.target)
-        const data = {
-          name: formData.get('name'),
-          url: formData.get('url'),
-          description: formData.get('description'),
-          avatar: formData.get('avatar') || '',
-          category: formData.get('category') || '',
-          contact: formData.get('contact'),
-          github: formData.get('github') || '',
-          reciprocal: formData.get('reciprocal') === 'on',
-        }
-
-        // Client-side validation
-        const errors = []
-
-        if (!data.name || data.name.trim().length < 2) {
-          errors.push(translations.errorName)
-        }
-
-        if (!data.url || !isValidUrl(data.url)) {
-          errors.push(translations.errorUrl)
-        }
-
-        if (!data.description || data.description.trim().length < 10) {
-          errors.push(translations.errorDescription)
-        }
-
-        if (!data.contact || !isValidEmail(data.contact)) {
-          errors.push(translations.errorContact)
-        }
-
-        if (!data.reciprocal) {
-          errors.push(translations.errorReciprocal)
-        }
-
-        if (errors.length > 0) {
-          throw new Error(errors.join('\n'))
-        }
-
-        // Generate PR data
-        const friendId = generateFriendId(data.name, data.url)
-        const timestamp = new Date().toISOString()
-
-        const prData = {
-          id: friendId,
-          ...data,
-          submittedAt: timestamp,
-          status: 'pending',
-          applicantGithub: data.github
-        }
-
-        // Create GitHub PR
-        const response = await fetch('/api/friends/submit', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            application: prData,
-            lang: `${lang}` // Pass current language to API
-          })
-        })
-
-        if (!response.ok) {
-          throw new Error('Failed to create pull request')
-        }
-
-        const result = await response.json()
-
-        // Store all necessary data for the guide page
-        sessionStorage.setItem('friendApplicationData', JSON.stringify(result.applicationData))
-        sessionStorage.setItem('friendApplicationPrepared', JSON.stringify(result.preparedContent))
-        sessionStorage.setItem('friendApplicationInstructions', JSON.stringify(result.instructions))
-
-        // Show success message and YAML preview
-        successDiv.classList.remove('hidden')
-
-        // Show YAML preview
-        const yamlPreview = document.getElementById('yamlPreview')
-        const yamlContent = document.getElementById('yamlContent')
-        const proceedBtn = document.getElementById('proceedToGuideBtn')
-
-        if (yamlPreview && yamlContent && proceedBtn) {
-          yamlContent.textContent = result.preparedContent
-          proceedBtn.href = result.redirect
-          yamlPreview.classList.remove('hidden')
-        }
-
-        // Hide the form
-        e.target.style.display = 'none'
-
-      } catch (error) {
-        errorDiv.textContent = error.message || translations.error
-        errorDiv.classList.remove('hidden')
-      } finally {
-        submitBtn.disabled = false
-        submitBtn.textContent = translations.submit
-      }
-    };
+    const form = document.getElementById('friendApplicationForm')
+    const errorDiv = document.getElementById('errorMessage')
+    const successDiv = document.getElementById('successMessage')
+    const copyBtn = document.getElementById('copyYamlBtn')
+    const copySuccessText =
+      document.getElementById('copySuccessText')?.textContent || 'Copied!'
+    const createdAt = new Date().toISOString()
+    const idSeed = Date.now()
+    let hasInteracted = false
 
     // Helper functions
     function generateFriendId(name, url) {
-      const timestamp = Date.now()
-      const nameSlug = name.toLowerCase().replace(/[^a-z0-9]/g, '-')
-      const urlSlug = new URL(url).hostname.replace(/[^a-z0-9]/g, '-')
-      return `${nameSlug}-${urlSlug}-${timestamp}`
+      const nameSlug = (name || 'your-site').toLowerCase().replace(/[^a-z0-9]/g, '-')
+      const urlSlug = (url || 'example.com').replace(/^https?:\/\//, '').split('/')[0].replace(/[^a-z0-9]/g, '-')
+      return `${nameSlug}-${urlSlug}-${idSeed}`
     }
 
-    function isValidUrl(url) {
+    function normalizeSiteUrl(value) {
+      const trimmed = (value || '').trim()
+      if (!trimmed) return ''
+      if (/^https?:\/\//i.test(trimmed)) return trimmed
+      return `https://${trimmed}`
+    }
+
+    function normalizeAssetUrl(value) {
+      const trimmed = (value || '').trim()
+      if (!trimmed) return ''
+      if (/^(data:|blob:)/i.test(trimmed)) return trimmed
+      if (trimmed.startsWith('/')) return trimmed
+      if (/^https?:\/\//i.test(trimmed)) return trimmed
+      return `https://${trimmed}`
+    }
+
+    function escapeYamlString(value) {
+      return (value || '')
+        .replace(/\\/g, '\\\\')
+        .replace(/"/g, '\\"')
+        .replace(/\n/g, ' ')
+        .trim()
+    }
+
+    function buildYaml(data) {
+      const lines = [
+        `- id: "${escapeYamlString(data.id)}"`,
+        `  name: "${escapeYamlString(data.name)}"`,
+        `  url: "${escapeYamlString(data.url)}"`,
+        `  description: "${escapeYamlString(data.description)}"`,
+      ]
+
+      if (data.avatar) {
+        lines.push(`  avatar: "${escapeYamlString(data.avatar)}"`)
+      }
+
+      if (data.category) {
+        lines.push(`  category: "${escapeYamlString(data.category)}"`)
+      }
+
+      lines.push(`  contact: "${escapeYamlString(data.contact)}"`)
+      lines.push(`  addedAt: "${createdAt}"`)
+      lines.push('  status: active')
+      lines.push('  rel: friend')
+      return lines.join('\n')
+    }
+
+    function getFormValues() {
+      if (!form) return null
+      const formData = new FormData(form)
+      const rawUrl = (formData.get('url') || '').toString()
+      const rawAvatar = (formData.get('avatar') || '').toString()
+      const url = normalizeSiteUrl(rawUrl)
+      const avatar = normalizeAssetUrl(rawAvatar)
+      const data = {
+        name: (formData.get('name') || '').toString().trim(),
+        url,
+        description: (formData.get('description') || '').toString().trim(),
+        avatar: avatar || '',
+        category: (formData.get('category') || '').toString().trim(),
+        contact: (formData.get('contact') || '').toString().trim(),
+        github: (formData.get('github') || '').toString().trim(),
+        reciprocal: formData.get('reciprocal') === 'on',
+      }
+      return {
+        ...data,
+        id: generateFriendId(data.name, data.url),
+      }
+    }
+
+    function isValidHttpUrl(url) {
       try {
-        new URL(url)
-        return true
+        const parsed = new URL(url)
+        return parsed.protocol === 'http:' || parsed.protocol === 'https:'
       } catch {
         return false
       }
@@ -417,49 +340,137 @@ const description = t['friends.apply_desc'] || 'Apply to have your website featu
       return emailRegex.test(email)
     }
 
+    function validateData(data) {
+      const errors = []
+
+      if (!data.name || data.name.trim().length < 2) {
+        errors.push(translations.errorName)
+      }
+
+      if (!data.url || !isValidHttpUrl(data.url)) {
+        errors.push(translations.errorUrl)
+      }
+
+      if (!data.description || data.description.trim().length < 10) {
+        errors.push(translations.errorDescription)
+      }
+
+      if (!data.contact || !isValidEmail(data.contact)) {
+        errors.push(translations.errorContact)
+      }
+
+      if (data.avatar) {
+        const isRelativeAvatar = data.avatar.startsWith('/')
+        const isDataAvatar = data.avatar.startsWith('data:')
+        const isBlobAvatar = data.avatar.startsWith('blob:')
+        if (!isRelativeAvatar && !isDataAvatar && !isBlobAvatar && !isValidHttpUrl(data.avatar)) {
+          errors.push(translations.errorAvatar)
+        }
+      }
+
+      if (!data.reciprocal) {
+        errors.push(translations.errorReciprocal)
+      }
+
+      return errors
+    }
+
+    function hasAnyData(data) {
+      return (
+        data.name ||
+        data.url ||
+        data.description ||
+        data.avatar ||
+        data.category ||
+        data.contact ||
+        data.github
+      )
+    }
+
+    function updatePreview() {
+      if (!form) return
+      const data = getFormValues()
+      if (!data) return
+
+      if (!data.reciprocal) {
+        if (copyBtn) copyBtn.disabled = true
+        return
+      }
+
+      const errors = validateData(data)
+
+      if (hasInteracted) {
+        if (errors.length > 0) {
+          if (errorDiv) {
+            errorDiv.textContent = errors.join('\n')
+            errorDiv.classList.remove('hidden')
+          }
+        } else {
+          if (errorDiv) errorDiv.classList.add('hidden')
+        }
+      }
+
+      if (copyBtn) {
+        copyBtn.disabled = errors.length > 0
+      }
+    }
+
+    function handleInputChange() {
+      hasInteracted = true
+      if (successDiv) successDiv.classList.add('hidden')
+      updatePreview()
+    }
+
+    if (form) {
+      const fields = form.querySelectorAll('input, textarea, select')
+      fields.forEach((field) => {
+        field.addEventListener('input', handleInputChange)
+        field.addEventListener('blur', handleInputChange)
+      })
+      form.addEventListener('submit', (event) => {
+        event.preventDefault()
+        window.copyYaml()
+      })
+    }
+
+    updatePreview()
+
     // Copy YAML functionality
     window.copyYaml = async function() {
-      const yamlContent = document.getElementById('yamlContent')?.textContent
-      if (!yamlContent) return
+      hasInteracted = true
+      updatePreview()
 
-      const btn = document.getElementById('copyYamlBtn')
-      const originalText = btn.textContent
+      const data = getFormValues()
+      if (!data) return
+      const errors = validateData(data)
 
+      if (errors.length > 0) {
+        if (errorDiv) {
+          errorDiv.textContent = errors.join('\n')
+          errorDiv.classList.remove('hidden')
+        }
+        if (successDiv) successDiv.classList.add('hidden')
+        return
+      }
+
+      const yamlText = buildYaml(data)
       try {
-        await navigator.clipboard.writeText(yamlContent)
-        const copySuccessText = document.getElementById('copySuccessText').textContent
-        btn.textContent = copySuccessText
-        btn.classList.add('bg-green-600', 'hover:bg-green-700')
-        btn.classList.remove('bg-secondary', 'hover:bg-secondary/90')
-
-        setTimeout(() => {
-          btn.textContent = originalText
-          btn.classList.remove('bg-green-600', 'hover:bg-green-700')
-          btn.classList.add('bg-secondary', 'hover:bg-secondary/90')
-        }, 2000)
+        await navigator.clipboard.writeText(yamlText)
+        sessionStorage.setItem('friendApplicationData', JSON.stringify(data))
+        sessionStorage.setItem('friendApplicationPrepared', JSON.stringify(yamlText))
+        if (successDiv) successDiv.classList.remove('hidden')
+        if (copyBtn) {
+          const originalText = copyBtn.textContent
+          copyBtn.textContent = copySuccessText
+          setTimeout(() => {
+            copyBtn.textContent = originalText
+          }, 2000)
+        }
+        window.location.href = `/${lang}/friends/guide`
       } catch (err) {
         console.error('Failed to copy YAML:', err)
       }
-    };
+    }
 
-    // Edit application functionality
-    window.editApplication = function() {
-      const form = document.getElementById('friendApplicationForm')
-      const yamlPreview = document.getElementById('yamlPreview')
-      const successDiv = document.getElementById('successMessage')
-
-      if (form && yamlPreview && successDiv) {
-        form.style.display = 'block'
-        yamlPreview.classList.add('hidden')
-        successDiv.classList.add('hidden')
-
-        // Reset submit button
-        const submitBtn = form.querySelector('button[type="submit"]')
-        if (submitBtn) {
-          submitBtn.disabled = false
-          submitBtn.textContent = translations.submit
-        }
-      }
-    };
   </script>
 </Layout>

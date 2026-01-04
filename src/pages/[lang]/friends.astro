@@ -72,7 +72,7 @@ const description = t['friends.page_desc'] || 'Discover amazing blogs and websit
     {filteredFriends.length > 0 ? (
       <div class="grid gap-4 md:grid-cols-2">
         {filteredFriends.map(friend => (
-          <FriendCard friend={friend} client:visible />
+          <FriendCard friend={friend} />
         ))}
       </div>
     ) : (
