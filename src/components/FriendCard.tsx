@@ -4,7 +4,27 @@ interface FriendCardProps {
   friend: Friend
 }
 
+function resolveAvatarSrc(avatar?: string): string | undefined {
+  if (!avatar) return undefined
+  if (avatar.startsWith('/') || avatar.startsWith('data:') || avatar.startsWith('blob:')) {
+    return avatar
+  }
+
+  try {
+    const avatarUrl = new URL(avatar)
+    if (avatarUrl.protocol === 'http:' || avatarUrl.protocol === 'https:') {
+      return `/api/image-proxy?url=${encodeURIComponent(avatar)}`
+    }
+  } catch {
+    return avatar
+  }
+
+  return avatar
+}
+
 export default function FriendCard({ friend }: FriendCardProps) {
+  const avatarSrc = resolveAvatarSrc(friend.avatar)
+
   return (
     <a
       href={friend.url}
@@ -14,10 +34,12 @@ export default function FriendCard({ friend }: FriendCardProps) {
     >
       <div className="flex items-start gap-4">
         <div className="flex-shrink-0">
-          {friend.avatar ? (
+          {avatarSrc ? (
             <img
-              src={friend.avatar}
+              src={avatarSrc}
               alt={friend.name}
+              loading="lazy"
+              decoding="async"
               className="w-12 h-12 rounded-lg object-cover bg-muted"
               onError={(e) => {
                 const target = e.target as HTMLImageElement
