@@ -13,6 +13,14 @@ export function getStaticPaths() {
 const { lang } = Astro.params
 const t = useTranslations(lang as keyof typeof ui)
 
+const sponsors = [
+    {
+        name: '晚',
+        amount: '$10',
+        message: '',
+    },
+]
+
 // Sponsorship Schema for SEO
 const sponsorSchema = {
     '@context': 'https://schema.org',
@@ -488,21 +496,47 @@ const sponsorSchema = {
 
                 <!-- Current Sponsors Display -->
                 <div class="space-y-4">
-                    <div class="text-center text-muted-foreground py-8">
-                        <svg
-                            class="mx-auto mb-4 h-12 w-12 opacity-50"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            stroke-width="2"
-                        >
-                            <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
-                            <path d="M2 17l10 5 10-5M2 12l10 5 10-5"></path>
-                        </svg>
-                        <p class="text-sm">
-                            {lang === 'zh-cn' ? '暂无赞助者，成为第一个支持者吧！' : 'No sponsors yet, be the first one!'}
-                        </p>
-                    </div>
+                    {
+                        sponsors.length ? (
+                            <div class="grid gap-4 sm:grid-cols-2">
+                                {sponsors.map((sponsor) => (
+                                    <div class="bg-muted/40 rounded-lg border border-border/60 p-4">
+                                        <div class="flex items-center justify-between gap-4">
+                                            <span class="font-medium">
+                                                {sponsor.name}
+                                            </span>
+                                            <span class="text-muted-foreground text-sm">
+                                                {sponsor.amount}
+                                            </span>
+                                        </div>
+                                        {sponsor.message && (
+                                            <p class="text-muted-foreground mt-2 text-sm">
+                                                {sponsor.message}
+                                            </p>
+                                        )}
+                                    </div>
+                                ))}
+                            </div>
+                        ) : (
+                            <div class="text-center text-muted-foreground py-8">
+                                <svg
+                                    class="mx-auto mb-4 h-12 w-12 opacity-50"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    stroke-width="2"
+                                >
+                                    <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+                                    <path d="M2 17l10 5 10-5M2 12l10 5 10-5"></path>
+                                </svg>
+                                <p class="text-sm">
+                                    {lang === 'zh-cn'
+                                        ? '暂无赞助者，成为第一个支持者吧！'
+                                        : 'No sponsors yet, be the first one!'}
+                                </p>
+                            </div>
+                        )
+                    }
                 </div>
             </div>
 
