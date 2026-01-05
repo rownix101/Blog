@@ -3,7 +3,7 @@ import type { IconMap, SocialLink, Site } from '@/types'
 export const SITE: Site = {
   title: "Rownix's Blog",
   description:
-    'A brief description of your blog. This will be used in meta tags and social sharing.',
+    '我们将努力为您呈现最好的内容',
   href: 'https://www.rownix.dev',
   author: 'rownix101',
   locale: 'en-US',
@@ -98,8 +98,8 @@ export const ICON_MAP: IconMap = {
   Website: 'lucide:globe',
   GitHub: 'lucide:github',
   LinkedIn: 'lucide:linkedin',
-  X: 'lucide:x',
-  Twitter: 'lucide:x',
+  X: 'simple-icons:x',
+  Twitter: 'simple-icons:x',
   Email: 'lucide:mail',
   RSS: 'lucide:rss',
 }

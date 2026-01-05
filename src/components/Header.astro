@@ -32,27 +32,9 @@ const isExternalLink = (href: string) => {
       class="flex shrink-0 items-center gap-2 text-xl font-medium"
       reload
     >
-      <img
-        src="/static/logo.svg"
-        alt="Logo"
-        class="hidden size-8 dark:block"
-        width="32"
-        height="32"
-        loading="eager"
-        fetchpriority="high"
-        transition:persist="logo-dark"
-      />
-      <img
-        src="/static/logod.svg"
-        alt="Logo"
-        class="block size-8 dark:hidden"
-        width="32"
-        height="32"
-        loading="eager"
-        fetchpriority="high"
-        transition:persist="logo-light"
-      />
-      <!-- <span class="hidden min-[400px]:block">{SITE.title}</span> -->
+      <span class="text-2xl font-handwriting tracking-wide">
+        Rownix's Blog
+      </span>
     </Link>
     <div class="flex items-center gap-2 md:gap-4">
       <nav class="hidden items-center gap-4 text-sm sm:gap-6 md:flex">

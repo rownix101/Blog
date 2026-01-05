@@ -1,5 +1,6 @@
 ---
 import { SITE, ANALYTICS, UMAMI } from '@/consts'
+import { defaultLang, languages } from '@/i18n/ui'
 import { ClientRouter } from 'astro:transitions'
 import Favicons from './Favicons.astro'
 
@@ -24,6 +25,44 @@ const enableViewTransitions =
 const canonicalURL = new URL(Astro.url.pathname, Astro.site).href
 const cleanPathname = Astro.url.pathname.replace(/\/$/, '')
 const ogImage = image || (cleanPathname ? new URL(`/og${cleanPathname}.png`, Astro.site).href : new URL('/og-default.png', Astro.site).href)
+const availableLangs = Object.keys(languages)
+const currentPath = Astro.url.pathname
+const currentSegments = currentPath.split('/').filter(Boolean)
+const currentLang = currentSegments[0]
+const hasLangPrefix = currentLang && availableLangs.includes(currentLang)
+const ogLocale =
+  lang === 'zh-cn'
+    ? 'zh_CN'
+    : lang === 'en'
+      ? 'en_US'
+      : SITE.locale.replace('-', '_')
+const webPageSchema = {
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  "name": title,
+  "description": description,
+  "url": canonicalURL,
+  "inLanguage": lang,
+  "isPartOf": {
+    "@type": "WebSite",
+    "@id": `${SITE.href}#website`
+  }
+}
+const websiteSchema = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "@id": `${SITE.href}#website`,
+  "name": SITE.title,
+  "url": SITE.href,
+  "description": SITE.description,
+  "inLanguage": lang
+}
+const authorSchema = {
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "name": SITE.author,
+  "url": SITE.href
+}
 ---
 
 <head>
@@ -52,6 +91,7 @@ const ogImage = image || (cleanPathname ? new URL(`/og${cleanPathname}.png`, Ast
     const desc = description && description.length > 160 ? `${description.slice(0, 157)}…` : description
     return <meta name="description" content={desc} />
   })()}
+  <meta name="author" content={SITE.author} />
   <link rel="canonical" href={canonicalURL} />
 
   <!-- Open Graph / Facebook -->
@@ -63,8 +103,11 @@ const ogImage = image || (cleanPathname ? new URL(`/og${cleanPathname}.png`, Ast
     return <meta property="og:description" content={desc} />
   })()}
   <meta property="og:image" content={ogImage} />
+  <meta property="og:image:alt" content={title} />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
+  <meta property="og:site_name" content={SITE.title} />
+  <meta property="og:locale" content={ogLocale} />
 
   <!-- Twitter -->
   <meta name="twitter:card" content="summary_large_image" />
@@ -104,6 +147,57 @@ const ogImage = image || (cleanPathname ? new URL(`/og${cleanPathname}.png`, Ast
     title={`${SITE.title} (${lang})`}
     href={new URL(`${lang}/rss.xml`, Astro.site)}
   />
+  {hasLangPrefix && (
+    <>
+      {availableLangs.map((locale) => {
+        const localizedPath = currentPath.replace(
+          new RegExp(`^/${currentLang}`),
+          `/${locale}`,
+        )
+        const hreflang = locale === 'zh-cn' ? 'zh-CN' : locale
+        return (
+          <link
+            rel="alternate"
+            hreflang={hreflang}
+            href={new URL(localizedPath, Astro.site).href}
+          />
+        )
+      })}
+      <link
+        rel="alternate"
+        hreflang="x-default"
+        href={
+          new URL(
+            currentPath.replace(
+              new RegExp(`^/${currentLang}`),
+              `/${defaultLang}`,
+            ),
+            Astro.site,
+          ).href
+        }
+      />
+      {availableLangs
+        .filter((locale) => locale !== lang)
+        .map((locale) => {
+          const localizedPath = currentPath.replace(
+            new RegExp(`^/${currentLang}`),
+            `/${locale}`,
+          )
+          const ogAltLocale =
+            locale === 'zh-cn'
+              ? 'zh_CN'
+              : locale === 'en'
+                ? 'en_US'
+                : locale
+          return (
+            <meta
+              property="og:locale:alternate"
+              content={ogAltLocale}
+            />
+          )
+        })}
+    </>
+  )}
 
   <Favicons />
   
@@ -112,6 +206,8 @@ const ogImage = image || (cleanPathname ? new URL(`/og${cleanPathname}.png`, Ast
   <link rel="preload" href="/fonts/GeistMonoVF.woff2" as="font" type="font/woff2" crossorigin="anonymous" />
   
   <!-- Resource Hints for Performance -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   {ANALYTICS.google && (
     <>
       <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
@@ -142,6 +238,20 @@ const ogImage = image || (cleanPathname ? new URL(`/og${cleanPathname}.png`, Ast
   {UMAMI.websiteId && (
     <script is:inline defer src="https://cloud.umami.is/script.js" define:vars={{ websiteId: UMAMI.websiteId }} data-website-id={UMAMI.websiteId}></script>
   )}
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400..700&display=swap"
+    rel="stylesheet"
+  />
+
+  <script
+    type="application/ld+json"
+    is:inline
+    set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@graph": [websiteSchema, authorSchema, webPageSchema]
+    })}
+  />
 
   <script is:inline>
     ;(() => {

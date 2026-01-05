@@ -169,6 +169,9 @@ try {
                     alt={post.data.title}
                     width={1200}
                     height={630}
+                    loading="eager"
+                    fetchpriority="high"
+                    decoding="async"
                     class="col-span-full mx-auto w-full max-w-5xl object-cover"
                 />
             )
@@ -291,7 +294,7 @@ try {
             )
         }
 
-        <article class="prose col-start-2 max-w-none">
+        <article class="prose col-start-2 max-w-none content-visibility-auto">
             <Content />
         </article>
 
