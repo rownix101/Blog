@@ -44,6 +44,15 @@
   font-display: optional;
 }
 
+.content-visibility-auto {
+  content-visibility: auto;
+  contain-intrinsic-size: 1px 1000px;
+}
+
+.font-handwriting {
+  font-family: 'Dancing Script', cursive;
+}
+
 :root {
   --background: hsl(0 0% 100%);
   --header-background: hsl(0 0% 89%);
@@ -244,4 +253,3 @@
 .pt-safe {
   padding-top: env(safe-area-inset-top, 0.75rem);
 }
-

@@ -40,6 +40,8 @@ export default function FriendCard({ friend }: FriendCardProps) {
               alt={friend.name}
               loading="lazy"
               decoding="async"
+              width={48}
+              height={48}
               className="w-12 h-12 rounded-lg object-cover bg-muted"
               onError={(e) => {
                 const target = e.target as HTMLImageElement
