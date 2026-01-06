@@ -20,7 +20,9 @@ export const ANALYTICS = {
 // Umami Analytics
 // Configure via environment variable: PUBLIC_UMAMI_WEBSITE_ID
 export const UMAMI = {
-  websiteId: import.meta.env.PUBLIC_UMAMI_WEBSITE_ID || '',
+  websiteId:
+    import.meta.env.PUBLIC_UMAMI_WEBSITE_ID ||
+    '22fac2db-2da8-4086-baad-b20d1c35a380',
 }
 
 // Vercel KV for likes and caching
