@@ -1,117 +1,76 @@
-import { InfiniteScroll } from './InfiniteScroll'
 import { getIcon } from './SkillsIconLoader'
 
-// Types for technologies
-type Category = {
+type FocusSkill = {
   text: string
   logo: string
+  badgeClassName: string
+  iconClassName: string
 }
 
-type Technologies = {
-  'Systems & Virtualization': Category[]
-  'Networking & Security': Category[]
-  'Automation & Orchestration': Category[]
-  'Cloud & Infrastructure': Category[]
-  'Monitoring & Tools': Category[]
-}
-
-// Technologies based on CV
-const technologies: Technologies = {
-  'Systems & Virtualization': [
-    { text: 'Linux', logo: 'simple-icons:linux' },
-    { text: 'Ubuntu', logo: 'mdi:ubuntu' },
-    { text: 'Debian', logo: 'simple-icons:debian' },
-    { text: 'Windows Server', logo: 'mdi:windows' },
-    { text: 'Proxmox', logo: 'simple-icons:proxmox' },
-    { text: 'Docker', logo: 'mdi:docker' },
-    { text: 'Kubernetes', logo: 'mdi:kubernetes' },
-    { text: 'XEN', logo: 'lucide:box' },
-  ],
-  'Networking & Security': [
-    { text: 'CISCO', logo: 'simple-icons:cisco' },
-    { text: 'pfSense', logo: 'simple-icons:pfsense' },
-    { text: 'Fortinet', logo: 'simple-icons:fortinet' },
-    { text: 'Palo Alto', logo: 'simple-icons:paloaltonetworks' },
-    { text: 'StrongSwan', logo: 'lucide:wifi' },
-    { text: 'VLAN', logo: 'lucide:network' },
-    { text: 'CyberArk', logo: 'lucide:lock' },
-    { text: 'Nessus', logo: 'lucide:shield' },
-  ],
-  'Automation & Orchestration': [
-    { text: 'Ansible', logo: 'simple-icons:ansible' },
-    { text: 'Terraform', logo: 'simple-icons:terraform' },
-    { text: 'Puppet', logo: 'simple-icons:puppet' },
-    { text: 'SALT', logo: 'simple-icons:saltproject' },
-    { text: 'Bash', logo: 'lucide:terminal' },
-    { text: 'Git', logo: 'mdi:git' },
-    { text: 'Flux', logo: 'simple-icons:flux' },
-    { text: 'Rancher', logo: 'simple-icons:rancher' },
-  ],
-  'Cloud & Infrastructure': [
-    { text: 'AWS', logo: 'lucide:cloud' },
-    { text: 'Oracle Cloud', logo: 'simple-icons:oracle' },
-    { text: 'Cloudflare', logo: 'simple-icons:cloudflare' },
-    { text: 'InfiniBand', logo: 'lucide:network' },
-    { text: 'PBS Scheduler', logo: 'lucide:server' },
-    { text: 'ManageIQ', logo: 'lucide:cloud-cog' },
-    { text: 'Talos Linux', logo: 'lucide:box' },
-    { text: 'Cilium CNI', logo: 'simple-icons:cilium' },
-  ],
-  'Monitoring & Tools': [
-    { text: 'Portainer', logo: 'simple-icons:portainer' },
-    { text: 'BAREOS', logo: 'lucide:hard-drive' },
-    { text: 'Asterisk', logo: 'simple-icons:asterisk' },
-    { text: 'Apache', logo: 'simple-icons:apache' },
-    { text: 'Nginx', logo: 'simple-icons:nginx' },
-    { text: 'MySQL', logo: 'simple-icons:mysql' },
-    { text: 'WordPress', logo: 'simple-icons:wordpress' },
-    { text: 'cPanel', logo: 'simple-icons:cpanel' },
-  ],
-}
-
-const categories = Object.keys(technologies)
-const groupSize = Math.ceil(categories.length / 3)
-const categoryGroups = [
-  categories.slice(0, groupSize),
-  categories.slice(groupSize, groupSize * 2),
-  categories.slice(groupSize * 2),
+const focusSkills: FocusSkill[] = [
+  {
+    text: 'Linux',
+    logo: 'simple-icons:linux',
+    badgeClassName:
+      '-rotate-2 translate-y-1 border-emerald-500/25 text-emerald-800 dark:text-emerald-200',
+    iconClassName: 'bg-emerald-500/10 text-emerald-700 dark:text-emerald-200',
+  },
+  {
+    text: 'Kubernetes',
+    logo: 'simple-icons:kubernetes',
+    badgeClassName:
+      'rotate-1 -translate-y-1 border-sky-500/25 text-sky-800 dark:text-sky-200',
+    iconClassName: 'bg-sky-500/10 text-sky-700 dark:text-sky-200',
+  },
+  {
+    text: 'Terraform',
+    logo: 'simple-icons:terraform',
+    badgeClassName:
+      '-rotate-1 translate-y-2 border-indigo-500/25 text-indigo-800 dark:text-indigo-200',
+    iconClassName:
+      'bg-indigo-500/10 text-indigo-700 dark:text-indigo-200',
+  },
+  {
+    text: 'Cloudflare',
+    logo: 'simple-icons:cloudflare',
+    badgeClassName:
+      'rotate-2 translate-y-0 border-orange-500/25 text-orange-800 dark:text-orange-200',
+    iconClassName:
+      'bg-orange-500/10 text-orange-700 dark:text-orange-200',
+  },
+  {
+    text: 'Automation',
+    logo: 'lucide:sparkles',
+    badgeClassName:
+      '-rotate-3 -translate-y-2 border-rose-500/25 text-rose-800 dark:text-rose-200',
+    iconClassName: 'bg-rose-500/10 text-rose-700 dark:text-rose-200',
+  },
 ]
 
 const Skills: React.FC = () => {
   return (
-    <div className="z-30 mt-12 flex w-full flex-col max-w-[calc(100vw-5rem)] mx-auto lg:max-w-full">
-      <div className="space-y-2">
-        {categoryGroups.map((group, groupIndex) => (
-          <InfiniteScroll
-            key={groupIndex}
-            duration={50000}
-            direction={groupIndex % 2 === 0 ? 'normal' : 'reverse'}
-            showFade={true}
-            className="flex flex-row justify-center"
-          >
-            {group.flatMap((category) =>
-              technologies[category as keyof Technologies].map(
-                (tech: Category, techIndex: number) => {
-                  const IconComponent = getIcon(tech.logo)
-                  return (
-                    <div
-                      key={`${category}-${techIndex}`}
-                      className="tech-badge repo-card border-border bg-card text-muted-foreground mr-5 flex items-center gap-3 rounded-full border p-3 shadow-sm backdrop-blur-sm transition-all duration-300 hover:shadow-md"
-                      data-tech-name={`${category}-${techIndex}`}
-                    >
-                      <span className="bg-muted flex h-10 w-10 items-center justify-center rounded-full p-2 text-lg shadow-inner">
-                        <IconComponent className="tech-icon text-primary" />
-                      </span>
-                      <span className="text-foreground font-medium">
-                        {tech.text}
-                      </span>
-                    </div>
-                  )
-                },
-              ),
-            )}
-          </InfiniteScroll>
-        ))}
+    <div className="z-30 mt-10 flex w-full flex-col">
+      <div className="relative mx-auto w-full max-w-xl">
+        <div className="absolute -left-6 -top-4 h-16 w-16 rounded-full bg-primary/10 blur-2xl" />
+        <div className="absolute -right-8 bottom-0 h-20 w-20 rounded-full bg-decorative/20 blur-2xl" />
+        <div className="relative flex flex-wrap items-center gap-3 md:gap-4">
+          {focusSkills.map((skill) => {
+            const IconComponent = getIcon(skill.logo)
+            return (
+              <div
+                key={skill.text}
+                className={`flex items-center gap-2 rounded-md border border-dashed px-3 py-2 text-sm font-medium shadow-none transition-all duration-300 hover:-translate-y-0.5 hover:rotate-1 ${skill.badgeClassName}`}
+              >
+                <span
+                  className={`flex h-7 w-7 items-center justify-center rounded-sm ${skill.iconClassName}`}
+                >
+                  <IconComponent className="size-4" />
+                </span>
+                <span>{skill.text}</span>
+              </div>
+            )
+          })}
+        </div>
       </div>
     </div>
   )
