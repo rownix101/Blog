@@ -1,0 +1,123 @@
+---
+interface Props {
+  variant?: 'blob' | 'line' | 'dots' | 'corner'
+  position?: 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right'
+  color?: 'primary' | 'decorative' | 'muted'
+  size?: 'sm' | 'md' | 'lg'
+  class?: string
+}
+
+const {
+  variant = 'blob',
+  position = 'top-right',
+  color = 'primary',
+  size = 'md',
+  class: className = '',
+} = Astro.props
+
+const positionClasses = {
+  'top-left': '-top-8 -left-8',
+  'top-right': '-top-8 -right-8',
+  'bottom-left': '-bottom-8 -left-8',
+  'bottom-right': '-bottom-8 -right-8',
+}
+
+const colorClasses = {
+  primary: 'bg-primary/15',
+  decorative: 'bg-decorative/20',
+  muted: 'bg-muted-foreground/10',
+}
+
+const sizeClasses = {
+  sm: 'h-16 w-16',
+  md: 'h-24 w-24',
+  lg: 'h-32 w-32',
+}
+
+const blurClasses = {
+  sm: 'blur-xl',
+  md: 'blur-2xl',
+  lg: 'blur-3xl',
+}
+---
+
+{
+  variant === 'blob' && (
+    <div
+      class:list={[
+        'pointer-events-none absolute rounded-full',
+        positionClasses[position],
+        colorClasses[color],
+        sizeClasses[size],
+        blurClasses[size],
+        className,
+      ]}
+      aria-hidden="true"
+    />
+  )
+}
+
+{
+  variant === 'line' && (
+    <div
+      class:list={[
+        'pointer-events-none absolute h-0.5 w-24',
+        'bg-gradient-to-r from-primary/60 via-decorative/40 to-transparent',
+        '-rotate-3',
+        positionClasses[position],
+        className,
+      ]}
+      aria-hidden="true"
+    />
+  )
+}
+
+{
+  variant === 'dots' && (
+    <div
+      class:list={[
+        'pointer-events-none absolute flex gap-1.5',
+        positionClasses[position],
+        className,
+      ]}
+      aria-hidden="true"
+    >
+      <span class="bg-primary/40 h-1.5 w-1.5 rounded-full" />
+      <span class="bg-decorative/50 h-1.5 w-1.5 rounded-full" />
+      <span class="bg-primary/30 h-1.5 w-1.5 rounded-full" />
+    </div>
+  )
+}
+
+{
+  variant === 'corner' && (
+    <div
+      class:list={[
+        'pointer-events-none absolute',
+        positionClasses[position],
+        className,
+      ]}
+      aria-hidden="true"
+    >
+      <svg
+        width="32"
+        height="32"
+        viewBox="0 0 32 32"
+        fill="none"
+        class="text-primary/30"
+      >
+        <path
+          d="M0 0L32 0L32 4L4 4L4 32L0 32L0 0Z"
+          fill="currentColor"
+          class={
+            position.includes('right')
+              ? 'origin-center -scale-x-100'
+              : position.includes('bottom')
+                ? '-scale-y-100'
+                : ''
+          }
+        />
+      </svg>
+    </div>
+  )
+}
