@@ -86,54 +86,69 @@ const websiteSchema = {
         set:html={JSON.stringify(websiteSchema)}
     />
 
-    <!-- Hero Section -->
+    <!-- Hero Section - Creative / Indie Style -->
     <section
-        class="relative overflow-hidden rounded-xl border"
-        style="min-height: clamp(280px, 40vh, 400px);"
+        class="relative overflow-visible py-8 md:py-16"
+        style="min-height: clamp(320px, 45vh, 480px);"
     >
-        <!-- Gradient Background -->
+        <!-- Decorative Elements with float animation -->
         <div
-            class="from-primary/5 via-background to-background absolute inset-0 bg-gradient-to-br"
+            class="animate-float-slow bg-decorative/20 absolute -top-8 -right-12 h-32 w-32 rounded-full blur-3xl"
+            aria-hidden="true"
+        >
+        </div>
+        <div
+            class="animate-float bg-primary/10 absolute -bottom-4 -left-8 h-24 w-24 rounded-full blur-2xl"
             aria-hidden="true"
         >
         </div>
 
         <!-- Content -->
-        <div class="relative z-10 p-8 md:p-12">
-            <div class="flex flex-col gap-8">
+        <div class="relative z-10">
+            <div class="flex flex-col gap-10">
                 <!-- Main Content -->
-                <div class="min-w-0 flex-1 space-y-6">
-                    <!-- Heading -->
-                    <div
-                        class="space-y-4"
-                        style="min-height: clamp(120px, 20vh, 180px);"
-                    >
-                        <h1
-                            class="text-4xl leading-[1.1] font-bold tracking-tight sm:text-5xl md:text-6xl"
-                            style="font-variation-settings: 'wght' 700;"
-                        >
-                            {t('home.welcome')}<br class="hidden sm:block" />
-                            <span class="text-primary">{SITE.title}</span>
+                <div class="min-w-0 flex-1 space-y-8">
+                    <!-- Heading with offset/rotation effect + entrance animation -->
+                    <div class="space-y-2">
+                        <h1 class="relative">
+                            <span
+                                class="animate-on-load animate-fade-in-up text-foreground/80 block text-4xl leading-[1.1] font-bold tracking-tight sm:text-5xl md:text-6xl -rotate-[0.5deg]"
+                            >
+                                {t('home.welcome')}
+                            </span>
+                            <span
+                                class="animate-on-load animate-fade-in-up delay-100 text-primary relative mt-1 block text-5xl leading-[1.1] font-bold tracking-tight sm:text-6xl md:text-7xl translate-x-1 rotate-[0.5deg] sm:translate-x-2"
+                            >
+                                {SITE.title}
+                                <!-- Decorative underline -->
+                                <span
+                                    class="from-primary/60 via-decorative/80 to-primary/20 absolute -bottom-2 left-0 h-1 w-3/4 -rotate-1 bg-gradient-to-r"
+                                    aria-hidden="true"></span>
+                            </span>
                         </h1>
                         <p
-                            class="text-muted-foreground mt-4 max-w-xl text-base leading-relaxed md:text-lg"
-                            style="min-height: 3rem;"
+                            class="animate-on-load animate-fade-in-up delay-200 text-muted-foreground mt-6 max-w-lg text-base leading-relaxed md:text-lg md:pl-1"
                         >
                             {t('home.description')}
                         </p>
                     </div>
 
-                    <!-- CTA Buttons -->
-                    <div class="flex flex-wrap items-center gap-3 pt-2">
+                    <!-- CTA Buttons with slight offset + entrance animation -->
+                    <div
+                        class="animate-on-load animate-fade-in-up delay-300 flex flex-wrap items-center gap-3 md:pl-1"
+                    >
                         <Link
                             href={l('/blog')}
                             class={buttonVariants({
                                 variant: 'default',
                                 size: 'lg',
-                            })}
+                            }) + ' group'}
                         >
                             {t('home.read_blog')}
-                            <Icon name="lucide:arrow-right" class="size-4" />
+                            <Icon
+                                name="lucide:arrow-right"
+                                class="size-4 transition-transform group-hover:translate-x-0.5"
+                            />
                         </Link>
                         <Link
                             href={l('/about')}
@@ -146,8 +161,8 @@ const websiteSchema = {
                         </Link>
                     </div>
 
-                    <!-- Social Icons -->
-                    <div class="pt-2">
+                    <!-- Social Icons + entrance animation -->
+                    <div class="animate-on-load animate-fade-in-up delay-400 md:pl-1">
                         <ul
                             class="flex flex-wrap items-center gap-2"
                             role="list"
@@ -156,7 +171,10 @@ const websiteSchema = {
                                 SOCIAL_LINKS.map(
                                     ({ href, label }: SocialLink) => {
                                         // Handle RSS link with language-specific path
-                                        const finalHref = label === 'RSS' ? `/${lang}/rss.xml` : href
+                                        const finalHref =
+                                            label === 'RSS'
+                                                ? `/${lang}/rss.xml`
+                                                : href
                                         return (
                                             <li>
                                                 <Link
@@ -168,11 +186,15 @@ const websiteSchema = {
                                                             variant: 'outline',
                                                             size: 'icon',
                                                         }) +
-                                                        ' bg-background/80 backdrop-blur-sm'
+                                                        ' hover:rotate-3 transition-all duration-200'
                                                     }
                                                     external={
-                                                        finalHref.startsWith('http') ||
-                                                        finalHref.startsWith('mailto:')
+                                                        finalHref.startsWith(
+                                                            'http',
+                                                        ) ||
+                                                        finalHref.startsWith(
+                                                            'mailto:',
+                                                        )
                                                     }
                                                 >
                                                     <Icon
@@ -198,10 +220,15 @@ const websiteSchema = {
     </section>
 
     <!-- Skills & Technologies (Optional) -->
-    <section class="mt-12">
+    <section class="mt-16">
         <div class="mb-6">
-            <h2 class="mb-2 text-2xl font-semibold">{t('home.skills')}</h2>
-            <p class="text-muted-foreground text-sm">
+            <h2 class="relative mb-2 inline-block text-2xl font-semibold">
+                {t('home.skills')}
+                <span
+                    class="bg-decorative/30 absolute -bottom-1 left-0 h-2 w-full -rotate-1"
+                    aria-hidden="true"></span>
+            </h2>
+            <p class="text-muted-foreground mt-3 text-sm">
                 {t('home.skills_desc')}
             </p>
         </div>
@@ -213,13 +240,17 @@ const websiteSchema = {
     <!-- Latest from the blog -->
     {
         latestPosts && latestPosts.length > 0 && (
-            <section class="mt-12">
+            <section class="mt-16">
                 <div class="mb-6 flex items-center justify-between">
                     <div>
-                        <h2 class="mb-2 text-2xl font-semibold">
+                        <h2 class="relative mb-2 inline-block text-2xl font-semibold">
                             {t('home.latest_posts')}
+                            <span
+                                class="bg-primary/20 absolute -bottom-1 left-0 h-2 w-full rotate-1"
+                                aria-hidden="true"
+                            />
                         </h2>
-                        <p class="text-muted-foreground text-sm">
+                        <p class="text-muted-foreground mt-3 text-sm">
                             {t('home.latest_posts_desc')}
                         </p>
                     </div>
@@ -227,11 +258,14 @@ const websiteSchema = {
                         href={l('/blog')}
                         class={
                             buttonVariants({ variant: 'ghost' }) +
-                            ' hidden items-center gap-1.5 sm:flex'
+                            ' group hidden items-center gap-1.5 sm:flex'
                         }
                     >
                         {t('home.view_all')}
-                        <Icon name="lucide:arrow-right" class="size-4" />
+                        <Icon
+                            name="lucide:arrow-right"
+                            class="size-4 transition-transform group-hover:translate-x-0.5"
+                        />
                     </Link>
                 </div>
 
@@ -279,25 +313,33 @@ const websiteSchema = {
     }
 
     <!-- CTA Section -->
-    <section class="mt-12 sm:mt-24">
-        <div class="mx-auto max-w-2xl">
-            <div class="relative mb-12">
+    <section class="relative mt-16 sm:mt-28">
+        <!-- Decorative background with float animation -->
+        <div
+            class="animate-float-slow bg-decorative/10 absolute -right-16 top-1/2 h-48 w-48 -translate-y-1/2 rounded-full blur-3xl"
+            aria-hidden="true"
+        >
+        </div>
+
+        <div class="relative mx-auto max-w-2xl">
+            <div class="relative mb-10">
                 <div
                     class="absolute inset-0 flex items-center"
                     aria-hidden="true"
                 >
-                    <div class="border-border w-full border-t"></div>
+                    <div class="from-transparent via-border to-transparent w-full border-t bg-gradient-to-r">
+                    </div>
                 </div>
                 <div class="relative flex justify-center">
                     <div
-                        class="bg-background border-border flex items-center gap-2.5 rounded-full border px-4 py-2 shadow-sm"
+                        class="bg-background border-border flex items-center gap-2.5 rounded-full border px-4 py-2"
                     >
-                        <span class="relative flex h-1.5 w-1.5">
+                        <span class="relative flex h-2 w-2">
                             <span
                                 class="bg-primary absolute inline-flex h-full w-full animate-ping rounded-full opacity-75"
                             ></span>
                             <span
-                                class="bg-primary relative inline-flex h-1.5 w-1.5 rounded-full"
+                                class="bg-primary relative inline-flex h-2 w-2 rounded-full"
                             ></span>
                         </span>
                         <span
@@ -311,9 +353,11 @@ const websiteSchema = {
             <div class="space-y-6 text-center">
                 <div class="space-y-2">
                     <h2
-                        class="text-foreground text-4xl leading-tight font-semibold tracking-tight sm:text-5xl md:text-6xl"
+                        class="text-foreground relative inline-block text-4xl leading-tight font-semibold tracking-tight sm:text-5xl md:text-6xl"
                     >
-                        {t('home.connect')}
+                        <span class="-rotate-1 inline-block">
+                            {t('home.connect')}
+                        </span>
                     </h2>
                 </div>
                 <p
@@ -321,7 +365,7 @@ const websiteSchema = {
                 >
                     {t('home.connect_desc')}
                 </p>
-                <div class="pt-4">
+                <div class="pt-6">
                     {
                         SOCIAL_LINKS.find((link) => link.label === 'Email') && (
                             <Link
@@ -330,7 +374,7 @@ const websiteSchema = {
                                         (link) => link.label === 'Email',
                                     )!.href
                                 }
-                                class="group bg-foreground text-background hover:bg-foreground/90 focus-visible:ring-ring inline-flex items-center gap-2.5 rounded-lg px-7 py-3.5 text-base font-medium transition-all duration-200 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+                                class="group bg-foreground text-background hover:bg-foreground/90 focus-visible:ring-ring inline-flex items-center gap-2.5 rounded-md px-7 py-3.5 text-base font-medium transition-all duration-200 hover:rotate-1 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
                             >
                                 <Icon name="lucide:mail" class="size-4" />
                                 <span>{t('home.get_in_touch')}</span>
@@ -345,4 +389,28 @@ const websiteSchema = {
             </div>
         </div>
     </section>
+    <!-- Entrance animation trigger -->
+    <script is:inline>
+        document.addEventListener('astro:page-load', () => {
+            // Trigger entrance animations
+            requestAnimationFrame(() => {
+                document.querySelectorAll('.animate-on-load').forEach((el) => {
+                    el.style.opacity = '1'
+                })
+            })
+        })
+
+        // Also trigger on initial load
+        if (document.readyState === 'complete') {
+            document.querySelectorAll('.animate-on-load').forEach((el) => {
+                el.style.opacity = '1'
+            })
+        } else {
+            window.addEventListener('load', () => {
+                document.querySelectorAll('.animate-on-load').forEach((el) => {
+                    el.style.opacity = '1'
+                })
+            })
+        }
+    </script>
 </Layout>
