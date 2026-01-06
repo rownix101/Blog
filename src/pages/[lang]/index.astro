@@ -104,18 +104,13 @@ const websiteSchema = {
         </div>
 
         <!-- Content -->
-        <div class="relative z-10">
+        <div class="relative z-10 md:-ml-8 md:mr-2">
             <div class="flex flex-col gap-10">
                 <!-- Main Content -->
                 <div class="min-w-0 flex-1 space-y-8">
                     <!-- Heading with offset/rotation effect + entrance animation -->
                     <div class="space-y-2">
                         <h1 class="relative">
-                            <span
-                                class="animate-on-load animate-fade-in-up text-foreground/80 block text-4xl leading-[1.1] font-bold tracking-tight sm:text-5xl md:text-6xl -rotate-[0.5deg]"
-                            >
-                                {t('home.welcome')}
-                            </span>
                             <span
                                 class="animate-on-load animate-fade-in-up delay-100 text-primary relative mt-1 block text-5xl leading-[1.1] font-bold tracking-tight sm:text-6xl md:text-7xl translate-x-1 rotate-[0.5deg] sm:translate-x-2"
                             >
@@ -127,7 +122,7 @@ const websiteSchema = {
                             </span>
                         </h1>
                         <p
-                            class="animate-on-load animate-fade-in-up delay-200 text-muted-foreground mt-6 max-w-lg text-base leading-relaxed md:text-lg md:pl-1"
+                            class="animate-on-load animate-fade-in-up delay-200 text-muted-foreground mt-4 max-w-lg text-base leading-relaxed md:text-lg md:pl-1"
                         >
                             {t('home.description')}
                         </p>
@@ -220,8 +215,8 @@ const websiteSchema = {
     </section>
 
     <!-- Skills & Technologies (Optional) -->
-    <section class="mt-16">
-        <div class="mb-6">
+    <section class="mt-16 md:-ml-4 md:mr-2">
+        <div class="mb-6 md:pl-2">
             <h2 class="relative mb-2 inline-block text-2xl font-semibold">
                 {t('home.skills')}
                 <span
