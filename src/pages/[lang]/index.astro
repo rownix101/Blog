@@ -317,69 +317,34 @@ const websiteSchema = {
         </div>
 
         <div class="relative mx-auto max-w-2xl">
-            <div class="relative mb-10">
-                <div
-                    class="absolute inset-0 flex items-center"
-                    aria-hidden="true"
-                >
-                    <div class="from-transparent via-border to-transparent w-full border-t bg-gradient-to-r">
-                    </div>
-                </div>
-                <div class="relative flex justify-center">
-                    <div
-                        class="bg-background border-border flex items-center gap-2.5 rounded-full border px-4 py-2"
-                    >
-                        <span class="relative flex h-2 w-2">
-                            <span
-                                class="bg-primary absolute inline-flex h-full w-full animate-ping rounded-full opacity-75"
-                            ></span>
-                            <span
-                                class="bg-primary relative inline-flex h-2 w-2 rounded-full"
-                            ></span>
-                        </span>
-                        <span
-                            class="text-muted-foreground text-xs font-medium tracking-wider uppercase"
-                            >Available</span
-                        >
-                    </div>
-                </div>
-            </div>
-
-            <div class="space-y-6 text-center">
-                <div class="space-y-2">
+            <div class="space-y-6 text-left">
+                <p class="text-muted-foreground text-sm">
+                    {t('home.connect_note')}
+                </p>
+                <div class="space-y-3">
                     <h2
-                        class="text-foreground relative inline-block text-4xl leading-tight font-semibold tracking-tight sm:text-5xl md:text-6xl"
+                        class="text-foreground relative inline-block text-3xl leading-tight font-semibold tracking-tight sm:text-4xl md:text-5xl"
                     >
                         <span class="-rotate-1 inline-block">
                             {t('home.connect')}
                         </span>
                     </h2>
                 </div>
-                <p
-                    class="text-muted-foreground mx-auto max-w-xl text-lg leading-relaxed sm:text-xl"
-                >
+                <p class="text-muted-foreground max-w-xl text-lg leading-relaxed">
                     {t('home.connect_desc')}
                 </p>
-                <div class="pt-6">
-                    {
-                        SOCIAL_LINKS.find((link) => link.label === 'Email') && (
-                            <Link
-                                href={
-                                    SOCIAL_LINKS.find(
-                                        (link) => link.label === 'Email',
-                                    )!.href
-                                }
-                                class="group bg-foreground text-background hover:bg-foreground/90 focus-visible:ring-ring inline-flex items-center gap-2.5 rounded-md px-7 py-3.5 text-base font-medium transition-all duration-200 hover:rotate-1 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
-                            >
-                                <Icon name="lucide:mail" class="size-4" />
-                                <span>{t('home.get_in_touch')}</span>
-                                <Icon
-                                    name="lucide:arrow-right"
-                                    class="size-4 transition-transform group-hover:translate-x-1"
-                                />
-                            </Link>
-                        )
-                    }
+                <div class="flex flex-wrap gap-3 pt-2">
+                    {SOCIAL_LINKS.filter((link) =>
+                        ['Email', 'GitHub', 'X'].includes(link.label),
+                    ).map((link) => (
+                        <Link
+                            href={link.href}
+                            class="group border-border/60 text-foreground hover:border-primary/60 hover:text-primary inline-flex items-center gap-2 rounded-full border px-4 py-2 text-sm transition-colors"
+                        >
+                            <Icon name={ICON_MAP[link.label]} class="size-4" />
+                            <span>{link.label}</span>
+                        </Link>
+                    ))}
                 </div>
             </div>
         </div>

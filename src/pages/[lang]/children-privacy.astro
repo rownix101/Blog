@@ -13,7 +13,8 @@ export async function getStaticPaths() {
 }
 
 const { lang } = Astro.params
-const t = useTranslations(lang as keyof typeof ui)
+const locale = (lang || 'zh-cn').toLowerCase()
+const t = useTranslations(locale as keyof typeof ui)
 
 // Get contact email from social links or use placeholder
 const contactEmail =
@@ -22,34 +23,47 @@ const contactEmail =
         '',
     ) || 'your@email.com'
 
-// Get privacy policy content
+// Get children's privacy content
 const legalDocs = await getCollection('legal')
-const privacyDoc = legalDocs.find((doc) => doc.id === `privacy.${lang}`)
+const childrenPrivacyDoc = legalDocs.find(
+    (doc) => doc.id === `children-privacy.${locale}`,
+)
 
-if (!privacyDoc) {
-    throw new Error(`Privacy policy not found for language: ${lang}`)
+if (!childrenPrivacyDoc) {
+    throw new Error(`Children's privacy policy not found for language: ${lang}`)
 }
 
-const { Content } = await render(privacyDoc)
+const { Content } = await render(childrenPrivacyDoc)
 ---
 
-<Layout class="max-w-3xl" lang={lang}>
-    <PageHead slot="head" title={privacyDoc.data.title} />
+<Layout class="max-w-3xl" lang={locale}>
+    <PageHead slot="head" title={childrenPrivacyDoc.data.title} />
     <Breadcrumbs
-        items={[{ label: privacyDoc.data.title, icon: 'lucide:shield-check' }]}
+        items={[
+            {
+                label: childrenPrivacyDoc.data.title,
+                icon: 'lucide:baby',
+            },
+        ]}
     />
 
     <article class="prose prose-neutral dark:prose-invert max-w-none">
         <div class="bg-card/50 mb-6 rounded-lg border p-6">
             <div class="mb-2 flex items-center gap-3">
-                <Icon name="lucide:shield-check" class="text-primary size-6" />
-                <h1 class="m-0 text-3xl font-bold">{privacyDoc.data.title}</h1>
+                <Icon name="lucide:baby" class="text-primary size-6" />
+                <h1 class="m-0 text-3xl font-bold">
+                    {childrenPrivacyDoc.data.title}
+                </h1>
             </div>
             {
-                privacyDoc.data.date && (
+                childrenPrivacyDoc.data.date && (
                     <p class="text-muted-foreground m-0 text-sm">
-                        {lang === 'en' ? 'Last updated' : '最后更新'}:{' '}
-                        {privacyDoc.data.date.toISOString().split('T')[0]}
+                        {locale === 'en' ? 'Last updated' : '最后更新'}:{' '}
+                        {
+                            childrenPrivacyDoc.data.date
+                                .toISOString()
+                                .split('T')[0]
+                        }
                     </p>
                 )
             }
@@ -61,14 +75,14 @@ const { Content } = await render(privacyDoc)
 
         <section class="mb-8 space-y-4">
             <h2 class="text-2xl font-semibold">
-                {lang === 'en' ? 'Contact Us' : '联系我们'}
+                {locale === 'en' ? 'Contact Us' : '联系我们'}
             </h2>
             <div class="bg-muted/30 rounded-lg border p-4">
                 <p class="m-0">
                     {
-                        lang === 'en'
-                            ? 'This website is operated by Rownix. If you have any questions about this Privacy Policy, please contact us:'
-                            : '本网站由 Rownix 运营。如果您对本隐私政策有任何疑问，请联系我们：'
+                        locale === 'en'
+                            ? 'If you are a parent or guardian and you believe we have collected information from your child, please contact us:'
+                            : '如果您是父母或监护人，并且您认为我们收集了您孩子的信息，请联系我们：'
                     }
                 </p>
                 <p class="mt-2">

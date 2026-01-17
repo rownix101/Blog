@@ -6,6 +6,7 @@ import FloatingSidebar from '@/components/FloatingSidebar.astro'
 import Footer from '@/components/Footer.astro'
 import Head from '@/components/Head.astro'
 import Header from '@/components/Header.astro'
+import { TermsConsent } from '@/components/TermsConsent'
 import { cn } from '@/lib/utils'
 
 interface Props {
@@ -118,5 +119,6 @@ const {
     </main>
     {false && !hideFloatingSidebar && <FloatingSidebar lang={lang} />}
     <Footer lang={lang} />
+    <TermsConsent client:only="react" lang={lang} />
   </body>
 </html>
