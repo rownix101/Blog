@@ -1,0 +1,22 @@
+$ bun run build-friends-data && astro dev
+$ node scripts/build-friends-data.js
+🔄 Building friends data from YAML files...
+✅ Friends data file generated successfully
+✅ Friends data build completed
+09:39:16 [@astrojs/cloudflare] Enabling sessions with Cloudflare KV with the "SESSION" KV binding.
+09:39:16 [@astrojs/cloudflare] If you see the error "Invalid binding `SESSION`" in your build output, you need to add the binding to your wrangler config file.
+09:39:16 [WARN] [adapter] Cloudflare does not support sharp at runtime. However, you can configure `imageService: "compile"` to optimize images with sharp on prerendered pages during build time.
+Using vars defined in .env
+09:39:16 [types] Generated 0ms
+09:39:16 [content] Syncing content
+09:39:16 [content] Synced content
+09:39:16 [vite] Port 1234 is in use, trying another one...
+09:39:16 [vite] Port 1235 is in use, trying another one...
+
+ astro  v5.16.6 ready in 1737 ms
+
+┃ Local    http://localhost:1236/
+┃ Network  http://192.168.5.116:1236/
+           http://198.18.0.1:1236/
+
+09:39:16 watching for file changes...
