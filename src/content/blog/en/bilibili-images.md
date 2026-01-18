@@ -35,6 +35,14 @@ curl -X POST "https://api.bilibili.com/x/upload/web/image" \
   -F "file=@image.png;filename=image.png"
 ```
 
+### How to get SESSDATA and BILI_JCT
+
+1. Open the Bilibili homepage and make sure you are logged in.
+2. Press `F12` to open your browser devtools.
+3. Switch to the **Application** tab.
+4. In the left sidebar, go to **Storage → Cookies** and select the `*.bilibili.com` domain.
+5. Find `SESSDATA` and `BILI_JCT` in the cookie list. The `Value` field is what you need.
+
 ### Parameter notes
 
 | Parameter | Type     | Description                               |
@@ -194,8 +202,8 @@ According to the project’s issue history, Bilibili adjusted the image upload i
 ### Cookie security
 
 - SESSDATA and bili_jct are sensitive; keep them safe
-- Do not paste cookies on public computers or untrusted websites
-- Regularly change your Bilibili password to protect your account
+- Do not enter cookies on public computers or untrusted websites
+- Change your Bilibili password regularly to protect your account
 
 ---
 

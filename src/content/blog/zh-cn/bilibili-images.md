@@ -34,6 +34,14 @@ curl -X POST "https://api.bilibili.com/x/upload/web/image" \
   -F "file=@image.png;filename=image.png"
 ```
 
+### 如何获取 SESSDATA 和 BILI_JCT
+
+1. 打开哔哩哔哩首页并确保已登录。
+2. 按 `F12` 打开浏览器开发者工具。
+3. 切换到 **Application（应用）** 标签页。
+4. 在左侧 **Storage → Cookies** 中选择 `*.bilibili.com` 域名。
+5. 在 Cookie 列表中找到 `SESSDATA` 和 `BILI_JCT`，其 `Value` 即所需值。
+
 ### 参数说明
 
 | 参数       | 类型       | 说明                |
