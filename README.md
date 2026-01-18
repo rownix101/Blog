@@ -11,6 +11,15 @@
 > **📖 Want to learn more about the original theme?**  
 > This theme is based on [astro-erudite](https://github.com/jktrn/astro-erudite) by [@jktrn](https://github.com/jktrn). For detailed documentation, architecture details, and the original design philosophy, visit the [official astro-erudite repository](https://github.com/jktrn/astro-erudite).
 
+## 🧩 二改说明
+
+这是基于 astro-erudite 的二次改造版本，核心差异如下：
+
+- 内容统一收敛到 `src/content/`（避免旧 `content/` 目录造成内容漂移）
+- OG 图片路由使用 `src/pages/og/[...route].ts`
+- 运行时统一使用 Bun（`bun install` / `bun run dev` / `bun run build`）
+- Cloudflare Pages 静态输出配置已适配（见 `astro.config.ts`、`wrangler.jsonc`）
+
 ## 🎯 What's Different from astro-erudite?
 
 This theme includes several enhancements and customizations:
@@ -74,7 +83,7 @@ All features from astro-erudite plus:
 
 3. **Install dependencies:**
    ```bash
-   npm install
+   bun install
    ```
 
 4. **Configure environment variables** (optional):
@@ -98,7 +107,7 @@ All features from astro-erudite plus:
 
 5. **Start the development server:**
    ```bash
-   npm run dev
+   bun run dev
    ```
 
 6. **Open your browser** and visit `http://localhost:1234`
@@ -267,4 +276,3 @@ For comprehensive documentation, detailed feature explanations, and the original
 Built with ❤️ by [merox](https://merox.dev)
 
 *Developed using [Cursor](https://cursor.sh/) AI coding assistant*
-
