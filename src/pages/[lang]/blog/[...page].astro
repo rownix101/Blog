@@ -11,20 +11,20 @@ import { getAllPosts, groupPostsByYear } from '@/lib/data-utils'
 import type { PaginateFunction } from 'astro'
 
 export async function getStaticPaths({
-    paginate,
+  paginate,
 }: {
-    paginate: PaginateFunction
+  paginate: PaginateFunction
 }) {
-    const paths = []
-    for (const lang of Object.keys(languages)) {
-        const allPosts = await getAllPosts(lang)
-        const paginatedPaths = paginate(allPosts, {
-            pageSize: SITE.postsPerPage,
-            params: { lang },
-        })
-        paths.push(...paginatedPaths)
-    }
-    return paths
+  const paths = []
+  for (const lang of Object.keys(languages)) {
+    const allPosts = await getAllPosts(lang)
+    const paginatedPaths = paginate(allPosts, {
+      pageSize: SITE.postsPerPage,
+      params: { lang },
+    })
+    paths.push(...paginatedPaths)
+  }
+  return paths
 }
 
 const { page } = Astro.props
@@ -38,47 +38,47 @@ const years = Object.keys(postsByYear).sort((a, b) => parseInt(b) - parseInt(a))
 
 const translatedBlogLabel = t('nav.blog')
 const translatedPageLabel =
-    lang === 'en' ? `Page ${page.currentPage}` : `第 ${page.currentPage} 页`
+  lang === 'en' ? `Page ${page.currentPage}` : `第 ${page.currentPage} 页`
 ---
 
 <Layout class="max-w-3xl" lang={lang}>
-    <PageHead slot="head" title={translatedBlogLabel} />
-    <Breadcrumbs
-        items={[
-            {
-                label: translatedBlogLabel,
-                href: l('/blog'),
-                icon: 'lucide:library-big',
-            },
-            { label: translatedPageLabel, icon: 'lucide:book-copy' },
-        ]}
+  <PageHead slot="head" title={translatedBlogLabel} />
+  <Breadcrumbs
+    items={[
+      {
+        label: translatedBlogLabel,
+        href: l('/blog'),
+        icon: 'lucide:library-big',
+      },
+      { label: translatedPageLabel, icon: 'lucide:book-copy' },
+    ]}
+  />
+
+  <div class="flex min-h-[calc(100vh-18rem)] flex-col">
+    {
+      years.map((year) => (
+        <section class="flex flex-col">
+          <div class="text-muted-foreground/60 mt-6 mb-2.5 text-xs font-medium tracking-wider uppercase first:mt-0">
+            {year}
+          </div>
+          <ul class="flex flex-col gap-2">
+            {postsByYear[year].map((post) => (
+              <li>
+                <BlogCard entry={post} />
+              </li>
+            ))}
+          </ul>
+        </section>
+      ))
+    }
+  </div>
+
+  <div class="mt-6">
+    <PaginationComponent
+      currentPage={page.currentPage}
+      totalPages={page.lastPage}
+      baseUrl={l('/blog/')}
+      client:idle
     />
-
-    <div class="flex min-h-[calc(100vh-18rem)] flex-col">
-        {
-            years.map((year) => (
-                <section class="flex flex-col">
-                    <div class="text-muted-foreground/60 mt-6 mb-2.5 text-xs font-medium tracking-wider uppercase first:mt-0">
-                        {year}
-                    </div>
-                    <ul class="flex flex-col gap-2">
-                        {postsByYear[year].map((post) => (
-                            <li>
-                                <BlogCard entry={post} />
-                            </li>
-                        ))}
-                    </ul>
-                </section>
-            ))
-        }
-    </div>
-
-    <div class="mt-6">
-        <PaginationComponent
-            currentPage={page.currentPage}
-            totalPages={page.lastPage}
-            baseUrl={l('/blog/')}
-            client:idle
-        />
-    </div>
+  </div>
 </Layout>

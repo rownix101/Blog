@@ -7,9 +7,9 @@ const { lang = 'zh-cn' } = Astro.props as Props
 
 import LanguageSwitcher from '@/components/LanguageSwitcher.astro'
 import Link from '@/components/Link.astro'
+import MobileMenu from '@/components/MobileMenu.astro'
 import SearchButton from '@/components/SearchButton.astro'
 import ThemeToggle from '@/components/ThemeToggle.astro'
-import MobileMenu from '@/components/MobileMenu.astro'
 import { NAV_LINKS } from '@/consts'
 import { ui } from '@/i18n/ui'
 import { useLocalizedPath, useTranslations } from '@/i18n/utils'
@@ -33,13 +33,13 @@ const isExternalLink = (href: string) => {
       reload
     >
       <span
-        class="text-foreground text-2xl font-handwriting tracking-wide transition-colors group-hover:text-primary"
+        class="text-foreground font-handwriting group-hover:text-primary text-2xl tracking-wide transition-colors"
       >
         Rownix's Blog
       </span>
       <!-- Decorative dot -->
       <span
-        class="bg-primary absolute -right-2 -top-1 h-1.5 w-1.5 rounded-full opacity-0 transition-opacity group-hover:opacity-100"
+        class="bg-primary absolute -top-1 -right-2 h-1.5 w-1.5 rounded-full opacity-0 transition-opacity group-hover:opacity-100"
         aria-hidden="true"></span>
     </Link>
     <div class="flex items-center gap-2 md:gap-4">

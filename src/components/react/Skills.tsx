@@ -27,16 +27,14 @@ const focusSkills: FocusSkill[] = [
     logo: 'simple-icons:terraform',
     badgeClassName:
       '-rotate-1 translate-y-2 border-indigo-500/25 text-indigo-800 dark:text-indigo-200',
-    iconClassName:
-      'bg-indigo-500/10 text-indigo-700 dark:text-indigo-200',
+    iconClassName: 'bg-indigo-500/10 text-indigo-700 dark:text-indigo-200',
   },
   {
     text: 'Cloudflare',
     logo: 'simple-icons:cloudflare',
     badgeClassName:
       'rotate-2 translate-y-0 border-orange-500/25 text-orange-800 dark:text-orange-200',
-    iconClassName:
-      'bg-orange-500/10 text-orange-700 dark:text-orange-200',
+    iconClassName: 'bg-orange-500/10 text-orange-700 dark:text-orange-200',
   },
   {
     text: 'Automation',
@@ -51,8 +49,8 @@ const Skills: React.FC = () => {
   return (
     <div className="z-30 mt-10 flex w-full flex-col">
       <div className="relative mx-auto w-full max-w-xl">
-        <div className="absolute -left-6 -top-4 h-16 w-16 rounded-full bg-primary/10 blur-2xl" />
-        <div className="absolute -right-8 bottom-0 h-20 w-20 rounded-full bg-decorative/20 blur-2xl" />
+        <div className="bg-primary/10 absolute -top-4 -left-6 h-16 w-16 rounded-full blur-2xl" />
+        <div className="bg-decorative/20 absolute -right-8 bottom-0 h-20 w-20 rounded-full blur-2xl" />
         <div className="relative flex flex-wrap items-center gap-3 md:gap-4">
           {focusSkills.map((skill) => {
             const IconComponent = getIcon(skill.logo)

@@ -1,30 +1,31 @@
 ---
-import Layout from '@/layouts/Layout.astro'
-import { getStaticPaths } from 'astro'
-import { ui, type Lang } from '@/i18n/ui'
 import { SITE } from '@/consts'
+import { ui, type Lang } from '@/i18n/ui'
+import Layout from '@/layouts/Layout.astro'
 
 export async function getStaticPaths() {
-  return [
-    { params: { lang: 'zh-cn' } },
-    { params: { lang: 'en' } }
-  ]
+  return [{ params: { lang: 'zh-cn' } }, { params: { lang: 'en' } }]
 }
 
 const { lang } = Astro.params
 const t = ui[lang as Lang]
 const title = `${t['friends.apply_title'] || 'Apply for Friend Link'} - ${SITE.title}`
-const description = t['friends.apply_desc'] || 'Apply to have your website featured in our friends list'
+const description =
+  t['friends.apply_desc'] ||
+  'Apply to have your website featured in our friends list'
 ---
 
 <Layout title={title} description={description}>
-  <div class="container max-w-2xl mx-auto px-4 py-12">
-    <header class="text-center mb-12">
-      <h1 class="text-4xl font-bold mb-4">
+  <div class="container mx-auto max-w-2xl px-4 py-12">
+    <header class="mb-12 text-center">
+      <h1 class="mb-4 text-4xl font-bold">
         {t['friends.apply_title'] || 'Apply for Friend Link'}
       </h1>
-      <p class="text-xl text-muted-foreground">
-        {t['friends.apply_desc'] || 'Apply to have your website featured in our friends list'}
+      <p class="text-muted-foreground text-xl">
+        {
+          t['friends.apply_desc'] ||
+            'Apply to have your website featured in our friends list'
+        }
       </p>
     </header>
 
@@ -33,7 +34,7 @@ const description = t['friends.apply_desc'] || 'Apply to have your website featu
       <div>
         <form id="friendApplicationForm" class="space-y-6" novalidate>
           <div>
-            <label for="name" class="block text-sm font-medium mb-2">
+            <label for="name" class="mb-2 block text-sm font-medium">
               {t['friends.form.name'] || 'Website Name'} *
             </label>
             <input
@@ -41,13 +42,14 @@ const description = t['friends.apply_desc'] || 'Apply to have your website featu
               id="name"
               name="name"
               required
-              class="w-full px-4 py-2 bg-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
-              placeholder={t['friends.form.name_placeholder'] || 'Your website name'}
+              class="bg-background border-border focus:ring-primary w-full rounded-lg border px-4 py-2 focus:border-transparent focus:ring-2 focus:outline-none"
+              placeholder={t['friends.form.name_placeholder'] ||
+                'Your website name'}
             />
           </div>
 
           <div>
-            <label for="url" class="block text-sm font-medium mb-2">
+            <label for="url" class="mb-2 block text-sm font-medium">
               {t['friends.form.url'] || 'Website URL'} *
             </label>
             <input
@@ -55,13 +57,13 @@ const description = t['friends.apply_desc'] || 'Apply to have your website featu
               id="url"
               name="url"
               required
-              class="w-full px-4 py-2 bg-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+              class="bg-background border-border focus:ring-primary w-full rounded-lg border px-4 py-2 focus:border-transparent focus:ring-2 focus:outline-none"
               placeholder="https://example.com"
             />
           </div>
 
           <div>
-            <label for="description" class="block text-sm font-medium mb-2">
+            <label for="description" class="mb-2 block text-sm font-medium">
               {t['friends.form.description'] || 'Description'} *
             </label>
             <textarea
@@ -69,44 +71,58 @@ const description = t['friends.apply_desc'] || 'Apply to have your website featu
               name="description"
               required
               rows={3}
-              class="w-full px-4 py-2 bg-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
-              placeholder={t['friends.form.description_placeholder'] || 'Brief description of your website'}
-            />
+              class="bg-background border-border focus:ring-primary w-full rounded-lg border px-4 py-2 focus:border-transparent focus:ring-2 focus:outline-none"
+              placeholder={t['friends.form.description_placeholder'] ||
+                'Brief description of your website'}></textarea>
           </div>
 
           <div>
-            <label for="avatar" class="block text-sm font-medium mb-2">
+            <label for="avatar" class="mb-2 block text-sm font-medium">
               {t['friends.form.avatar'] || 'Avatar URL'}
             </label>
             <input
               type="url"
               id="avatar"
               name="avatar"
-              class="w-full px-4 py-2 bg-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+              class="bg-background border-border focus:ring-primary w-full rounded-lg border px-4 py-2 focus:border-transparent focus:ring-2 focus:outline-none"
               placeholder="https://example.com/avatar.png"
             />
           </div>
 
           <div>
-            <label for="category" class="block text-sm font-medium mb-2">
+            <label for="category" class="mb-2 block text-sm font-medium">
               {t['friends.form.category'] || 'Category'}
             </label>
             <select
               id="category"
               name="category"
-              class="w-full px-4 py-2 bg-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+              class="bg-background border-border focus:ring-primary w-full rounded-lg border px-4 py-2 focus:border-transparent focus:ring-2 focus:outline-none"
             >
-              <option value="">{t['friends.form.select_category'] || 'Select category'}</option>
-              <option value="技术">{t['friends.category.tech'] || 'Technology'}</option>
-              <option value="生活">{t['friends.category.life'] || 'Life'}</option>
-              <option value="学习">{t['friends.category.study'] || 'Learning'}</option>
-              <option value="设计">{t['friends.category.design'] || 'Design'}</option>
-              <option value="其他">{t['friends.category.other'] || 'Other'}</option>
+              <option value=""
+                >{
+                  t['friends.form.select_category'] || 'Select category'
+                }</option
+              >
+              <option value="技术"
+                >{t['friends.category.tech'] || 'Technology'}</option
+              >
+              <option value="生活"
+                >{t['friends.category.life'] || 'Life'}</option
+              >
+              <option value="学习"
+                >{t['friends.category.study'] || 'Learning'}</option
+              >
+              <option value="设计"
+                >{t['friends.category.design'] || 'Design'}</option
+              >
+              <option value="其他"
+                >{t['friends.category.other'] || 'Other'}</option
+              >
             </select>
           </div>
 
           <div>
-            <label for="contact" class="block text-sm font-medium mb-2">
+            <label for="contact" class="mb-2 block text-sm font-medium">
               {t['friends.form.contact'] || 'Contact Email'} *
             </label>
             <input
@@ -114,20 +130,20 @@ const description = t['friends.apply_desc'] || 'Apply to have your website featu
               id="contact"
               name="contact"
               required
-              class="w-full px-4 py-2 bg-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+              class="bg-background border-border focus:ring-primary w-full rounded-lg border px-4 py-2 focus:border-transparent focus:ring-2 focus:outline-none"
               placeholder="your@email.com"
             />
           </div>
 
           <div>
-            <label for="github" class="block text-sm font-medium mb-2">
+            <label for="github" class="mb-2 block text-sm font-medium">
               {t['friends.form.github'] || 'GitHub Username'}
             </label>
             <input
               type="text"
               id="github"
               name="github"
-              class="w-full px-4 py-2 bg-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent"
+              class="bg-background border-border focus:ring-primary w-full rounded-lg border px-4 py-2 focus:border-transparent focus:ring-2 focus:outline-none"
               placeholder="username"
             />
           </div>
@@ -140,8 +156,11 @@ const description = t['friends.apply_desc'] || 'Apply to have your website featu
               required
               class="mt-1"
             />
-            <label for="reciprocal" class="text-sm text-muted-foreground">
-              {t['friends.form.reciprocal'] || 'I have added a link to this blog on my website'}
+            <label for="reciprocal" class="text-muted-foreground text-sm">
+              {
+                t['friends.form.reciprocal'] ||
+                  'I have added a link to this blog on my website'
+              }
             </label>
           </div>
 
@@ -149,69 +168,155 @@ const description = t['friends.apply_desc'] || 'Apply to have your website featu
             type="button"
             id="copyYamlBtn"
             onclick="copyYaml()"
-            class="w-full px-6 py-3 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            class="bg-primary text-primary-foreground hover:bg-primary/90 w-full rounded-lg px-6 py-3 transition-colors disabled:cursor-not-allowed disabled:opacity-50"
           >
-            {t['friends.copy_yaml'] || (lang === 'zh-cn' ? '一键复制 YAML' : 'Copy YAML')}
+            {
+              t['friends.copy_yaml'] ||
+                (lang === 'zh-cn' ? '一键复制 YAML' : 'Copy YAML')
+            }
           </button>
         </form>
 
-        <div id="errorMessage" class="hidden mt-4 p-4 bg-destructive/10 border border-destructive/20 rounded-lg text-destructive text-sm whitespace-pre-line"></div>
-        <div id="successMessage" class="hidden mt-4 p-4 bg-green-50 border border-green-200 rounded-lg text-green-800 text-sm">{t["friends.success_message"] || (lang === 'zh-cn' ? '已复制到剪贴板。下一步请添加到 friends.yaml 并提交 PR。' : 'Copied to clipboard. Next, add to friends.yaml and open a PR.')}</div>
+        <div
+          id="errorMessage"
+          class="bg-destructive/10 border-destructive/20 text-destructive mt-4 hidden rounded-lg border p-4 text-sm whitespace-pre-line"
+        >
+        </div>
+        <div
+          id="successMessage"
+          class="mt-4 hidden rounded-lg border border-green-200 bg-green-50 p-4 text-sm text-green-800"
+        >
+          {
+            t['friends.success_message'] ||
+              (lang === 'zh-cn'
+                ? '已复制到剪贴板。下一步请添加到 friends.yaml 并提交 PR。'
+                : 'Copied to clipboard. Next, add to friends.yaml and open a PR.')
+          }
+        </div>
 
         <!-- Hidden data for JavaScript -->
-        <div id="copySuccessText" class="hidden">{t["friends.copied"] || "Copied!"}</div>
-
+        <div id="copySuccessText" class="hidden">
+          {t['friends.copied'] || 'Copied!'}
+        </div>
       </div>
 
       <!-- Instructions -->
       <div>
         <div class="sticky top-4 space-y-6">
-          <div class="p-6 bg-muted/50 rounded-lg">
-            <h2 class="text-lg font-semibold mb-4">
+          <div class="bg-muted/50 rounded-lg p-6">
+            <h2 class="mb-4 text-lg font-semibold">
               {t['friends.instructions_title'] || 'Application Instructions'}
             </h2>
-            <ol class="space-y-3 text-sm text-muted-foreground">
+            <ol class="text-muted-foreground space-y-3 text-sm">
               <li class="flex gap-2">
-                <span class="flex-shrink-0 w-6 h-6 bg-primary text-primary-foreground rounded-full flex items-center justify-center text-xs font-semibold">1</span>
-                <span>{t['friends.instruction1'] || 'Fill in the form with your website information'}</span>
+                <span
+                  class="bg-primary text-primary-foreground flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full text-xs font-semibold"
+                  >1</span
+                >
+                <span
+                  >{
+                    t['friends.instruction1'] ||
+                      'Fill in the form with your website information'
+                  }</span
+                >
               </li>
               <li class="flex gap-2">
-                <span class="flex-shrink-0 w-6 h-6 bg-primary text-primary-foreground rounded-full flex items-center justify-center text-xs font-semibold">2</span>
-                <span>{t['friends.instruction2'] || 'Make sure you have linked back to this blog'}</span>
+                <span
+                  class="bg-primary text-primary-foreground flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full text-xs font-semibold"
+                  >2</span
+                >
+                <span
+                  >{
+                    t['friends.instruction2'] ||
+                      'Make sure you have linked back to this blog'
+                  }</span
+                >
               </li>
               <li class="flex gap-2">
-                <span class="flex-shrink-0 w-6 h-6 bg-primary text-primary-foreground rounded-full flex items-center justify-center text-xs font-semibold">3</span>
-                <span>{t['friends.instruction3'] || (lang === 'zh-cn' ? '复制 YAML 片段并检查预览' : 'Copy the YAML snippet and review the preview')}</span>
+                <span
+                  class="bg-primary text-primary-foreground flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full text-xs font-semibold"
+                  >3</span
+                >
+                <span
+                  >{
+                    t['friends.instruction3'] ||
+                      (lang === 'zh-cn'
+                        ? '复制 YAML 片段并检查预览'
+                        : 'Copy the YAML snippet and review the preview')
+                  }</span
+                >
               </li>
               <li class="flex gap-2">
-                <span class="flex-shrink-0 w-6 h-6 bg-primary text-primary-foreground rounded-full flex items-center justify-center text-xs font-semibold">4</span>
-                <span>{t['friends.instruction4'] || (lang === 'zh-cn' ? '将 YAML 添加到 friends.yaml 并提交 PR' : 'Add it to friends.yaml and open a PR')}</span>
+                <span
+                  class="bg-primary text-primary-foreground flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full text-xs font-semibold"
+                  >4</span
+                >
+                <span
+                  >{
+                    t['friends.instruction4'] ||
+                      (lang === 'zh-cn'
+                        ? '将 YAML 添加到 friends.yaml 并提交 PR'
+                        : 'Add it to friends.yaml and open a PR')
+                  }</span
+                >
               </li>
             </ol>
           </div>
 
-          <div class="p-6 bg-blue-50 border border-blue-200 rounded-lg">
-            <h3 class="text-sm font-semibold text-blue-900 mb-2">
+          <div class="rounded-lg border border-blue-200 bg-blue-50 p-6">
+            <h3 class="mb-2 text-sm font-semibold text-blue-900">
               {t['friends.requirements_title'] || 'Requirements'}
             </h3>
             <ul class="space-y-2 text-sm text-blue-800">
-              <li>✓ {t['friends.req.active'] || 'Website must be active and accessible'}</li>
-              <li>✓ {t['friends.req.quality'] || 'High-quality content and design'}</li>
-              <li>✓ {t['friends.req.reciprocal'] || 'Must link back to this blog'}</li>
-              <li>✓ {t['friends.req.appropriate'] || 'Appropriate and safe content'}</li>
+              <li>
+                ✓ {
+                  t['friends.req.active'] ||
+                    'Website must be active and accessible'
+                }
+              </li>
+              <li>
+                ✓ {
+                  t['friends.req.quality'] || 'High-quality content and design'
+                }
+              </li>
+              <li>
+                ✓ {t['friends.req.reciprocal'] || 'Must link back to this blog'}
+              </li>
+              <li>
+                ✓ {
+                  t['friends.req.appropriate'] || 'Appropriate and safe content'
+                }
+              </li>
             </ul>
           </div>
 
-          <div class="p-6 bg-amber-50 border border-amber-200 rounded-lg">
-            <h3 class="text-sm font-semibold text-amber-900 mb-2">
+          <div class="rounded-lg border border-amber-200 bg-amber-50 p-6">
+            <h3 class="mb-2 text-sm font-semibold text-amber-900">
               {t['friends.review_process_title'] || 'Review Process'}
             </h3>
-            <p class="text-sm text-amber-800 mb-3">
-              {t['friends.review_process_desc'] || 'Applications are automatically reviewed by our systems. Most applications are processed within 24 hours.'}
+            <p class="mb-3 text-sm text-amber-800">
+              {
+                t['friends.review_process_desc'] ||
+                  'Applications are automatically reviewed by our systems. Most applications are processed within 24 hours.'
+              }
             </p>
             <div class="text-xs text-amber-700">
-              <strong>{t['friends.alternative_title'] || 'Alternative Method:'}</strong><br>
-              {t['friends.alternative_desc'] || 'If you prefer not to fork, you can also'} <a href="https://github.com/rownix101/Blog/issues/new?assignees=&labels=friend-application&template=friend-application.md" target="_blank" class="text-amber-900 underline hover:no-underline">{t['friends.create_issue'] || 'create an issue'}</a> {t['friends.with_your_info'] || 'with your information'}
+              <strong
+                >{
+                  t['friends.alternative_title'] || 'Alternative Method:'
+                }</strong
+              ><br />
+              {
+                t['friends.alternative_desc'] ||
+                  'If you prefer not to fork, you can also'
+              }
+              <a
+                href="https://github.com/rownix101/Blog/issues/new?assignees=&labels=friend-application&template=friend-application.md"
+                target="_blank"
+                class="text-amber-900 underline hover:no-underline"
+                >{t['friends.create_issue'] || 'create an issue'}</a
+              >
+              {t['friends.with_your_info'] || 'with your information'}
             </div>
           </div>
         </div>
@@ -219,16 +324,44 @@ const description = t['friends.apply_desc'] || 'Apply to have your website featu
     </div>
   </div>
 
-  <script define:vars={{ 
-    lang,
-    errorName: t['friends.form.error_name'] || (lang === 'zh-cn' ? '站点名称至少需要2个字符' : 'Website name must be at least 2 characters'),
-    errorUrl: t['friends.form.error_url'] || (lang === 'zh-cn' ? '请输入有效的网站地址' : 'Please enter a valid website URL'),
-    errorDescription: t['friends.form.error_description'] || (lang === 'zh-cn' ? '站点描述至少需要10个字符' : 'Description must be at least 10 characters'),
-    errorContact: t['friends.form.error_contact'] || (lang === 'zh-cn' ? '请输入有效的联系邮箱' : 'Please enter a valid contact email'),
-    errorReciprocal: t['friends.form.error_reciprocal'] || (lang === 'zh-cn' ? '请确认已添加本站友链' : 'Please confirm you have added this blog link'),
-    errorAvatar: t['friends.form.error_avatar'] || (lang === 'zh-cn' ? '头像链接格式无效' : 'Avatar URL is invalid'),
-    previewEmpty: t['friends.yaml_preview.empty'] || (lang === 'zh-cn' ? '填写表单以生成 YAML 预览。' : 'Fill in the form to generate the YAML preview.')
-  }}>
+  <script
+    define:vars={{
+      lang,
+      errorName:
+        t['friends.form.error_name'] ||
+        (lang === 'zh-cn'
+          ? '站点名称至少需要2个字符'
+          : 'Website name must be at least 2 characters'),
+      errorUrl:
+        t['friends.form.error_url'] ||
+        (lang === 'zh-cn'
+          ? '请输入有效的网站地址'
+          : 'Please enter a valid website URL'),
+      errorDescription:
+        t['friends.form.error_description'] ||
+        (lang === 'zh-cn'
+          ? '站点描述至少需要10个字符'
+          : 'Description must be at least 10 characters'),
+      errorContact:
+        t['friends.form.error_contact'] ||
+        (lang === 'zh-cn'
+          ? '请输入有效的联系邮箱'
+          : 'Please enter a valid contact email'),
+      errorReciprocal:
+        t['friends.form.error_reciprocal'] ||
+        (lang === 'zh-cn'
+          ? '请确认已添加本站友链'
+          : 'Please confirm you have added this blog link'),
+      errorAvatar:
+        t['friends.form.error_avatar'] ||
+        (lang === 'zh-cn' ? '头像链接格式无效' : 'Avatar URL is invalid'),
+      previewEmpty:
+        t['friends.yaml_preview.empty'] ||
+        (lang === 'zh-cn'
+          ? '填写表单以生成 YAML 预览。'
+          : 'Fill in the form to generate the YAML preview.'),
+    }}
+  >
     const translations = {
       errorName,
       errorUrl,
@@ -236,7 +369,7 @@ const description = t['friends.apply_desc'] || 'Apply to have your website featu
       errorContact,
       errorReciprocal,
       errorAvatar,
-      previewEmpty
+      previewEmpty,
     }
 
     const form = document.getElementById('friendApplicationForm')
@@ -251,8 +384,13 @@ const description = t['friends.apply_desc'] || 'Apply to have your website featu
 
     // Helper functions
     function generateFriendId(name, url) {
-      const nameSlug = (name || 'your-site').toLowerCase().replace(/[^a-z0-9]/g, '-')
-      const urlSlug = (url || 'example.com').replace(/^https?:\/\//, '').split('/')[0].replace(/[^a-z0-9]/g, '-')
+      const nameSlug = (name || 'your-site')
+        .toLowerCase()
+        .replace(/[^a-z0-9]/g, '-')
+      const urlSlug = (url || 'example.com')
+        .replace(/^https?:\/\//, '')
+        .split('/')[0]
+        .replace(/[^a-z0-9]/g, '-')
       return `${nameSlug}-${urlSlug}-${idSeed}`
     }
 
@@ -363,7 +501,12 @@ const description = t['friends.apply_desc'] || 'Apply to have your website featu
         const isRelativeAvatar = data.avatar.startsWith('/')
         const isDataAvatar = data.avatar.startsWith('data:')
         const isBlobAvatar = data.avatar.startsWith('blob:')
-        if (!isRelativeAvatar && !isDataAvatar && !isBlobAvatar && !isValidHttpUrl(data.avatar)) {
+        if (
+          !isRelativeAvatar &&
+          !isDataAvatar &&
+          !isBlobAvatar &&
+          !isValidHttpUrl(data.avatar)
+        ) {
           errors.push(translations.errorAvatar)
         }
       }
@@ -436,7 +579,7 @@ const description = t['friends.apply_desc'] || 'Apply to have your website featu
     updatePreview()
 
     // Copy YAML functionality
-    window.copyYaml = async function() {
+    window.copyYaml = async function () {
       hasInteracted = true
       updatePreview()
 
@@ -457,7 +600,10 @@ const description = t['friends.apply_desc'] || 'Apply to have your website featu
       try {
         await navigator.clipboard.writeText(yamlText)
         sessionStorage.setItem('friendApplicationData', JSON.stringify(data))
-        sessionStorage.setItem('friendApplicationPrepared', JSON.stringify(yamlText))
+        sessionStorage.setItem(
+          'friendApplicationPrepared',
+          JSON.stringify(yamlText),
+        )
         if (successDiv) successDiv.classList.remove('hidden')
         if (copyBtn) {
           const originalText = copyBtn.textContent
@@ -471,6 +617,5 @@ const description = t['friends.apply_desc'] || 'Apply to have your website featu
         console.error('Failed to copy YAML:', err)
       }
     }
-
   </script>
 </Layout>

@@ -9,7 +9,7 @@ import { Icon } from 'astro-icon/components'
 import { getCollection, render } from 'astro:content'
 
 export async function getStaticPaths() {
-    return [{ params: { lang: 'zh-cn' } }, { params: { lang: 'en' } }]
+  return [{ params: { lang: 'zh-cn' } }, { params: { lang: 'en' } }]
 }
 
 const { lang } = Astro.params
@@ -18,82 +18,78 @@ const t = useTranslations(locale as keyof typeof ui)
 
 // Get contact email from social links or use placeholder
 const contactEmail =
-    SOCIAL_LINKS.find((link) => link.label === 'Email')?.href.replace(
-        'mailto:',
-        '',
-    ) || 'your@email.com'
+  SOCIAL_LINKS.find((link) => link.label === 'Email')?.href.replace(
+    'mailto:',
+    '',
+  ) || 'your@email.com'
 
 // Get children's privacy content
 const legalDocs = await getCollection('legal')
 const childrenPrivacyDoc = legalDocs.find(
-    (doc) => doc.id === `children-privacy.${locale}`,
+  (doc) => doc.id === `children-privacy.${locale}`,
 )
 
 if (!childrenPrivacyDoc) {
-    throw new Error(`Children's privacy policy not found for language: ${lang}`)
+  throw new Error(`Children's privacy policy not found for language: ${lang}`)
 }
 
 const { Content } = await render(childrenPrivacyDoc)
 ---
 
 <Layout class="max-w-3xl" lang={locale}>
-    <PageHead slot="head" title={childrenPrivacyDoc.data.title} />
-    <Breadcrumbs
-        items={[
-            {
-                label: childrenPrivacyDoc.data.title,
-                icon: 'lucide:baby',
-            },
-        ]}
-    />
+  <PageHead slot="head" title={childrenPrivacyDoc.data.title} />
+  <Breadcrumbs
+    items={[
+      {
+        label: childrenPrivacyDoc.data.title,
+        icon: 'lucide:baby',
+      },
+    ]}
+  />
 
-    <article class="prose prose-neutral dark:prose-invert max-w-none">
-        <div class="bg-card/50 mb-6 rounded-lg border p-6">
-            <div class="mb-2 flex items-center gap-3">
-                <Icon name="lucide:baby" class="text-primary size-6" />
-                <h1 class="m-0 text-3xl font-bold">
-                    {childrenPrivacyDoc.data.title}
-                </h1>
-            </div>
-            {
-                childrenPrivacyDoc.data.date && (
-                    <p class="text-muted-foreground m-0 text-sm">
-                        {locale === 'en' ? 'Last updated' : '最后更新'}:{' '}
-                        {
-                            childrenPrivacyDoc.data.date
-                                .toISOString()
-                                .split('T')[0]
-                        }
-                    </p>
-                )
-            }
-        </div>
+  <article class="prose prose-neutral dark:prose-invert max-w-none">
+    <div class="bg-card/50 mb-6 rounded-lg border p-6">
+      <div class="mb-2 flex items-center gap-3">
+        <Icon name="lucide:baby" class="text-primary size-6" />
+        <h1 class="m-0 text-3xl font-bold">
+          {childrenPrivacyDoc.data.title}
+        </h1>
+      </div>
+      {
+        childrenPrivacyDoc.data.date && (
+          <p class="text-muted-foreground m-0 text-sm">
+            {locale === 'en' ? 'Last updated' : '最后更新'}:{' '}
+            {childrenPrivacyDoc.data.date.toISOString().split('T')[0]}
+          </p>
+        )
+      }
+    </div>
 
-        <section class="mb-8 space-y-6">
-            <Content />
-        </section>
+    <section class="mb-8 space-y-6">
+      <Content />
+    </section>
 
-        <section class="mb-8 space-y-4">
-            <h2 class="text-2xl font-semibold">
-                {locale === 'en' ? 'Contact Us' : '联系我们'}
-            </h2>
-            <div class="bg-muted/30 rounded-lg border p-4">
-                <p class="m-0">
-                    {
-                        locale === 'en'
-                            ? 'If you are a parent or guardian and you believe we have collected information from your child, please contact us:'
-                            : '如果您是父母或监护人，并且您认为我们收集了您孩子的信息，请联系我们：'
-                    }
-                </p>
-                <p class="mt-2">
-                    <strong>Email:</strong>
-                    <a
-                        href={`mailto:${contactEmail}`}
-                        class="hover:text-primary underline transition-colors"
-                        >{contactEmail}</a
-                    >
-                </p>
-            </div>
-        </section>
-    </article>
+    <section class="mb-8 space-y-4">
+      <h2 class="text-2xl font-semibold">
+        {locale === 'en' ? 'Contact Us' : '联系我们'}
+      </h2>
+      <div class="bg-muted/30 rounded-lg border p-4">
+        <p class="m-0">
+          {
+            locale === 'en'
+              ? 'If you are a parent or guardian and you believe we have collected information from your child, please contact us:'
+              : '如果您是父母或监护人，并且您认为我们收集了您孩子的信息，请联系我们：'
+          }
+        </p>
+        <p class="mt-2">
+          <strong>Email:</strong>
+          <a
+            href={`mailto:${contactEmail}`}
+            class="hover:text-primary underline transition-colors"
+            >{contactEmail}</a
+          >
+        </p>
+      </div>
+    </section>
+  </article>
 </Layout>

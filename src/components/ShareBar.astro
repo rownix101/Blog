@@ -4,9 +4,9 @@ import { useTranslations } from '@/i18n/utils'
 import { Icon } from 'astro-icon/components'
 
 type ShareBarProps = {
-    title: string
-    url: string
-    lang: keyof typeof ui
+  title: string
+  url: string
+  lang: keyof typeof ui
 }
 
 const { title, url, lang } = Astro.props as ShareBarProps
@@ -16,153 +16,160 @@ const encodedUrl = encodeURIComponent(url)
 const encodedTitle = encodeURIComponent(title)
 
 const shareItems = [
-    {
-        id: 'x',
-        label: 'X',
-        icon: 'simple-icons:x',
-        type: 'link',
-        href: `https://x.com/intent/tweet?url=${encodedUrl}&text=${encodedTitle}`,
-    },
-    {
-        id: 'reddit',
-        label: 'Reddit',
-        icon: 'simple-icons:reddit',
-        type: 'link',
-        href: `https://www.reddit.com/submit?url=${encodedUrl}&title=${encodedTitle}`,
-    },
-    {
-        id: 'linkedin',
-        label: 'LinkedIn',
-        icon: 'simple-icons:linkedin',
-        type: 'link',
-        href: `https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}`,
-    },
-    {
-        id: 'weibo',
-        label: 'Weibo',
-        icon: 'simple-icons:sinaweibo',
-        type: 'link',
-        href: `https://service.weibo.com/share/share.php?url=${encodedUrl}&title=${encodedTitle}`,
-    },
-    {
-        id: 'facebook',
-        label: 'Facebook',
-        icon: 'simple-icons:facebook',
-        type: 'link',
-        href: `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`,
-    },
-    {
-        id: 'more',
-        label: t('share.more'),
-        icon: 'lucide:more-horizontal',
-        type: 'more',
-    },
+  {
+    id: 'x',
+    label: 'X',
+    icon: 'simple-icons:x',
+    type: 'link',
+    href: `https://x.com/intent/tweet?url=${encodedUrl}&text=${encodedTitle}`,
+  },
+  {
+    id: 'reddit',
+    label: 'Reddit',
+    icon: 'simple-icons:reddit',
+    type: 'link',
+    href: `https://www.reddit.com/submit?url=${encodedUrl}&title=${encodedTitle}`,
+  },
+  {
+    id: 'linkedin',
+    label: 'LinkedIn',
+    icon: 'simple-icons:linkedin',
+    type: 'link',
+    href: `https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}`,
+  },
+  {
+    id: 'weibo',
+    label: 'Weibo',
+    icon: 'simple-icons:sinaweibo',
+    type: 'link',
+    href: `https://service.weibo.com/share/share.php?url=${encodedUrl}&title=${encodedTitle}`,
+  },
+  {
+    id: 'facebook',
+    label: 'Facebook',
+    icon: 'simple-icons:facebook',
+    type: 'link',
+    href: `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`,
+  },
+  {
+    id: 'more',
+    label: t('share.more'),
+    icon: 'lucide:more-horizontal',
+    type: 'more',
+  },
 ]
 ---
 
 <section
-    class="bg-muted/40 rounded-xl border border-border/60 p-5"
-    id="share-bar"
+  class="bg-muted/40 border-border/60 rounded-xl border p-5"
+  id="share-bar"
 >
-    <div class="flex flex-wrap items-center justify-between gap-3">
-        <div>
-            <h2 class="text-sm font-semibold uppercase tracking-wide">
-                {t('share.title')}
-            </h2>
-            <p class="text-muted-foreground mt-1 text-xs">
-                {t('share.desc')}
-            </p>
-        </div>
-        <div class="flex flex-wrap items-center gap-2">
-            {
-                shareItems.map((item) =>
-                    item.type === 'link' ? (
-                        <a
-                            class="bg-background/80 hover:bg-background inline-flex items-center gap-2 rounded-full border border-border/60 px-3 py-1.5 text-xs font-medium transition-colors"
-                            href={item.href}
-                            target="_blank"
-                            rel="noreferrer noopener"
-                            aria-label={item.label}
-                        >
-                            <Icon name={item.icon} class="size-3.5" />
-                            <span>{item.label}</span>
-                        </a>
-                    ) : (
-                        <button
-                            type="button"
-                            class="bg-background/80 hover:bg-background inline-flex items-center gap-2 rounded-full border border-border/60 px-3 py-1.5 text-xs font-medium transition-colors"
-                            data-share="more"
-                            data-url={url}
-                            data-title={title}
-                            aria-label={item.label}
-                        >
-                            <Icon name={item.icon} class="size-3.5" />
-                            <span>{item.label}</span>
-                        </button>
-                    ),
-                )
-            }
-        </div>
+  <div class="flex flex-wrap items-center justify-between gap-3">
+    <div>
+      <h2 class="text-sm font-semibold tracking-wide uppercase">
+        {t('share.title')}
+      </h2>
+      <p class="text-muted-foreground mt-1 text-xs">
+        {t('share.desc')}
+      </p>
     </div>
-    <p
-        id="share-message"
-        class="text-muted-foreground mt-3 hidden text-xs"
-        role="status"
-    ></p>
+    <div class="flex flex-wrap items-center gap-2">
+      {
+        shareItems.map((item) =>
+          item.type === 'link' ? (
+            <a
+              class="bg-background/80 hover:bg-background border-border/60 inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-xs font-medium transition-colors"
+              href={item.href}
+              target="_blank"
+              rel="noreferrer noopener"
+              aria-label={item.label}
+            >
+              <Icon name={item.icon} class="size-3.5" />
+              <span>{item.label}</span>
+            </a>
+          ) : (
+            <button
+              type="button"
+              class="bg-background/80 hover:bg-background border-border/60 inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-xs font-medium transition-colors"
+              data-share="more"
+              data-url={url}
+              data-title={title}
+              aria-label={item.label}
+            >
+              <Icon name={item.icon} class="size-3.5" />
+              <span>{item.label}</span>
+            </button>
+          ),
+        )
+      }
+    </div>
+  </div>
+  <p
+    id="share-message"
+    class="text-muted-foreground mt-3 hidden text-xs"
+    role="status"
+  >
+  </p>
 </section>
 
-<script define:vars={{ copySuccess: t('share.copy_success'), copyFail: t('share.copy_fail') }}>
-    const shareBar = document.getElementById('share-bar')
-    const messageEl = document.getElementById('share-message')
+<script
+  define:vars={{
+    copySuccess: t('share.copy_success'),
+    copyFail: t('share.copy_fail'),
+  }}
+>
+  const shareBar = document.getElementById('share-bar')
+  const messageEl = document.getElementById('share-message')
 
-    const showMessage = (text) => {
-        if (!messageEl) return
-        messageEl.textContent = text
-        messageEl.classList.remove('hidden')
+  const showMessage = (text) => {
+    if (!messageEl) return
+    messageEl.textContent = text
+    messageEl.classList.remove('hidden')
+  }
+
+  const copyToClipboard = async (text) => {
+    if (navigator.clipboard?.writeText) {
+      await navigator.clipboard.writeText(text)
+      return
     }
+    const input = document.createElement('input')
+    input.value = text
+    document.body.appendChild(input)
+    input.select()
+    document.execCommand('copy')
+    document.body.removeChild(input)
+  }
 
-    const copyToClipboard = async (text) => {
-        if (navigator.clipboard?.writeText) {
-            await navigator.clipboard.writeText(text)
-            return
-        }
-        const input = document.createElement('input')
-        input.value = text
-        document.body.appendChild(input)
-        input.select()
-        document.execCommand('copy')
-        document.body.removeChild(input)
+  shareBar?.addEventListener('click', async (event) => {
+    const target = event.target.closest('[data-share="more"]')
+    if (!target) return
+    const url = target.dataset.url
+    const title = target.dataset.title
+    if (!url) return
+
+    try {
+      const sharePayload = title ? { title, url } : { url }
+      const canShare =
+        typeof navigator.canShare === 'function'
+          ? navigator.canShare(sharePayload)
+          : true
+
+      if (navigator.share && canShare) {
+        await navigator.share(sharePayload)
+        return
+      }
+      const copyText = title ? `${title} ${url}` : url
+      await copyToClipboard(copyText)
+      showMessage(copySuccess)
+    } catch (error) {
+      try {
+        const copyText = title ? `${title} ${url}` : url
+        await copyToClipboard(copyText)
+        showMessage(copySuccess)
+      } catch (copyError) {
+        console.error('Failed to copy share link', copyError)
+        showMessage(copyFail)
+      }
     }
-
-    shareBar?.addEventListener('click', async (event) => {
-        const target = event.target.closest('[data-share="more"]')
-        if (!target) return
-        const url = target.dataset.url
-        const title = target.dataset.title
-        if (!url) return
-
-        try {
-            const sharePayload = title ? { title, url } : { url }
-            const canShare = typeof navigator.canShare === 'function'
-                ? navigator.canShare(sharePayload)
-                : true
-
-            if (navigator.share && canShare) {
-                await navigator.share(sharePayload)
-                return
-            }
-            const copyText = title ? `${title} ${url}` : url
-            await copyToClipboard(copyText)
-            showMessage(copySuccess)
-        } catch (error) {
-            try {
-                const copyText = title ? `${title} ${url}` : url
-                await copyToClipboard(copyText)
-                showMessage(copySuccess)
-            } catch (copyError) {
-                console.error('Failed to copy share link', copyError)
-                showMessage(copyFail)
-            }
-        }
-    })
+  })
 </script>

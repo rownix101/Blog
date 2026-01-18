@@ -38,19 +38,19 @@ export class ErrorBoundary extends Component<Props, State> {
 
       return (
         <div
-          className="rounded-lg border border-destructive/50 bg-destructive/10 p-6"
+          className="border-destructive/50 bg-destructive/10 rounded-lg border p-6"
           role="alert"
           aria-live="assertive"
         >
-          <h2 className="text-lg font-semibold text-destructive mb-2">
+          <h2 className="text-destructive mb-2 text-lg font-semibold">
             Something went wrong
           </h2>
-          <p className="text-sm text-muted-foreground">
+          <p className="text-muted-foreground text-sm">
             {this.state.error?.message || 'An unexpected error occurred'}
           </p>
           <button
             onClick={() => this.setState({ hasError: false, error: null })}
-            className="mt-4 text-sm text-primary hover:underline"
+            className="text-primary mt-4 text-sm hover:underline"
           >
             Try again
           </button>
@@ -61,4 +61,3 @@ export class ErrorBoundary extends Component<Props, State> {
     return this.props.children
   }
 }
-

@@ -14,7 +14,7 @@ if (typeof globalThis.MessageChannel === 'undefined') {
         onmessage: null,
         addEventListener: () => {},
         removeEventListener: () => {},
-        dispatchEvent: () => {}
+        dispatchEvent: () => {},
       }
       this.port2 = {
         postMessage: () => {},
@@ -23,7 +23,7 @@ if (typeof globalThis.MessageChannel === 'undefined') {
         onmessage: null,
         addEventListener: () => {},
         removeEventListener: () => {},
-        dispatchEvent: () => {}
+        dispatchEvent: () => {},
       }
     }
   }

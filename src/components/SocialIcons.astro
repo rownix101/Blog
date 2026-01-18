@@ -25,7 +25,9 @@ const { links, lang = 'zh-cn' } = Astro.props
             aria-label={label}
             title={label}
             class={buttonVariants({ variant: 'outline', size: 'icon' })}
-            external={finalHref.startsWith('http') || finalHref.startsWith('mailto:')}
+            external={
+              finalHref.startsWith('http') || finalHref.startsWith('mailto:')
+            }
           >
             <Icon
               name={

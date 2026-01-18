@@ -16,13 +16,14 @@ const {
 } = Astro.props
 ---
 
-<!-- Minimal head helpers to avoid duplicates with Head.astro -->
-{(() => {
-  const docTitle = fullTitle
-    ? title
-    : title && title !== SITE.title
-      ? `${title} - ${SITE.title}`
-      : SITE.title
-  return <title>{docTitle}</title>
-})()}
+<!-- Minimal head helpers to avoid duplicates with Head.astro -->{
+  (() => {
+    const docTitle = fullTitle
+      ? title
+      : title && title !== SITE.title
+        ? `${title} - ${SITE.title}`
+        : SITE.title
+    return <title>{docTitle}</title>
+  })()
+}
 {noindex && <meta name="robots" content="noindex, nofollow" />}

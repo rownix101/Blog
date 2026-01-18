@@ -1,7 +1,7 @@
 ---
 import { GISCUS } from '@/consts'
-import { useTranslations } from '@/i18n/utils'
 import { languages } from '@/i18n/ui'
+import { useTranslations } from '@/i18n/utils'
 
 interface Props {
   lang: keyof typeof import('@/i18n/ui').ui
@@ -14,7 +14,7 @@ const t = useTranslations(lang)
 // Map blog language to Giscus language codes
 const giscusLangMap = {
   'zh-cn': 'zh-CN',
-  'en': 'en'
+  en: 'en',
 }
 const giscusLang = giscusLangMap[lang] || 'en'
 
@@ -40,12 +40,12 @@ const unifiedId = getUnifiedIdentifier(Astro.url.pathname)
   aria-labelledby="comments-title"
 >
   <!-- Decorative separator -->
-  <div class="flex items-center justify-center mb-8">
-    <div class="h-px bg-border flex-1 max-w-32"></div>
-    <div class="px-4 text-muted-foreground text-sm">💬</div>
-    <div class="h-px bg-border flex-1 max-w-32"></div>
+  <div class="mb-8 flex items-center justify-center">
+    <div class="bg-border h-px max-w-32 flex-1"></div>
+    <div class="text-muted-foreground px-4 text-sm">💬</div>
+    <div class="bg-border h-px max-w-32 flex-1"></div>
   </div>
-  <h2 id="comments-title" class="mb-6 text-2xl font-medium text-center">
+  <h2 id="comments-title" class="mb-6 text-center text-2xl font-medium">
     {t('comments.title') || 'Comments'}
   </h2>
 
@@ -66,8 +66,7 @@ const unifiedId = getUnifiedIdentifier(Astro.url.pathname)
       data-lang={giscusLang}
       data-loading={GISCUS.lazy ? 'lazy' : 'eager'}
       crossorigin="anonymous"
-      async
-    />
+      async></script>
   </div>
 </section>
 
@@ -95,16 +94,19 @@ const unifiedId = getUnifiedIdentifier(Astro.url.pathname)
   }
 
   @keyframes spin {
-    0% { transform: translate(-50%, -50%) rotate(0deg); }
-    100% { transform: translate(-50%, -50%) rotate(360deg); }
+    0% {
+      transform: translate(-50%, -50%) rotate(0deg);
+    }
+    100% {
+      transform: translate(-50%, -50%) rotate(360deg);
+    }
   }
 
   /* Hide loading spinner when Giscus is loaded */
   :global(.giscus-frame) + .giscus-loading {
     display: none;
   }
-
-  </style>
+</style>
 
 <script define:vars={{ GISCUS }}>
   // Listen for Giscus metadata events
@@ -133,7 +135,7 @@ const unifiedId = getUnifiedIdentifier(Astro.url.pathname)
   function getUnifiedIdentifier(pathname) {
     const segments = pathname.split('/').filter(Boolean)
     // Remove language prefix if it exists
-    const languages = { 'zh-cn': '中文', 'en': 'English' }
+    const languages = { 'zh-cn': '中文', en: 'English' }
     if (segments.length > 0 && segments[0] in languages) {
       return '/' + segments.slice(1).join('/')
     }
@@ -167,7 +169,7 @@ const unifiedId = getUnifiedIdentifier(Astro.url.pathname)
     const lang = document.documentElement.lang || 'zh-cn'
     const giscusLangMap = {
       'zh-cn': 'zh-CN',
-      'en': 'en'
+      en: 'en',
     }
     const giscusLang = giscusLangMap[lang] || 'en'
 
@@ -192,7 +194,6 @@ const unifiedId = getUnifiedIdentifier(Astro.url.pathname)
     container.appendChild(script)
   }
 
-  
   // Handle language switching with ViewTransitions
   document.addEventListener('astro:after-preparation', () => {
     setTimeout(reloadGiscus, 100)

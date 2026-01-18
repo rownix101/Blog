@@ -1,5 +1,15 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react'
-import { Search, Loader2, FileText, Calendar, Hash, Clock, AlertCircle, ChevronDown, X } from 'lucide-react'
+import {
+  Search,
+  Loader2,
+  FileText,
+  Calendar,
+  Hash,
+  Clock,
+  AlertCircle,
+  ChevronDown,
+  X,
+} from 'lucide-react'
 import { Index } from 'flexsearch'
 import {
   Dialog,
@@ -35,7 +45,6 @@ const getStorageKeys = (lang: string) => ({
 
 // Cache version - increment when index structure changes
 const INDEX_VERSION = '1.0'
-
 
 // Calculate relevance score
 function calculateRelevanceScore(
@@ -95,7 +104,8 @@ function calculateRelevanceScore(
   try {
     const postDate = new Date(result.date)
     const now = new Date()
-    const daysSince = (now.getTime() - postDate.getTime()) / (1000 * 60 * 60 * 24)
+    const daysSince =
+      (now.getTime() - postDate.getTime()) / (1000 * 60 * 60 * 24)
     if (daysSince < 30) score += 5
     else if (daysSince < 90) score += 2
   } catch {
@@ -133,7 +143,9 @@ function saveSearchHistory(query: string, lang: string): void {
 }
 
 // Get cached search index
-function getCachedIndex(lang: string): { data: SearchResult[]; version: string } | null {
+function getCachedIndex(
+  lang: string,
+): { data: SearchResult[]; version: string } | null {
   try {
     const keys = getStorageKeys(lang)
     const cached = localStorage.getItem(keys.SEARCH_INDEX)
@@ -159,29 +171,44 @@ function cacheIndex(data: SearchResult[], lang: string): void {
 }
 
 // Extract content snippet around search terms
-function extractSnippet(content: string, query: string, maxLength: number = 150): string {
+function extractSnippet(
+  content: string,
+  query: string,
+  maxLength: number = 150,
+): string {
   if (!content) return content.substring(0, maxLength)
-  if (!query) return content.substring(0, maxLength) + (content.length > maxLength ? '...' : '')
-  
+  if (!query)
+    return (
+      content.substring(0, maxLength) +
+      (content.length > maxLength ? '...' : '')
+    )
+
   const queryLower = query.toLowerCase()
   const contentLower = content.toLowerCase()
   const index = contentLower.indexOf(queryLower)
-  
+
   if (index === -1) {
-    return content.substring(0, maxLength) + (content.length > maxLength ? '...' : '')
+    return (
+      content.substring(0, maxLength) +
+      (content.length > maxLength ? '...' : '')
+    )
   }
-  
+
   const start = Math.max(0, index - 50)
   const end = Math.min(content.length, index + query.length + maxLength - 50)
   let snippet = content.substring(start, end)
-  
+
   if (start > 0) snippet = '...' + snippet
   if (end < content.length) snippet = snippet + '...'
-  
+
   return snippet
 }
 
-const SearchDialog: React.FC<SearchDialogProps> = ({ open, onOpenChange, lang = 'zh-cn' }) => {
+const SearchDialog: React.FC<SearchDialogProps> = ({
+  open,
+  onOpenChange,
+  lang = 'zh-cn',
+}) => {
   const [query, setQuery] = useState('')
   const [results, setResults] = useState<SearchResult[]>([])
   const [isLoading, setIsLoading] = useState(false)
@@ -209,7 +236,7 @@ const SearchDialog: React.FC<SearchDialogProps> = ({ open, onOpenChange, lang = 
       if (cached && cached.data.length > 0) {
         setSearchIndex(cached.data)
         setIsLoadingIndex(false)
-        
+
         // Create FlexSearch index from cached data
         const searchIndex = new Index({
           tokenize: 'forward',
@@ -247,7 +274,7 @@ const SearchDialog: React.FC<SearchDialogProps> = ({ open, onOpenChange, lang = 
 
         // Cache the index
         cacheIndex(data, lang)
-        
+
         setSearchIndex(data)
         setRecentPosts(data.slice(0, 5))
 
@@ -324,14 +351,14 @@ const SearchDialog: React.FC<SearchDialogProps> = ({ open, onOpenChange, lang = 
           // Try searching with each word separately
           const words = normalizedQuery.split(/\s+/)
           const wordResults = new Set<number>()
-          
+
           words.forEach((word) => {
             if (word.length > 2) {
               const wordSearch = index.search(word, { limit: 20 })
               wordSearch.forEach((idx) => wordResults.add(Number(idx)))
             }
           })
-          
+
           searchResults = Array.from(wordResults)
         }
 
@@ -420,9 +447,7 @@ const SearchDialog: React.FC<SearchDialogProps> = ({ open, onOpenChange, lang = 
       if (e.key === 'ArrowDown') {
         e.preventDefault()
         const maxIndex = Math.min(displayedResults - 1, results.length - 1)
-        setSelectedIndex((prev) =>
-          prev < maxIndex ? prev + 1 : prev,
-        )
+        setSelectedIndex((prev) => (prev < maxIndex ? prev + 1 : prev))
       } else if (e.key === 'ArrowUp') {
         e.preventDefault()
         setSelectedIndex((prev) => (prev > 0 ? prev - 1 : 0))
@@ -506,7 +531,7 @@ const SearchDialog: React.FC<SearchDialogProps> = ({ open, onOpenChange, lang = 
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-full sm:max-w-lg md:max-w-2xl p-0 gap-0 overflow-hidden top-0 sm:top-[10%] translate-y-0 h-[100dvh] sm:h-auto sm:max-h-[85vh] flex flex-col rounded-none sm:rounded-lg data-[state=open]:slide-in-from-top-0 data-[state=closed]:slide-out-to-top-0">
+      <DialogContent className="data-[state=open]:slide-in-from-top-0 data-[state=closed]:slide-out-to-top-0 top-0 flex h-[100dvh] max-w-full translate-y-0 flex-col gap-0 overflow-hidden rounded-none p-0 sm:top-[10%] sm:h-auto sm:max-h-[85vh] sm:max-w-lg sm:rounded-lg md:max-w-2xl">
         <DialogDescription className="sr-only">
           Search blog posts by title, description, tags, or content
         </DialogDescription>
@@ -519,21 +544,31 @@ const SearchDialog: React.FC<SearchDialogProps> = ({ open, onOpenChange, lang = 
         >
           {isLoadingIndex && 'Loading search index...'}
           {isLoading && 'Searching...'}
-          {!isLoading && !isLoadingIndex && query.trim() && results.length > 0 && `${results.length} result${results.length !== 1 ? 's' : ''} found`}
-          {!isLoading && !isLoadingIndex && query.trim() && results.length === 0 && 'No results found'}
-          {selectedIndex >= 0 && results[selectedIndex] && `Selected: ${results[selectedIndex].title}`}
+          {!isLoading &&
+            !isLoadingIndex &&
+            query.trim() &&
+            results.length > 0 &&
+            `${results.length} result${results.length !== 1 ? 's' : ''} found`}
+          {!isLoading &&
+            !isLoadingIndex &&
+            query.trim() &&
+            results.length === 0 &&
+            'No results found'}
+          {selectedIndex >= 0 &&
+            results[selectedIndex] &&
+            `Selected: ${results[selectedIndex].title}`}
         </div>
-        <div className="flex shrink-0 items-center border-b border-border px-4 sm:px-4 pt-safe relative">
-          <Search className="mr-3 h-5 w-5 shrink-0 text-muted-foreground sm:h-4 sm:w-4" />
+        <div className="border-border pt-safe relative flex shrink-0 items-center border-b px-4 sm:px-4">
+          <Search className="text-muted-foreground mr-3 h-5 w-5 shrink-0 sm:h-4 sm:w-4" />
           <input
             ref={inputRef}
             type="text"
             placeholder="Search posts..."
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            className="flex h-16 sm:h-14 w-full bg-transparent py-4 sm:py-3 pr-12 sm:pr-0 text-base sm:text-sm outline-none border-0 shadow-none appearance-none placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50 focus-visible:ring-0"
-            style={{ 
-              WebkitAppearance: 'none', 
+            className="placeholder:text-muted-foreground flex h-16 w-full appearance-none border-0 bg-transparent py-4 pr-12 text-base shadow-none outline-none focus-visible:ring-0 disabled:cursor-not-allowed disabled:opacity-50 sm:h-14 sm:py-3 sm:pr-0 sm:text-sm"
+            style={{
+              WebkitAppearance: 'none',
               MozAppearance: 'textfield',
               border: 'none',
               outline: 'none',
@@ -542,17 +577,21 @@ const SearchDialog: React.FC<SearchDialogProps> = ({ open, onOpenChange, lang = 
             aria-label="Search blog posts"
             aria-expanded={results.length > 0}
             aria-controls={listboxId}
-            aria-activedescendant={results.length > 0 && selectedIndex >= 0 ? `result-${selectedIndex}` : undefined}
+            aria-activedescendant={
+              results.length > 0 && selectedIndex >= 0
+                ? `result-${selectedIndex}`
+                : undefined
+            }
             role="combobox"
             aria-autocomplete="list"
           />
           {isLoading && (
-            <Loader2 className="absolute right-14 sm:relative sm:right-0 ml-2 h-5 w-5 sm:h-4 sm:w-4 animate-spin text-muted-foreground shrink-0" />
+            <Loader2 className="text-muted-foreground absolute right-14 ml-2 h-5 w-5 shrink-0 animate-spin sm:relative sm:right-0 sm:h-4 sm:w-4" />
           )}
           {/* Close button for mobile - positioned in header */}
           <button
             onClick={() => onOpenChange(false)}
-            className="sm:hidden absolute right-4 top-1/2 -translate-y-1/2 rounded-lg p-2 opacity-70 transition-opacity active:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
+            className="focus:ring-ring absolute top-1/2 right-4 -translate-y-1/2 rounded-lg p-2 opacity-70 transition-opacity focus:ring-2 focus:ring-offset-2 focus:outline-none active:opacity-100 sm:hidden"
             aria-label="Close search"
           >
             <X className="h-5 w-5" />
@@ -563,7 +602,7 @@ const SearchDialog: React.FC<SearchDialogProps> = ({ open, onOpenChange, lang = 
         {error && (
           <div
             role="alert"
-            className="flex shrink-0 items-center gap-2 rounded-md bg-destructive/10 p-3 text-sm text-destructive mx-4 mt-2"
+            className="bg-destructive/10 text-destructive mx-4 mt-2 flex shrink-0 items-center gap-2 rounded-md p-3 text-sm"
           >
             <AlertCircle className="h-4 w-4 shrink-0" />
             <span>{error}</span>
@@ -572,17 +611,17 @@ const SearchDialog: React.FC<SearchDialogProps> = ({ open, onOpenChange, lang = 
 
         <div
           ref={scrollContainerRef}
-          className="flex-1 min-h-0 overflow-y-auto overscroll-contain px-4 py-4 sm:px-2 sm:py-2"
+          className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-4 py-4 sm:px-2 sm:py-2"
           style={{ WebkitOverflowScrolling: 'touch' }}
         >
           {/* Loading skeleton */}
           {isLoadingIndex && (
             <div className="space-y-2 py-4">
               {[1, 2, 3].map((i) => (
-                <div key={i} className="animate-pulse rounded-md bg-muted p-3">
-                  <div className="h-4 w-3/4 bg-muted-foreground/20 rounded mb-2" />
-                  <div className="h-3 w-full bg-muted-foreground/20 rounded mb-1" />
-                  <div className="h-3 w-2/3 bg-muted-foreground/20 rounded" />
+                <div key={i} className="bg-muted animate-pulse rounded-md p-3">
+                  <div className="bg-muted-foreground/20 mb-2 h-4 w-3/4 rounded" />
+                  <div className="bg-muted-foreground/20 mb-1 h-3 w-full rounded" />
+                  <div className="bg-muted-foreground/20 h-3 w-2/3 rounded" />
                 </div>
               ))}
             </div>
@@ -594,7 +633,7 @@ const SearchDialog: React.FC<SearchDialogProps> = ({ open, onOpenChange, lang = 
               {/* Recent posts */}
               {recentPosts.length > 0 && (
                 <div className="mb-6">
-                  <h3 className="mb-3 px-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                  <h3 className="text-muted-foreground mb-3 px-2 text-xs font-semibold tracking-wider uppercase">
                     Recent Posts
                   </h3>
                   <ul className="space-y-2 sm:space-y-1">
@@ -603,19 +642,21 @@ const SearchDialog: React.FC<SearchDialogProps> = ({ open, onOpenChange, lang = 
                         <a
                           href={post.url}
                           onClick={() => onOpenChange(false)}
-                          className="flex flex-col gap-2 rounded-lg sm:rounded-md p-4 sm:p-3 transition-colors active:bg-muted focus:bg-muted focus:outline-none focus:ring-2 focus:ring-ring"
+                          className="active:bg-muted focus:bg-muted focus:ring-ring flex flex-col gap-2 rounded-lg p-4 transition-colors focus:ring-2 focus:outline-none sm:rounded-md sm:p-3"
                         >
                           <div className="flex items-start justify-between gap-2">
-                            <h3 className="font-medium text-base sm:text-sm leading-tight">
+                            <h3 className="text-base leading-tight font-medium sm:text-sm">
                               {post.title}
                             </h3>
-                            <div className="flex shrink-0 items-center gap-1 text-xs text-muted-foreground">
+                            <div className="text-muted-foreground flex shrink-0 items-center gap-1 text-xs">
                               <Calendar className="h-3 w-3" />
-                              <span className="hidden sm:inline">{formatDate(post.date)}</span>
+                              <span className="hidden sm:inline">
+                                {formatDate(post.date)}
+                              </span>
                             </div>
                           </div>
                           {post.description && (
-                            <p className="text-sm sm:text-xs text-muted-foreground line-clamp-2">
+                            <p className="text-muted-foreground line-clamp-2 text-sm sm:text-xs">
                               {post.description}
                             </p>
                           )}
@@ -629,7 +670,7 @@ const SearchDialog: React.FC<SearchDialogProps> = ({ open, onOpenChange, lang = 
               {/* Search history */}
               {searchHistory.length > 0 && (
                 <div>
-                  <h3 className="mb-3 px-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                  <h3 className="text-muted-foreground mb-3 px-2 text-xs font-semibold tracking-wider uppercase">
                     Recent Searches
                   </h3>
                   <div className="flex flex-wrap gap-2 px-2">
@@ -637,7 +678,7 @@ const SearchDialog: React.FC<SearchDialogProps> = ({ open, onOpenChange, lang = 
                       <button
                         key={idx}
                         onClick={() => setQuery(term)}
-                        className="inline-flex items-center gap-1 rounded-md bg-muted px-2.5 py-1.5 text-xs text-muted-foreground transition-colors hover:bg-muted/80 focus:outline-none focus:ring-2 focus:ring-ring"
+                        className="bg-muted text-muted-foreground hover:bg-muted/80 focus:ring-ring inline-flex items-center gap-1 rounded-md px-2.5 py-1.5 text-xs transition-colors focus:ring-2 focus:outline-none"
                       >
                         <Clock className="h-3 w-3" />
                         {term}
@@ -650,11 +691,11 @@ const SearchDialog: React.FC<SearchDialogProps> = ({ open, onOpenChange, lang = 
               {/* Empty state if no suggestions */}
               {recentPosts.length === 0 && searchHistory.length === 0 && (
                 <div className="flex flex-col items-center justify-center py-8 text-center">
-                  <Search className="mb-2 h-8 w-8 text-muted-foreground" />
-                  <p className="text-sm text-muted-foreground">
+                  <Search className="text-muted-foreground mb-2 h-8 w-8" />
+                  <p className="text-muted-foreground text-sm">
                     Start typing to search posts...
                   </p>
-                  <p className="mt-1 text-xs text-muted-foreground">
+                  <p className="text-muted-foreground mt-1 text-xs">
                     Search by title, description, tags, or content
                   </p>
                 </div>
@@ -663,17 +704,20 @@ const SearchDialog: React.FC<SearchDialogProps> = ({ open, onOpenChange, lang = 
           )}
 
           {/* No results */}
-          {query.trim() && results.length === 0 && !isLoading && !isLoadingIndex && (
-            <div className="flex flex-col items-center justify-center py-8 text-center">
-              <FileText className="mb-2 h-8 w-8 text-muted-foreground" />
-              <p className="text-sm text-muted-foreground">
-                No results found for &quot;{query}&quot;
-              </p>
-              <p className="mt-1 text-xs text-muted-foreground">
-                Try different keywords or check your spelling
-              </p>
-            </div>
-          )}
+          {query.trim() &&
+            results.length === 0 &&
+            !isLoading &&
+            !isLoadingIndex && (
+              <div className="flex flex-col items-center justify-center py-8 text-center">
+                <FileText className="text-muted-foreground mb-2 h-8 w-8" />
+                <p className="text-muted-foreground text-sm">
+                  No results found for &quot;{query}&quot;
+                </p>
+                <p className="text-muted-foreground mt-1 text-xs">
+                  Try different keywords or check your spelling
+                </p>
+              </div>
+            )}
 
           {/* Results */}
           {visibleResults.length > 0 && (
@@ -695,32 +739,37 @@ const SearchDialog: React.FC<SearchDialogProps> = ({ open, onOpenChange, lang = 
                     href={result.url}
                     onClick={() => onOpenChange(false)}
                     className={cn(
-                      'flex flex-col gap-3 sm:gap-2.5 rounded-lg sm:rounded-md p-4 sm:p-3.5 transition-colors',
-                      'active:bg-muted focus-visible:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
+                      'flex flex-col gap-3 rounded-lg p-4 transition-colors sm:gap-2.5 sm:rounded-md sm:p-3.5',
+                      'active:bg-muted focus-visible:bg-muted focus-visible:ring-ring focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none',
                       idx === selectedIndex && 'bg-muted',
                     )}
                     aria-label={`Go to ${result.title}`}
                   >
                     <div className="flex items-start justify-between gap-2">
-                      <h3 className="font-medium text-base sm:text-sm leading-snug flex-1">
+                      <h3 className="flex-1 text-base leading-snug font-medium sm:text-sm">
                         {highlightText(result.title, query)}
                       </h3>
-                      <div className="flex shrink-0 items-center gap-1 text-xs text-muted-foreground">
+                      <div className="text-muted-foreground flex shrink-0 items-center gap-1 text-xs">
                         <Calendar className="h-3 w-3" />
-                        <span className="hidden sm:inline">{formatDate(result.date)}</span>
+                        <span className="hidden sm:inline">
+                          {formatDate(result.date)}
+                        </span>
                       </div>
                     </div>
 
                     {result.description && (
-                      <p className="text-sm sm:text-xs text-muted-foreground line-clamp-2 leading-relaxed">
+                      <p className="text-muted-foreground line-clamp-2 text-sm leading-relaxed sm:text-xs">
                         {highlightText(result.description, query)}
                       </p>
                     )}
 
                     {/* Content snippet - hidden on mobile for cleaner UI */}
                     {result.content && (
-                      <p className="hidden sm:block text-xs text-muted-foreground/80 line-clamp-2 leading-relaxed italic">
-                        {highlightText(extractSnippet(result.content, query), query)}
+                      <p className="text-muted-foreground/80 line-clamp-2 hidden text-xs leading-relaxed italic sm:block">
+                        {highlightText(
+                          extractSnippet(result.content, query),
+                          query,
+                        )}
                       </p>
                     )}
 
@@ -729,14 +778,14 @@ const SearchDialog: React.FC<SearchDialogProps> = ({ open, onOpenChange, lang = 
                         {result.tags.slice(0, 3).map((tag) => (
                           <span
                             key={tag}
-                            className="inline-flex items-center gap-1 rounded-md bg-muted px-2 py-1 sm:px-1.5 sm:py-0.5 text-xs text-muted-foreground"
+                            className="bg-muted text-muted-foreground inline-flex items-center gap-1 rounded-md px-2 py-1 text-xs sm:px-1.5 sm:py-0.5"
                           >
                             <Hash className="h-3 w-3" />
                             {tag}
                           </span>
                         ))}
                         {result.tags.length > 3 && (
-                          <span className="text-xs text-muted-foreground">
+                          <span className="text-muted-foreground text-xs">
                             +{result.tags.length - 3} more
                           </span>
                         )}
@@ -750,38 +799,42 @@ const SearchDialog: React.FC<SearchDialogProps> = ({ open, onOpenChange, lang = 
 
           {/* Load more button */}
           {hasMoreResults && (
-            <div className="mt-6 mb-4 sm:mt-4 sm:mb-2 flex justify-center pb-safe">
+            <div className="pb-safe mt-6 mb-4 flex justify-center sm:mt-4 sm:mb-2">
               <button
-                onClick={() => setDisplayedResults((prev) => Math.min(prev + 10, results.length))}
-                className="flex items-center gap-2 rounded-lg sm:rounded-md border border-border bg-background px-6 py-3 sm:px-4 sm:py-2 text-base sm:text-sm text-foreground transition-colors active:bg-muted focus:outline-none focus:ring-2 focus:ring-ring shadow-sm"
+                onClick={() =>
+                  setDisplayedResults((prev) =>
+                    Math.min(prev + 10, results.length),
+                  )
+                }
+                className="border-border bg-background text-foreground active:bg-muted focus:ring-ring flex items-center gap-2 rounded-lg border px-6 py-3 text-base shadow-sm transition-colors focus:ring-2 focus:outline-none sm:rounded-md sm:px-4 sm:py-2 sm:text-sm"
               >
                 <ChevronDown className="h-5 w-5 sm:h-4 sm:w-4" />
                 Load more ({results.length - displayedResults} remaining)
               </button>
             </div>
           )}
-          
+
           {/* Extra padding at bottom for mobile to ensure last items are scrollable */}
           <div className="h-4 sm:h-2" aria-hidden="true" />
         </div>
 
         {results.length > 0 && (
-          <div className="flex shrink-0 items-center justify-center border-t border-border bg-background px-4 py-3 sm:py-2 text-xs text-muted-foreground">
-            <div className="hidden sm:flex flex-wrap items-center gap-4">
+          <div className="border-border bg-background text-muted-foreground flex shrink-0 items-center justify-center border-t px-4 py-3 text-xs sm:py-2">
+            <div className="hidden flex-wrap items-center gap-4 sm:flex">
               <span>
-                <kbd className="pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium opacity-100">
+                <kbd className="bg-muted pointer-events-none inline-flex h-5 items-center gap-1 rounded border px-1.5 font-mono text-[10px] font-medium opacity-100 select-none">
                   ↑↓
                 </kbd>{' '}
                 navigate
               </span>
               <span>
-                <kbd className="pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium opacity-100">
+                <kbd className="bg-muted pointer-events-none inline-flex h-5 items-center gap-1 rounded border px-1.5 font-mono text-[10px] font-medium opacity-100 select-none">
                   ↵
                 </kbd>{' '}
                 select
               </span>
               <span>
-                <kbd className="pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium opacity-100">
+                <kbd className="bg-muted pointer-events-none inline-flex h-5 items-center gap-1 rounded border px-1.5 font-mono text-[10px] font-medium opacity-100 select-none">
                   esc
                 </kbd>{' '}
                 close

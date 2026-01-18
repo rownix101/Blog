@@ -47,7 +47,9 @@ import {
 } from 'lucide-react'
 
 // Common icon type that works for both react-icons and lucide-react
-type IconComponent = ComponentType<{ className?: string } & SVGProps<SVGSVGElement>>
+type IconComponent = ComponentType<
+  { className?: string } & SVGProps<SVGSVGElement>
+>
 
 // Icon mapping - using direct imports for better tree-shaking
 export const iconMap: Record<string, IconComponent> = {

@@ -9,45 +9,42 @@ const lang = getLangFromUrl(Astro.url)
 ---
 
 <div class="flex items-center gap-1">
-    <div class="group relative">
-        <button
-            class={buttonVariants({ variant: 'ghost', size: 'sm' }) +
-                ' flex items-center gap-1.5 px-2'}
-            aria-label="Select Language"
-        >
-            <Icon name="lucide:globe" class="size-4" />
-            <span class="text-xs font-medium uppercase">{lang}</span>
-            <Icon
-                name="lucide:chevron-down"
-                class="size-3 opacity-50 transition-transform group-hover:rotate-180"
-            />
-        </button>
+  <div class="group relative">
+    <button
+      class={buttonVariants({ variant: 'ghost', size: 'sm' }) +
+        ' flex items-center gap-1.5 px-2'}
+      aria-label="Select Language"
+    >
+      <Icon name="lucide:globe" class="size-4" />
+      <span class="text-xs font-medium uppercase">{lang}</span>
+      <Icon
+        name="lucide:chevron-down"
+        class="size-3 opacity-50 transition-transform group-hover:rotate-180"
+      />
+    </button>
 
-        <div
-            class="bg-popover invisible absolute top-full right-0 z-50 mt-1 w-32 rounded-md border p-1 opacity-0 shadow-md transition-all duration-200 group-hover:visible group-hover:opacity-100"
-        >
-            {
-                Object.entries(languages).map(([code, label]) => (
-                    <a
-                        href={`/${code}/${Astro.url.pathname.split('/').slice(2).join('/')}`}
-                        onclick={`document.cookie = 'language=${code}; path=/; max-age=31536000; sameSite=Lax';`}
-                        class={cn(
-                            'hover:bg-accent hover:text-accent-foreground flex items-center justify-between rounded-sm px-2 py-1.5 text-xs transition-colors',
-                            lang === code ? 'bg-accent/50 font-medium' : '',
-                        )}
-                    >
-                        {label}
-                        {lang === code && (
-                            <Icon
-                                name="lucide:check"
-                                class="text-primary size-3"
-                            />
-                        )}
-                    </a>
-                ))
-            }
-        </div>
+    <div
+      class="bg-popover invisible absolute top-full right-0 z-50 mt-1 w-32 rounded-md border p-1 opacity-0 shadow-md transition-all duration-200 group-hover:visible group-hover:opacity-100"
+    >
+      {
+        Object.entries(languages).map(([code, label]) => (
+          <a
+            href={`/${code}/${Astro.url.pathname.split('/').slice(2).join('/')}`}
+            onclick={`document.cookie = 'language=${code}; path=/; max-age=31536000; sameSite=Lax';`}
+            class={cn(
+              'hover:bg-accent hover:text-accent-foreground flex items-center justify-between rounded-sm px-2 py-1.5 text-xs transition-colors',
+              lang === code ? 'bg-accent/50 font-medium' : '',
+            )}
+          >
+            {label}
+            {lang === code && (
+              <Icon name="lucide:check" class="text-primary size-3" />
+            )}
+          </a>
+        ))
+      }
     </div>
+  </div>
 </div>
 
 <script>
@@ -62,7 +59,7 @@ const lang = getLangFromUrl(Astro.url)
       const normalizedLang = browserLang.toLowerCase()
 
       // 直接匹配
-      if (normalizedLang in {'zh-cn': true, 'en': true}) {
+      if (normalizedLang in { 'zh-cn': true, en: true }) {
         targetLang = normalizedLang
       }
       // 前缀匹配
@@ -88,7 +85,9 @@ const lang = getLangFromUrl(Astro.url)
     } else if (langPrefix !== targetLang) {
       // 有语言前缀但与检测到的不同，可以选择是否重定向
       // 这里我们选择不自动重定向，让用户手动选择
-      console.log(`Browser language is ${browserLang} but current page is in ${langPrefix}`)
+      console.log(
+        `Browser language is ${browserLang} but current page is in ${langPrefix}`,
+      )
     }
 
     // 设置语言 cookie

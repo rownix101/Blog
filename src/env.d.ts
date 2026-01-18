@@ -3,8 +3,8 @@
 
 declare global {
   interface Window {
-    adsbygoogle?: any[] & { loaded?: boolean };
+    adsbygoogle?: any[] & { loaded?: boolean }
   }
 }
 
-export {};
+export {}
