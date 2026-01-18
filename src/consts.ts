@@ -2,8 +2,7 @@ import type { IconMap, SocialLink, Site } from '@/types'
 
 export const SITE: Site = {
   title: "Rownix's Blog",
-  description:
-    '我们将努力为您呈现最好的内容',
+  description: '我们将努力为您呈现最好的内容',
   href: 'https://www.rownix.dev',
   author: 'rownix101',
   locale: 'en-US',
@@ -51,10 +50,12 @@ export const GISCUS = {
   repo: import.meta.env.PUBLIC_GISCUS_REPO || 'rownix101/Blog',
   repoId: import.meta.env.PUBLIC_GISCUS_REPO_ID || 'R_kgDOQwpn1g',
   category: import.meta.env.PUBLIC_GISCUS_CATEGORY || 'Q&A',
-  categoryId: import.meta.env.PUBLIC_GISCUS_CATEGORY_ID || 'DIC_kwDOQwpn1s4C0d9L',
-  theme: import.meta.env.MODE === 'development'
-    ? '/giscus-theme.css'  // Local development
-    : SITE.href + '/giscus-theme.css',  // Production
+  categoryId:
+    import.meta.env.PUBLIC_GISCUS_CATEGORY_ID || 'DIC_kwDOQwpn1s4C0d9L',
+  theme:
+    import.meta.env.MODE === 'development'
+      ? '/giscus-theme.css' // Local development
+      : SITE.href + '/giscus-theme.css', // Production
   lazy: true,
 }
 

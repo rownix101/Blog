@@ -8,7 +8,7 @@ import { Icon } from 'astro-icon/components'
 import { getCollection, render } from 'astro:content'
 
 export async function getStaticPaths() {
-    return [{ params: { lang: 'zh-cn' } }, { params: { lang: 'en' } }]
+  return [{ params: { lang: 'zh-cn' } }, { params: { lang: 'en' } }]
 }
 
 const { lang } = Astro.params
@@ -19,36 +19,36 @@ const legalDocs = await getCollection('legal')
 const termsDoc = legalDocs.find((doc) => doc.id === `terms.${lang}`)
 
 if (!termsDoc) {
-    throw new Error(`Terms of service not found for language: ${lang}`)
+  throw new Error(`Terms of service not found for language: ${lang}`)
 }
 
 const { Content } = await render(termsDoc)
 ---
 
 <Layout class="max-w-3xl" lang={lang}>
-    <PageHead slot="head" title={termsDoc.data.title} />
-    <Breadcrumbs
-        items={[{ label: termsDoc.data.title, icon: 'lucide:file-text' }]}
-    />
+  <PageHead slot="head" title={termsDoc.data.title} />
+  <Breadcrumbs
+    items={[{ label: termsDoc.data.title, icon: 'lucide:file-text' }]}
+  />
 
-    <article class="prose prose-neutral dark:prose-invert max-w-none">
-        <div class="bg-card/50 mb-6 rounded-lg border p-6">
-            <div class="mb-2 flex items-center gap-3">
-                <Icon name="lucide:file-text" class="text-primary size-6" />
-                <h1 class="m-0 text-3xl font-bold">{termsDoc.data.title}</h1>
-            </div>
-            {
-                termsDoc.data.date && (
-                    <p class="text-muted-foreground m-0 text-sm">
-                        {lang === 'en' ? 'Last updated' : '最后更新'}:{' '}
-                        {termsDoc.data.date.toISOString().split('T')[0]}
-                    </p>
-                )
-            }
-        </div>
+  <article class="prose prose-neutral dark:prose-invert max-w-none">
+    <div class="bg-card/50 mb-6 rounded-lg border p-6">
+      <div class="mb-2 flex items-center gap-3">
+        <Icon name="lucide:file-text" class="text-primary size-6" />
+        <h1 class="m-0 text-3xl font-bold">{termsDoc.data.title}</h1>
+      </div>
+      {
+        termsDoc.data.date && (
+          <p class="text-muted-foreground m-0 text-sm">
+            {lang === 'en' ? 'Last updated' : '最后更新'}:{' '}
+            {termsDoc.data.date.toISOString().split('T')[0]}
+          </p>
+        )
+      }
+    </div>
 
-        <section class="mb-8 space-y-6">
-            <Content />
-        </section>
-    </article>
+    <section class="mb-8 space-y-6">
+      <Content />
+    </section>
+  </article>
 </Layout>

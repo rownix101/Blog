@@ -10,7 +10,7 @@ import { getTagVariant } from '@/lib/utils'
 import { Icon } from 'astro-icon/components'
 
 export function getStaticPaths() {
-    return Object.keys(languages).map((lang) => ({ params: { lang } }))
+  return Object.keys(languages).map((lang) => ({ params: { lang } }))
 }
 
 const { lang } = Astro.params
@@ -21,26 +21,24 @@ const l = useLocalizedPath(lang as keyof typeof ui)
 ---
 
 <Layout class="max-w-3xl" lang={lang}>
-    <PageHead slot="head" title={t('nav.tags')} />
-    <Breadcrumbs items={[{ label: t('nav.tags'), icon: 'lucide:hash' }]} />
+  <PageHead slot="head" title={t('nav.tags')} />
+  <Breadcrumbs items={[{ label: t('nav.tags'), icon: 'lucide:hash' }]} />
 
-    <div class="flex flex-wrap gap-3">
-        {
-            tags.map(({ tag, count }) => {
-                const { variant, className } = getTagVariant(tag)
-                return (
-                    <a
-                        href={l(`/tags/${tag}`)}
-                        class={
-                            badgeVariants({ variant }) + ' ' + (className || '')
-                        }
-                    >
-                        <Icon name="lucide:hash" class="size-3" />
-                        {tag}
-                        <span class="ml-1.5 opacity-60">({count})</span>
-                    </a>
-                )
-            })
-        }
-    </div>
+  <div class="flex flex-wrap gap-3">
+    {
+      tags.map(({ tag, count }) => {
+        const { variant, className } = getTagVariant(tag)
+        return (
+          <a
+            href={l(`/tags/${tag}`)}
+            class={badgeVariants({ variant }) + ' ' + (className || '')}
+          >
+            <Icon name="lucide:hash" class="size-3" />
+            {tag}
+            <span class="ml-1.5 opacity-60">({count})</span>
+          </a>
+        )
+      })
+    }
+  </div>
 </Layout>

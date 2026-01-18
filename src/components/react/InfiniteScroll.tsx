@@ -21,7 +21,7 @@ export function InfiniteScroll({
   pauseOnHover = true,
 }: InfiniteScrollProps) {
   const [isPaused, setIsPaused] = useState(false)
-  
+
   // Use React's useId for stable SSR-compatible ID
   const id = useId().replace(/:/g, '')
   const animationName = `scroll-${id}`
@@ -37,7 +37,7 @@ export function InfiniteScroll({
   return (
     <div
       className={cn(
-        'relative flex shrink-0 flex-col gap-4 overflow-hidden py-3 sm:py-2 sm:gap-2',
+        'relative flex shrink-0 flex-col gap-4 overflow-hidden py-3 sm:gap-2 sm:py-2',
         className,
       )}
       onMouseEnter={handleMouseEnter}
@@ -67,9 +67,7 @@ export function InfiniteScroll({
         </div>
       </div>
       {showFade && (
-        <div
-          className="from-background to-background pointer-events-none absolute inset-0 bg-linear-to-r via-transparent sm:bg-gradient-to-r"
-        />
+        <div className="from-background to-background pointer-events-none absolute inset-0 bg-linear-to-r via-transparent sm:bg-gradient-to-r" />
       )}
     </div>
   )

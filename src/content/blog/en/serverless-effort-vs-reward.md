@@ -1,9 +1,9 @@
 ---
-title: "Is All the Serverless Hassle Really Worth It?"
-description: "My first article of the new year, asking whether serverless is actually faster and cheaper than traditional servers"
-date: "2026-01-01"
-tags: ["serverless","cloudflare","vercel","cloud computing"]
-authors: ["rownix"]
+title: 'Is All the Serverless Hassle Really Worth It?'
+description: 'My first article of the new year, asking whether serverless is actually faster and cheaper than traditional servers'
+date: '2026-01-01'
+tags: ['serverless', 'cloudflare', 'vercel', 'cloud computing']
+authors: ['rownix']
 draft: false
 ---
 
@@ -22,6 +22,7 @@ Serverless usually offers **better uptime** than your typical single-server setu
 ### Next-to-Zero Ops Overhead
 
 This is probably serverless's killer feature. No more:
+
 - Getting woken up at 3 AM to fix a crashed server
 - Chasing security patches and system updates
 - Stressing about running out of disk space or memory

@@ -1,16 +1,12 @@
 ---
-import Layout from '@/layouts/Layout.astro'
-import { getStaticPaths } from 'astro'
-import { ui, type Lang } from '@/i18n/ui'
-import { getApprovedFriends, getFriendCategories, getFriendsByCategory } from '@/lib/friends-utils'
 import FriendCard from '@/components/FriendCard'
 import { SITE } from '@/consts'
+import { ui, type Lang } from '@/i18n/ui'
+import Layout from '@/layouts/Layout.astro'
+import { getApprovedFriends, getFriendCategories } from '@/lib/friends-utils'
 
 export async function getStaticPaths() {
-  return [
-    { params: { lang: 'zh-cn' } },
-    { params: { lang: 'en' } }
-  ]
+  return [{ params: { lang: 'zh-cn' } }, { params: { lang: 'en' } }]
 }
 
 const { lang } = Astro.params
@@ -23,31 +19,36 @@ const filteredFriends = allFriends
 
 // SEO
 const title = `${t['nav.friends'] || 'Friends'} - ${SITE.title}`
-const description = t['friends.page_desc'] || 'Discover amazing blogs and websites from our friends'
+const description =
+  t['friends.page_desc'] ||
+  'Discover amazing blogs and websites from our friends'
 ---
 
 <Layout title={title} description={description}>
-  <div class="container max-w-4xl mx-auto px-4 py-12">
+  <div class="container mx-auto max-w-4xl px-4 py-12">
     <!-- Header -->
-    <header class="text-center mb-12">
-      <h1 class="text-4xl font-bold mb-4">
+    <header class="mb-12 text-center">
+      <h1 class="mb-4 text-4xl font-bold">
         {t['friends.title'] || 'Friends'}
       </h1>
-      <p class="text-xl text-muted-foreground mb-8">
-        {t['friends.page_desc'] || 'Discover amazing blogs and websites from our friends'}
+      <p class="text-muted-foreground mb-8 text-xl">
+        {
+          t['friends.page_desc'] ||
+            'Discover amazing blogs and websites from our friends'
+        }
       </p>
 
       <!-- Stats -->
-      <div class="flex justify-center gap-8 mb-8">
+      <div class="mb-8 flex justify-center gap-8">
         <div class="text-center">
-          <div class="text-2xl font-bold text-primary">{allFriends.length}</div>
-          <div class="text-sm text-muted-foreground">
+          <div class="text-primary text-2xl font-bold">{allFriends.length}</div>
+          <div class="text-muted-foreground text-sm">
             {t['friends.total_friends'] || 'Total Friends'}
           </div>
         </div>
         <div class="text-center">
-          <div class="text-2xl font-bold text-primary">{categories.length}</div>
-          <div class="text-sm text-muted-foreground">
+          <div class="text-primary text-2xl font-bold">{categories.length}</div>
+          <div class="text-muted-foreground text-sm">
             {t['friends.categories'] || 'Categories'}
           </div>
         </div>
@@ -57,64 +58,83 @@ const description = t['friends.page_desc'] || 'Discover amazing blogs and websit
       <div class="mb-8">
         <a
           href={`/${lang}/friends/apply`}
-          class="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors"
+          class="bg-primary text-primary-foreground hover:bg-primary/90 inline-flex items-center gap-2 rounded-lg px-6 py-3 transition-colors"
         >
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width={2} d="M12 4v16m8-8H4" />
+          <svg
+            class="h-5 w-5"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width={2}
+              d="M12 4v16m8-8H4"></path>
           </svg>
           {t['friends.apply_button'] || 'Apply for Friend Link'}
         </a>
       </div>
     </header>
 
-    
     <!-- Friends Grid -->
-    {filteredFriends.length > 0 ? (
-      <div class="grid gap-4 md:grid-cols-2">
-        {filteredFriends.map(friend => (
-          <FriendCard friend={friend} />
-        ))}
-      </div>
-    ) : (
-      <div class="text-center py-12">
-        <div class="text-muted-foreground mb-4">
-          {selectedCategory
-            ? (t['friends.no_friends_in_category'] || 'No friends found in this category')
-            : (t['friends.no_friends_yet'] || 'No friends added yet')
-          }
+    {
+      filteredFriends.length > 0 ? (
+        <div class="grid gap-4 md:grid-cols-2">
+          {filteredFriends.map((friend) => (
+            <FriendCard friend={friend} />
+          ))}
         </div>
-        {!selectedCategory && (
-          <a
-            href={`/${lang}/friends/apply`}
-            class="text-primary hover:underline"
-          >
-            {t['friends.be_first'] || 'Be the first to apply!'}
-          </a>
-        )}
-      </div>
-    )}
+      ) : (
+        <div class="py-12 text-center">
+          <div class="text-muted-foreground mb-4">
+            {selectedCategory
+              ? t['friends.no_friends_in_category'] ||
+                'No friends found in this category'
+              : t['friends.no_friends_yet'] || 'No friends added yet'}
+          </div>
+          {!selectedCategory && (
+            <a
+              href={`/${lang}/friends/apply`}
+              class="text-primary hover:underline"
+            >
+              {t['friends.be_first'] || 'Be the first to apply!'}
+            </a>
+          )}
+        </div>
+      )
+    }
 
     <!-- How to Apply Section -->
-    <section class="mt-16 p-6 bg-muted/50 rounded-lg">
-      <h2 class="text-xl font-semibold mb-4">
+    <section class="bg-muted/50 mt-16 rounded-lg p-6">
+      <h2 class="mb-4 text-xl font-semibold">
         {t['friends.how_to_apply_title'] || 'How to Apply'}
       </h2>
-      <ol class="space-y-2 text-sm text-muted-foreground">
+      <ol class="text-muted-foreground space-y-2 text-sm">
         <li>
-          1. {t['friends.step1'] || 'Click the "Apply for Friend Link" button above'}
+          1. {
+            t['friends.step1'] ||
+              'Click the "Apply for Friend Link" button above'
+          }
         </li>
         <li>
           2. {t['friends.step2'] || 'Fill in your website information'}
         </li>
         <li>
-          3. {t['friends.step3'] || 'Submit a Pull Request with your information'}
+          3. {
+            t['friends.step3'] || 'Submit a Pull Request with your information'
+          }
         </li>
         <li>
           4. {t['friends.step4'] || 'Wait for automatic review and approval'}
         </li>
       </ol>
       <p class="mt-4 text-sm">
-        <strong>{t['friends.requirement_title'] || 'Requirements'}:</strong> {t['friends.requirement_desc'] || 'Your website should be active, high-quality, and already link back to this blog.'}
+        <strong>{t['friends.requirement_title'] || 'Requirements'}:</strong>
+        {
+          t['friends.requirement_desc'] ||
+            'Your website should be active, high-quality, and already link back to this blog.'
+        }
       </p>
     </section>
   </div>

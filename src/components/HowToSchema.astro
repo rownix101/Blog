@@ -1,6 +1,6 @@
 ---
 // Reusable HowTo Schema component for tutorial/guide posts
-// Usage: <HowToSchema 
+// Usage: <HowToSchema
 //   name="How to..."
 //   description="..."
 //   steps={[{ name: "...", text: "...", image?: "..." }]}
@@ -29,30 +29,33 @@ if (!steps || steps.length === 0) {
 }
 
 const howToSchema = {
-  "@context": "https://schema.org",
-  "@type": "HowTo",
-  "name": name,
-  "description": description,
+  '@context': 'https://schema.org',
+  '@type': 'HowTo',
+  name: name,
+  description: description,
   ...(image && {
-    "image": image
+    image: image,
   }),
   ...(totalTime && {
-    "totalTime": totalTime
+    totalTime: totalTime,
   }),
-  "step": steps.map((step, index) => ({
-    "@type": "HowToStep",
-    "position": index + 1,
-    "name": step.name,
-    "text": step.text,
+  step: steps.map((step, index) => ({
+    '@type': 'HowToStep',
+    position: index + 1,
+    name: step.name,
+    text: step.text,
     ...(step.image && {
-      "image": step.image
+      image: step.image,
     }),
     ...(step.url && {
-      "url": step.url
-    })
-  }))
+      url: step.url,
+    }),
+  })),
 }
 ---
 
-<script type="application/ld+json" is:inline set:html={JSON.stringify(howToSchema)} />
-
+<script
+  type="application/ld+json"
+  is:inline
+  set:html={JSON.stringify(howToSchema)}
+/>

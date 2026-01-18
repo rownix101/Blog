@@ -1,5 +1,11 @@
 import React, { useState } from 'react'
-import { Mail, Loader2, CheckCircle2, AlertCircle, ArrowRight } from 'lucide-react'
+import {
+  Mail,
+  Loader2,
+  CheckCircle2,
+  AlertCircle,
+  ArrowRight,
+} from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 import { NEWSLETTER_CONSENT_TEXT } from '@/consts'
@@ -23,7 +29,7 @@ const Newsletter: React.FC<NewsletterProps> = ({ className }) => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    
+
     if (!email.trim()) {
       setStatus('error')
       setMessage('Please enter your email address')
@@ -65,7 +71,7 @@ const Newsletter: React.FC<NewsletterProps> = ({ className }) => {
       setMessage('Successfully subscribed! Please check your email to confirm.')
       setEmail('')
       setConsent(false)
-      
+
       // Reset success message after 5 seconds
       setTimeout(() => {
         setStatus('idle')
@@ -74,9 +80,9 @@ const Newsletter: React.FC<NewsletterProps> = ({ className }) => {
     } catch (error) {
       setStatus('error')
       setMessage(
-        error instanceof Error 
-          ? error.message 
-          : 'Something went wrong. Please try again later.'
+        error instanceof Error
+          ? error.message
+          : 'Something went wrong. Please try again later.',
       )
     }
   }
@@ -84,16 +90,16 @@ const Newsletter: React.FC<NewsletterProps> = ({ className }) => {
   return (
     <div className={cn('w-full', className)}>
       <form onSubmit={handleSubmit} className="space-y-3">
-        <div className="flex flex-col sm:flex-row gap-3 items-start">
-          <div className="relative w-full sm:flex-1 sm:min-w-0 group">
-            <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground transition-colors group-focus-within:text-primary pointer-events-none z-10 flex-shrink-0" />
+        <div className="flex flex-col items-start gap-3 sm:flex-row">
+          <div className="group relative w-full sm:min-w-0 sm:flex-1">
+            <Mail className="text-muted-foreground group-focus-within:text-primary pointer-events-none absolute top-1/2 left-3 z-10 h-4 w-4 flex-shrink-0 -translate-y-1/2 transition-colors" />
             <input
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="Enter your email"
               disabled={status === 'loading'}
-              className="w-full h-10 pl-10 pr-4 text-sm rounded-md border border-border/60 bg-background/80 backdrop-blur-sm text-foreground placeholder:text-muted-foreground/60 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/50 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+              className="border-border/60 bg-background/80 text-foreground placeholder:text-muted-foreground/60 focus:ring-primary/20 focus:border-primary/50 h-10 w-full rounded-md border pr-4 pl-10 text-sm backdrop-blur-sm transition-all focus:ring-2 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
               aria-label="Email address"
               required
             />
@@ -103,7 +109,7 @@ const Newsletter: React.FC<NewsletterProps> = ({ className }) => {
             disabled={status === 'loading'}
             size="lg"
             variant="default"
-            className="w-full sm:w-auto sm:flex-shrink-0 group gap-2"
+            className="group w-full gap-2 sm:w-auto sm:flex-shrink-0"
           >
             {status === 'loading' ? (
               <>
@@ -119,7 +125,7 @@ const Newsletter: React.FC<NewsletterProps> = ({ className }) => {
             )}
           </Button>
         </div>
-        
+
         {/* GDPR Compliant Consent Checkbox */}
         <div className="flex items-start gap-2.5 pl-1">
           <input
@@ -128,32 +134,32 @@ const Newsletter: React.FC<NewsletterProps> = ({ className }) => {
             checked={consent}
             onChange={(e) => setConsent(e.target.checked)}
             disabled={status === 'loading'}
-            className="mt-0.5 h-3.5 w-3.5 rounded border-border text-primary focus:ring-2 focus:ring-primary/20 focus:ring-offset-0 disabled:opacity-50 disabled:cursor-not-allowed shrink-0 cursor-pointer"
+            className="border-border text-primary focus:ring-primary/20 mt-0.5 h-3.5 w-3.5 shrink-0 cursor-pointer rounded focus:ring-2 focus:ring-offset-0 disabled:cursor-not-allowed disabled:opacity-50"
             required
           />
           <label
             htmlFor="newsletter-consent-footer"
-            className="text-xs text-muted-foreground leading-relaxed cursor-pointer"
+            className="text-muted-foreground cursor-pointer text-xs leading-relaxed"
           >
             {NEWSLETTER_CONSENT_TEXT.text}{' '}
-            <a 
-              href={NEWSLETTER_CONSENT_TEXT.privacyLink} 
-              className="underline hover:text-foreground transition-colors" 
-              target="_blank" 
+            <a
+              href={NEWSLETTER_CONSENT_TEXT.privacyLink}
+              className="hover:text-foreground underline transition-colors"
+              target="_blank"
               rel="noopener noreferrer"
             >
               {NEWSLETTER_CONSENT_TEXT.privacyText}
             </a>
           </label>
         </div>
-        
+
         {message && (
           <div
             className={cn(
               'flex items-center gap-1.5 text-xs',
-              status === 'success' 
-                ? 'text-green-600 dark:text-green-400' 
-                : 'text-destructive'
+              status === 'success'
+                ? 'text-green-600 dark:text-green-400'
+                : 'text-destructive',
             )}
             role="alert"
           >

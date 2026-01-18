@@ -7,750 +7,720 @@ import { useTranslations } from '@/i18n/utils'
 import Layout from '@/layouts/Layout.astro'
 
 export function getStaticPaths() {
-    return [{ params: { lang: 'zh-cn' } }, { params: { lang: 'en' } }]
+  return [{ params: { lang: 'zh-cn' } }, { params: { lang: 'en' } }]
 }
 
 const { lang } = Astro.params
 const t = useTranslations(lang as keyof typeof ui)
 
 const sponsors = [
-    {
-        name: '晚',
-        amount: '$10',
-        message: '',
-    },
+  {
+    name: '晚',
+    amount: '$10',
+    message: '',
+  },
 ]
 
 // Sponsorship Schema for SEO
 const sponsorSchema = {
-    '@context': 'https://schema.org',
-    '@type': 'AboutPage',
-    name: t('nav.sponsor'),
-    description: t('sponsor.page_desc'),
-    url: `${SITE.href.replace(/\/$/, '')}/${lang}/sponsor`,
+  '@context': 'https://schema.org',
+  '@type': 'AboutPage',
+  name: t('nav.sponsor'),
+  description: t('sponsor.page_desc'),
+  url: `${SITE.href.replace(/\/$/, '')}/${lang}/sponsor`,
 }
 ---
 
 <Layout class="max-w-4xl" lang={lang}>
-    <PageHead slot="head" title={t('nav.sponsor')} />
+  <PageHead slot="head" title={t('nav.sponsor')} />
 
-    <!-- Sponsorship Schema for SEO -->
-    <script
-        type="application/ld+json"
-        is:inline
-        set:html={JSON.stringify(sponsorSchema)}
-    />
+  <!-- Sponsorship Schema for SEO -->
+  <script
+    type="application/ld+json"
+    is:inline
+    set:html={JSON.stringify(sponsorSchema)}
+  />
 
-    <Breadcrumbs items={[{ label: t('nav.sponsor'), icon: 'lucide:heart' }]} />
+  <Breadcrumbs items={[{ label: t('nav.sponsor'), icon: 'lucide:heart' }]} />
 
-    <section class="flex flex-col gap-8">
-        <!-- Header -->
-        <div class="flex flex-col gap-4">
+  <section class="flex flex-col gap-8">
+    <!-- Header -->
+    <div class="flex flex-col gap-4">
+      <div>
+        <h1 class="text-3xl font-bold md:text-4xl">
+          {t('nav.sponsor')}
+        </h1>
+        <p class="text-muted-foreground mt-1 font-mono text-sm">
+          {t('sponsor.page_desc')}
+        </p>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="prose prose-sm dark:prose-invert max-w-none space-y-8">
+      <!-- Introduction -->
+      <div class="bg-card rounded-lg border p-6">
+        <h2 class="mb-4 flex items-center gap-2 text-xl font-semibold">
+          <span class="text-2xl">🙏</span>
+          {t('sponsor.why_title')}
+        </h2>
+        <p class="text-muted-foreground leading-relaxed">
+          {t('sponsor.why_desc')}
+        </p>
+      </div>
+
+      <!-- Sponsorship Tiers -->
+      <div class="grid gap-6 md:grid-cols-3">
+        <!-- Basic Tier -->
+        <div
+          class="bg-card hover:border-primary/50 rounded-lg border p-6 transition-colors"
+        >
+          <div class="text-center">
+            <div class="mb-2 text-3xl">☕</div>
+            <h3 class="mb-2 text-lg font-semibold">
+              {t('sponsor.tier.basic.title')}
+            </h3>
+            <div class="text-primary mb-4 text-2xl font-bold">$5-20</div>
+            <p class="text-muted-foreground mb-4 text-sm">
+              {t('sponsor.tier.basic.desc')}
+            </p>
+            <ul class="space-y-2 text-left text-sm">
+              <li class="flex items-center gap-2">
+                <span class="text-green-500">✓</span>
+                {t('sponsor.tier.basic.benefit1')}
+              </li>
+              <li class="flex items-center gap-2">
+                <span class="text-green-500">✓</span>
+                {t('sponsor.tier.basic.benefit2')}
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Supporter Tier -->
+        <div
+          class="bg-card hover:border-primary/50 relative rounded-lg border p-6 transition-colors"
+        >
+          <div class="absolute -top-3 left-1/2 -translate-x-1/2 transform">
+            <span
+              class="bg-primary text-primary-foreground rounded-full px-3 py-1 text-xs font-semibold"
+            >
+              {t('sponsor.recommended')}
+            </span>
+          </div>
+          <div class="text-center">
+            <div class="mb-2 text-3xl">🌟</div>
+            <h3 class="mb-2 text-lg font-semibold">
+              {t('sponsor.tier.supporter.title')}
+            </h3>
+            <div class="text-primary mb-4 text-2xl font-bold">$20-50</div>
+            <p class="text-muted-foreground mb-4 text-sm">
+              {t('sponsor.tier.supporter.desc')}
+            </p>
+            <ul class="space-y-2 text-left text-sm">
+              <li class="flex items-center gap-2">
+                <span class="text-green-500">✓</span>
+                {t('sponsor.tier.basic.benefit1')}
+              </li>
+              <li class="flex items-center gap-2">
+                <span class="text-green-500">✓</span>
+                {t('sponsor.tier.basic.benefit2')}
+              </li>
+              <li class="flex items-center gap-2">
+                <span class="text-green-500">✓</span>
+                {t('sponsor.tier.supporter.benefit3')}
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Sponsor Tier -->
+        <div
+          class="bg-card hover:border-primary/50 rounded-lg border p-6 transition-colors"
+        >
+          <div class="text-center">
+            <div class="mb-2 text-3xl">💎</div>
+            <h3 class="mb-2 text-lg font-semibold">
+              {t('sponsor.tier.sponsor.title')}
+            </h3>
+            <div class="text-primary mb-4 text-2xl font-bold">$50+</div>
+            <p class="text-muted-foreground mb-4 text-sm">
+              {t('sponsor.tier.sponsor.desc')}
+            </p>
+            <ul class="space-y-2 text-left text-sm">
+              <li class="flex items-center gap-2">
+                <span class="text-green-500">✓</span>
+                {t('sponsor.tier.basic.benefit1')}
+              </li>
+              <li class="flex items-center gap-2">
+                <span class="text-green-500">✓</span>
+                {t('sponsor.tier.basic.benefit2')}
+              </li>
+              <li class="flex items-center gap-2">
+                <span class="text-green-500">✓</span>
+                {t('sponsor.tier.supporter.benefit3')}
+              </li>
+              <li class="flex items-center gap-2">
+                <span class="text-green-500">✓</span>
+                {t('sponsor.tier.sponsor.benefit4')}
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Payment Methods -->
+      <div class="bg-card rounded-lg border p-6">
+        <h2 class="mb-6 flex items-center gap-2 text-xl font-semibold">
+          <span class="text-2xl">💳</span>
+          {t('sponsor.payment_methods')}
+        </h2>
+
+        <div class="grid items-start justify-items-center gap-8 md:grid-cols-2">
+          <!-- Alipay -->
+          <div class="text-center">
+            <h3 class="mb-3 font-medium">{t('sponsor.alipay')}</h3>
+            <div class="bg-muted inline-block rounded-lg p-4">
+              <img
+                src="/images/sponsor/alipay.png"
+                alt="{t('sponsor.alipay')}"
+                class="h-[131px] w-[131px] max-w-full rounded-lg shadow-sm"
+                width="131"
+                height="131"
+                loading="lazy"
+                decoding="async"
+                onerror="this.style.display='none'; this.nextElementSibling.style.display='block';"
+              />
+              <div
+                class="text-muted-foreground flex h-[200px] w-[200px] items-center justify-center text-sm"
+                style="display:none;"
+              >
+                {t('sponsor.qr_not_available')}
+              </div>
+            </div>
+            <p class="text-muted-foreground mt-1 text-xs">
+              {lang === 'en' ? 'Scan with Alipay app' : '使用支付宝扫码'}
+            </p>
+          </div>
+
+          <!-- WeChat Pay -->
+          <div class="text-center">
+            <h3 class="mb-3 font-medium">{t('sponsor.wechat')}</h3>
+            <div class="bg-muted inline-block rounded-lg p-4">
+              <img
+                src="/images/sponsor/wechat.png"
+                alt="{t('sponsor.wechat')}"
+                class="h-[131px] w-[131px] max-w-full rounded-lg shadow-sm"
+                width="131"
+                height="131"
+                loading="lazy"
+                decoding="async"
+                onerror="this.style.display='none'; this.nextElementSibling.style.display='block';"
+              />
+              <div
+                class="text-muted-foreground flex h-[200px] w-[200px] items-center justify-center text-sm"
+                style="display:none;"
+              >
+                {t('sponsor.qr_not_available')}
+              </div>
+            </div>
+            <p class="text-muted-foreground mt-1 text-xs">
+              {lang === 'en' ? 'Scan with WeChat app' : '使用微信扫码'}
+            </p>
+          </div>
+        </div>
+
+        <!-- Crypto Payments -->
+        <div class="mt-6 border-t pt-4">
+          <h3 class="mb-4 text-center font-medium">
+            {t('sponsor.crypto_payments')}
+          </h3>
+          <div
+            class="grid items-start justify-items-center gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5"
+          >
+            <!-- Bitcoin -->
+            <div class="text-center">
+              <h4 class="mb-2 text-sm font-medium">
+                {t('sponsor.btc')}
+              </h4>
+              <div class="bg-muted inline-block rounded-lg p-2">
+                <img
+                  src="/images/sponsor/crypto/bitcoin.png"
+                  alt="Bitcoin"
+                  class="h-[131px] w-[131px] max-w-full rounded-lg shadow-sm"
+                  width="131"
+                  height="131"
+                  loading="lazy"
+                  decoding="async"
+                  onerror="this.style.display='none'; this.nextElementSibling.style.display='block';"
+                />
+                <div
+                  class="text-muted-foreground flex h-[131px] w-[131px] items-center justify-center text-xs"
+                  style="display:none;"
+                >
+                  {t('sponsor.qr_not_available')}
+                </div>
+              </div>
+            </div>
+
+            <!-- Ethereum -->
+            <div class="text-center">
+              <h4 class="mb-2 text-sm font-medium">
+                {t('sponsor.eth')}
+              </h4>
+              <div class="bg-muted inline-block rounded-lg p-2">
+                <img
+                  src="/images/sponsor/crypto/ethereum.png"
+                  alt="Ethereum"
+                  class="h-[131px] w-[131px] max-w-full rounded-lg shadow-sm"
+                  width="131"
+                  height="131"
+                  loading="lazy"
+                  decoding="async"
+                  onerror="this.style.display='none'; this.nextElementSibling.style.display='block';"
+                />
+                <div
+                  class="text-muted-foreground flex h-[131px] w-[131px] items-center justify-center text-xs"
+                  style="display:none;"
+                >
+                  {t('sponsor.qr_not_available')}
+                </div>
+              </div>
+              <p class="text-muted-foreground mt-2 text-xs">ERC-20</p>
+            </div>
+
+            <!-- USDT-ERC20 -->
+            <div class="text-center">
+              <h4 class="mb-2 text-sm font-medium">
+                {t('sponsor.usdt_erc20')}
+              </h4>
+              <div class="bg-muted inline-block rounded-lg p-2">
+                <img
+                  src="/images/sponsor/crypto/usdt-erc20.png"
+                  alt="USDT-ERC20"
+                  class="h-[131px] w-[131px] max-w-full rounded-lg shadow-sm"
+                  width="131"
+                  height="131"
+                  loading="lazy"
+                  decoding="async"
+                  onerror="this.style.display='none'; this.nextElementSibling.style.display='block';"
+                />
+                <div
+                  class="text-muted-foreground flex h-[131px] w-[131px] items-center justify-center text-xs"
+                  style="display:none;"
+                >
+                  {t('sponsor.qr_not_available')}
+                </div>
+              </div>
+              <p class="text-muted-foreground mt-2 text-xs">Ethereum Network</p>
+            </div>
+
+            <!-- USDT-TRC20 -->
+            <div class="text-center">
+              <h4 class="mb-2 text-sm font-medium">
+                {t('sponsor.usdt_trc20')}
+              </h4>
+              <div class="bg-muted inline-block rounded-lg p-2">
+                <img
+                  src="/images/sponsor/crypto/usdt-trc20.png"
+                  alt="USDT-TRC20"
+                  class="h-[131px] w-[131px] max-w-full rounded-lg shadow-sm"
+                  width="131"
+                  height="131"
+                  loading="lazy"
+                  decoding="async"
+                  onerror="this.style.display='none'; this.nextElementSibling.style.display='block';"
+                />
+                <div
+                  class="text-muted-foreground flex h-[131px] w-[131px] items-center justify-center text-xs"
+                  style="display:none;"
+                >
+                  {t('sponsor.qr_not_available')}
+                </div>
+              </div>
+              <p class="text-muted-foreground mt-2 text-xs">Tron Network</p>
+            </div>
+
+            <!-- Tron -->
+            <div class="text-center">
+              <h4 class="mb-2 text-sm font-medium">
+                {t('sponsor.tron')}
+              </h4>
+              <div class="bg-muted inline-block rounded-lg p-2">
+                <img
+                  src="/images/sponsor/crypto/tron.png"
+                  alt="Tron"
+                  class="h-[131px] w-[131px] max-w-full rounded-lg shadow-sm"
+                  width="131"
+                  height="131"
+                  loading="lazy"
+                  decoding="async"
+                  onerror="this.style.display='none'; this.nextElementSibling.style.display='block';"
+                />
+                <div
+                  class="text-muted-foreground flex h-[131px] w-[131px] items-center justify-center text-xs"
+                  style="display:none;"
+                >
+                  {t('sponsor.qr_not_available')}
+                </div>
+              </div>
+              <p class="text-muted-foreground mt-2 text-xs">TRC-20</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- How Funds Are Used -->
+      <div class="bg-card rounded-lg border p-6">
+        <h2 class="mb-4 flex items-center gap-2 text-xl font-semibold">
+          <span class="text-2xl">💰</span>
+          {t('sponsor.fund_usage_title')}
+        </h2>
+        <div class="grid gap-4 md:grid-cols-2">
+          <div class="flex items-start gap-3">
+            <span class="text-xl">🌐</span>
             <div>
-                <h1 class="text-3xl font-bold md:text-4xl">
-                    {t('nav.sponsor')}
-                </h1>
-                <p class="text-muted-foreground mt-1 font-mono text-sm">
-                    {t('sponsor.page_desc')}
-                </p>
+              <h4 class="font-medium">
+                {t('sponsor.usage.server')}
+              </h4>
+              <p class="text-muted-foreground text-sm">
+                {t('sponsor.usage.server_desc')}
+              </p>
             </div>
+          </div>
+          <div class="flex items-start gap-3">
+            <span class="text-xl">🛠️</span>
+            <div>
+              <h4 class="font-medium">
+                {t('sponsor.usage.tools')}
+              </h4>
+              <p class="text-muted-foreground text-sm">
+                {t('sponsor.usage.tools_desc')}
+              </p>
+            </div>
+          </div>
+          <div class="flex items-start gap-3">
+            <span class="text-xl">📚</span>
+            <div>
+              <h4 class="font-medium">
+                {t('sponsor.usage.learning')}
+              </h4>
+              <p class="text-muted-foreground text-sm">
+                {t('sponsor.usage.learning_desc')}
+              </p>
+            </div>
+          </div>
+          <div class="flex items-start gap-3">
+            <span class="text-xl">🎁</span>
+            <div>
+              <h4 class="font-medium">
+                {t('sponsor.usage.opensource')}
+              </h4>
+              <p class="text-muted-foreground text-sm">
+                {t('sponsor.usage.opensource_desc')}
+              </p>
+            </div>
+          </div>
         </div>
+      </div>
 
-        <!-- Main Content -->
-        <div class="prose prose-sm dark:prose-invert max-w-none space-y-8">
-            <!-- Introduction -->
-            <div class="bg-card rounded-lg border p-6">
-                <h2 class="mb-4 flex items-center gap-2 text-xl font-semibold">
-                    <span class="text-2xl">🙏</span>
-                    {t('sponsor.why_title')}
-                </h2>
-                <p class="text-muted-foreground leading-relaxed">
-                    {t('sponsor.why_desc')}
-                </p>
-            </div>
-
-            <!-- Sponsorship Tiers -->
-            <div class="grid gap-6 md:grid-cols-3">
-                <!-- Basic Tier -->
-                <div
-                    class="bg-card hover:border-primary/50 rounded-lg border p-6 transition-colors"
-                >
-                    <div class="text-center">
-                        <div class="mb-2 text-3xl">☕</div>
-                        <h3 class="mb-2 text-lg font-semibold">
-                            {t('sponsor.tier.basic.title')}
-                        </h3>
-                        <div class="text-primary mb-4 text-2xl font-bold">
-                            $5-20
-                        </div>
-                        <p class="text-muted-foreground mb-4 text-sm">
-                            {t('sponsor.tier.basic.desc')}
-                        </p>
-                        <ul class="space-y-2 text-left text-sm">
-                            <li class="flex items-center gap-2">
-                                <span class="text-green-500">✓</span>
-                                {t('sponsor.tier.basic.benefit1')}
-                            </li>
-                            <li class="flex items-center gap-2">
-                                <span class="text-green-500">✓</span>
-                                {t('sponsor.tier.basic.benefit2')}
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-
-                <!-- Supporter Tier -->
-                <div
-                    class="bg-card hover:border-primary/50 relative rounded-lg border p-6 transition-colors"
-                >
-                    <div
-                        class="absolute -top-3 left-1/2 -translate-x-1/2 transform"
-                    >
-                        <span
-                            class="bg-primary text-primary-foreground rounded-full px-3 py-1 text-xs font-semibold"
-                        >
-                            {t('sponsor.recommended')}
-                        </span>
-                    </div>
-                    <div class="text-center">
-                        <div class="mb-2 text-3xl">🌟</div>
-                        <h3 class="mb-2 text-lg font-semibold">
-                            {t('sponsor.tier.supporter.title')}
-                        </h3>
-                        <div class="text-primary mb-4 text-2xl font-bold">
-                            $20-50
-                        </div>
-                        <p class="text-muted-foreground mb-4 text-sm">
-                            {t('sponsor.tier.supporter.desc')}
-                        </p>
-                        <ul class="space-y-2 text-left text-sm">
-                            <li class="flex items-center gap-2">
-                                <span class="text-green-500">✓</span>
-                                {t('sponsor.tier.basic.benefit1')}
-                            </li>
-                            <li class="flex items-center gap-2">
-                                <span class="text-green-500">✓</span>
-                                {t('sponsor.tier.basic.benefit2')}
-                            </li>
-                            <li class="flex items-center gap-2">
-                                <span class="text-green-500">✓</span>
-                                {t('sponsor.tier.supporter.benefit3')}
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-
-                <!-- Sponsor Tier -->
-                <div
-                    class="bg-card hover:border-primary/50 rounded-lg border p-6 transition-colors"
-                >
-                    <div class="text-center">
-                        <div class="mb-2 text-3xl">💎</div>
-                        <h3 class="mb-2 text-lg font-semibold">
-                            {t('sponsor.tier.sponsor.title')}
-                        </h3>
-                        <div class="text-primary mb-4 text-2xl font-bold">
-                            $50+
-                        </div>
-                        <p class="text-muted-foreground mb-4 text-sm">
-                            {t('sponsor.tier.sponsor.desc')}
-                        </p>
-                        <ul class="space-y-2 text-left text-sm">
-                            <li class="flex items-center gap-2">
-                                <span class="text-green-500">✓</span>
-                                {t('sponsor.tier.basic.benefit1')}
-                            </li>
-                            <li class="flex items-center gap-2">
-                                <span class="text-green-500">✓</span>
-                                {t('sponsor.tier.basic.benefit2')}
-                            </li>
-                            <li class="flex items-center gap-2">
-                                <span class="text-green-500">✓</span>
-                                {t('sponsor.tier.supporter.benefit3')}
-                            </li>
-                            <li class="flex items-center gap-2">
-                                <span class="text-green-500">✓</span>
-                                {t('sponsor.tier.sponsor.benefit4')}
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Payment Methods -->
-            <div class="bg-card rounded-lg border p-6">
-                <h2 class="mb-6 flex items-center gap-2 text-xl font-semibold">
-                    <span class="text-2xl">💳</span>
-                    {t('sponsor.payment_methods')}
-                </h2>
-
-                <div
-                    class="grid items-start justify-items-center gap-8 md:grid-cols-2"
-                >
-                    <!-- Alipay -->
-                    <div class="text-center">
-                        <h3 class="mb-3 font-medium">{t('sponsor.alipay')}</h3>
-                        <div class="bg-muted inline-block rounded-lg p-4">
-                            <img
-                                src="/images/sponsor/alipay.png"
-                                alt="{t('sponsor.alipay')}"
-                                class="h-[131px] w-[131px] max-w-full rounded-lg shadow-sm"
-                                width="131"
-                                height="131"
-                                loading="lazy"
-                                decoding="async"
-                                onerror="this.style.display='none'; this.nextElementSibling.style.display='block';"
-                            />
-                            <div
-                                class="text-muted-foreground flex h-[200px] w-[200px] items-center justify-center text-sm"
-                                style="display:none;"
-                            >
-                                {t('sponsor.qr_not_available')}
-                            </div>
-                        </div>
-                        <p class="text-muted-foreground mt-1 text-xs">
-                            {
-                                lang === 'en'
-                                    ? 'Scan with Alipay app'
-                                    : '使用支付宝扫码'
-                            }
-                        </p>
-                    </div>
-
-                    <!-- WeChat Pay -->
-                    <div class="text-center">
-                        <h3 class="mb-3 font-medium">{t('sponsor.wechat')}</h3>
-                        <div class="bg-muted inline-block rounded-lg p-4">
-                            <img
-                                src="/images/sponsor/wechat.png"
-                                alt="{t('sponsor.wechat')}"
-                                class="h-[131px] w-[131px] max-w-full rounded-lg shadow-sm"
-                                width="131"
-                                height="131"
-                                loading="lazy"
-                                decoding="async"
-                                onerror="this.style.display='none'; this.nextElementSibling.style.display='block';"
-                            />
-                            <div
-                                class="text-muted-foreground flex h-[200px] w-[200px] items-center justify-center text-sm"
-                                style="display:none;"
-                            >
-                                {t('sponsor.qr_not_available')}
-                            </div>
-                        </div>
-                        <p class="text-muted-foreground mt-1 text-xs">
-                            {
-                                lang === 'en'
-                                    ? 'Scan with WeChat app'
-                                    : '使用微信扫码'
-                            }
-                        </p>
-                    </div>
-                </div>
-
-                <!-- Crypto Payments -->
-                <div class="mt-6 border-t pt-4">
-                    <h3 class="mb-4 text-center font-medium">
-                        {t('sponsor.crypto_payments')}
-                    </h3>
-                    <div
-                        class="grid items-start justify-items-center gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5"
-                    >
-                        <!-- Bitcoin -->
-                        <div class="text-center">
-                            <h4 class="mb-2 text-sm font-medium">
-                                {t('sponsor.btc')}
-                            </h4>
-                            <div class="bg-muted inline-block rounded-lg p-2">
-                                <img
-                                    src="/images/sponsor/crypto/bitcoin.png"
-                                    alt="Bitcoin"
-                                    class="h-[131px] w-[131px] max-w-full rounded-lg shadow-sm"
-                                    width="131"
-                                    height="131"
-                                    loading="lazy"
-                                    decoding="async"
-                                    onerror="this.style.display='none'; this.nextElementSibling.style.display='block';"
-                                />
-                                <div
-                                    class="text-muted-foreground flex h-[131px] w-[131px] items-center justify-center text-xs"
-                                    style="display:none;"
-                                >
-                                    {t('sponsor.qr_not_available')}
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Ethereum -->
-                        <div class="text-center">
-                            <h4 class="mb-2 text-sm font-medium">
-                                {t('sponsor.eth')}
-                            </h4>
-                            <div class="bg-muted inline-block rounded-lg p-2">
-                                <img
-                                    src="/images/sponsor/crypto/ethereum.png"
-                                    alt="Ethereum"
-                                    class="h-[131px] w-[131px] max-w-full rounded-lg shadow-sm"
-                                    width="131"
-                                    height="131"
-                                    loading="lazy"
-                                    decoding="async"
-                                    onerror="this.style.display='none'; this.nextElementSibling.style.display='block';"
-                                />
-                                <div
-                                    class="text-muted-foreground flex h-[131px] w-[131px] items-center justify-center text-xs"
-                                    style="display:none;"
-                                >
-                                    {t('sponsor.qr_not_available')}
-                                </div>
-                            </div>
-                            <p class="text-muted-foreground mt-2 text-xs">
-                                ERC-20
-                            </p>
-                        </div>
-
-                        <!-- USDT-ERC20 -->
-                        <div class="text-center">
-                            <h4 class="mb-2 text-sm font-medium">
-                                {t('sponsor.usdt_erc20')}
-                            </h4>
-                            <div class="bg-muted inline-block rounded-lg p-2">
-                                <img
-                                    src="/images/sponsor/crypto/usdt-erc20.png"
-                                    alt="USDT-ERC20"
-                                    class="h-[131px] w-[131px] max-w-full rounded-lg shadow-sm"
-                                    width="131"
-                                    height="131"
-                                    loading="lazy"
-                                    decoding="async"
-                                    onerror="this.style.display='none'; this.nextElementSibling.style.display='block';"
-                                />
-                                <div
-                                    class="text-muted-foreground flex h-[131px] w-[131px] items-center justify-center text-xs"
-                                    style="display:none;"
-                                >
-                                    {t('sponsor.qr_not_available')}
-                                </div>
-                            </div>
-                            <p class="text-muted-foreground mt-2 text-xs">
-                                Ethereum Network
-                            </p>
-                        </div>
-
-                        <!-- USDT-TRC20 -->
-                        <div class="text-center">
-                            <h4 class="mb-2 text-sm font-medium">
-                                {t('sponsor.usdt_trc20')}
-                            </h4>
-                            <div class="bg-muted inline-block rounded-lg p-2">
-                                <img
-                                    src="/images/sponsor/crypto/usdt-trc20.png"
-                                    alt="USDT-TRC20"
-                                    class="h-[131px] w-[131px] max-w-full rounded-lg shadow-sm"
-                                    width="131"
-                                    height="131"
-                                    loading="lazy"
-                                    decoding="async"
-                                    onerror="this.style.display='none'; this.nextElementSibling.style.display='block';"
-                                />
-                                <div
-                                    class="text-muted-foreground flex h-[131px] w-[131px] items-center justify-center text-xs"
-                                    style="display:none;"
-                                >
-                                    {t('sponsor.qr_not_available')}
-                                </div>
-                            </div>
-                            <p class="text-muted-foreground mt-2 text-xs">
-                                Tron Network
-                            </p>
-                        </div>
-
-                        <!-- Tron -->
-                        <div class="text-center">
-                            <h4 class="mb-2 text-sm font-medium">
-                                {t('sponsor.tron')}
-                            </h4>
-                            <div class="bg-muted inline-block rounded-lg p-2">
-                                <img
-                                    src="/images/sponsor/crypto/tron.png"
-                                    alt="Tron"
-                                    class="h-[131px] w-[131px] max-w-full rounded-lg shadow-sm"
-                                    width="131"
-                                    height="131"
-                                    loading="lazy"
-                                    decoding="async"
-                                    onerror="this.style.display='none'; this.nextElementSibling.style.display='block';"
-                                />
-                                <div
-                                    class="text-muted-foreground flex h-[131px] w-[131px] items-center justify-center text-xs"
-                                    style="display:none;"
-                                >
-                                    {t('sponsor.qr_not_available')}
-                                </div>
-                            </div>
-                            <p class="text-muted-foreground mt-2 text-xs">
-                                TRC-20
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- How Funds Are Used -->
-            <div class="bg-card rounded-lg border p-6">
-                <h2 class="mb-4 flex items-center gap-2 text-xl font-semibold">
-                    <span class="text-2xl">💰</span>
-                    {t('sponsor.fund_usage_title')}
-                </h2>
-                <div class="grid gap-4 md:grid-cols-2">
-                    <div class="flex items-start gap-3">
-                        <span class="text-xl">🌐</span>
-                        <div>
-                            <h4 class="font-medium">
-                                {t('sponsor.usage.server')}
-                            </h4>
-                            <p class="text-muted-foreground text-sm">
-                                {t('sponsor.usage.server_desc')}
-                            </p>
-                        </div>
-                    </div>
-                    <div class="flex items-start gap-3">
-                        <span class="text-xl">🛠️</span>
-                        <div>
-                            <h4 class="font-medium">
-                                {t('sponsor.usage.tools')}
-                            </h4>
-                            <p class="text-muted-foreground text-sm">
-                                {t('sponsor.usage.tools_desc')}
-                            </p>
-                        </div>
-                    </div>
-                    <div class="flex items-start gap-3">
-                        <span class="text-xl">📚</span>
-                        <div>
-                            <h4 class="font-medium">
-                                {t('sponsor.usage.learning')}
-                            </h4>
-                            <p class="text-muted-foreground text-sm">
-                                {t('sponsor.usage.learning_desc')}
-                            </p>
-                        </div>
-                    </div>
-                    <div class="flex items-start gap-3">
-                        <span class="text-xl">🎁</span>
-                        <div>
-                            <h4 class="font-medium">
-                                {t('sponsor.usage.opensource')}
-                            </h4>
-                            <p class="text-muted-foreground text-sm">
-                                {t('sponsor.usage.opensource_desc')}
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Non-Monetary Support -->
-            <div class="bg-card rounded-lg border p-6">
-                <h2 class="mb-4 flex items-center gap-2 text-xl font-semibold">
-                    <span class="text-2xl">❤️</span>
-                    {t('sponsor.non_monetary_title')}
-                </h2>
-                <div class="grid gap-3 md:grid-cols-2">
-                    <div class="flex items-center gap-2">
-                        <span class="text-green-500">⭐</span>
-                        <span class="text-sm"
-                            >{t('sponsor.non_monetary.star')}</span
-                        >
-                    </div>
-                    <div class="flex items-center gap-2">
-                        <span class="text-green-500">🔄</span>
-                        <span class="text-sm"
-                            >{t('sponsor.non_monetary.share')}</span
-                        >
-                    </div>
-                    <div class="flex items-center gap-2">
-                        <span class="text-green-500">💬</span>
-                        <span class="text-sm"
-                            >{t('sponsor.non_monetary.comment')}</span
-                        >
-                    </div>
-                    <div class="flex items-center gap-2">
-                        <span class="text-green-500">🐛</span>
-                        <span class="text-sm"
-                            >{t('sponsor.non_monetary.feedback')}</span
-                        >
-                    </div>
-                </div>
-            </div>
-
-            <!-- Sponsor List -->
-            <div class="bg-card rounded-lg border p-6">
-                <h2 class="mb-4 flex items-center gap-2 text-xl font-semibold">
-                    <span class="text-2xl">🏆</span>
-                    {t('sponsor.sponsors_title')}
-                </h2>
-                <p class="text-muted-foreground mb-6">
-                    {t('sponsor.sponsors_desc')}
-                </p>
-
-                <!-- Current Sponsors Display -->
-                <div class="space-y-4">
-                    {
-                        sponsors.length ? (
-                            <div class="grid gap-4 sm:grid-cols-2">
-                                {sponsors.map((sponsor) => (
-                                    <div class="bg-muted/40 rounded-lg border border-border/60 p-4">
-                                        <div class="flex items-center justify-between gap-4">
-                                            <span class="font-medium">
-                                                {sponsor.name}
-                                            </span>
-                                            <span class="text-muted-foreground text-sm">
-                                                {sponsor.amount}
-                                            </span>
-                                        </div>
-                                        {sponsor.message && (
-                                            <p class="text-muted-foreground mt-2 text-sm">
-                                                {sponsor.message}
-                                            </p>
-                                        )}
-                                    </div>
-                                ))}
-                            </div>
-                        ) : (
-                            <div class="text-center text-muted-foreground py-8">
-                                <svg
-                                    class="mx-auto mb-4 h-12 w-12 opacity-50"
-                                    viewBox="0 0 24 24"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    stroke-width="2"
-                                >
-                                    <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
-                                    <path d="M2 17l10 5 10-5M2 12l10 5 10-5"></path>
-                                </svg>
-                                <p class="text-sm">
-                                    {lang === 'zh-cn'
-                                        ? '暂无赞助者，成为第一个支持者吧！'
-                                        : 'No sponsors yet, be the first one!'}
-                                </p>
-                            </div>
-                        )
-                    }
-                </div>
-            </div>
-
-            <!-- Add to Sponsor List Form -->
-            <div class="bg-card rounded-lg border p-6">
-                <h2 class="mb-4 flex items-center gap-2 text-xl font-semibold">
-                    <span class="text-2xl">📝</span>
-                    {t('sponsor.add_to_list')}
-                </h2>
-                <p class="text-muted-foreground mb-6 text-sm">
-                    {t('sponsor.add_to_list_desc')}
-                </p>
-
-                <form
-                    id="sponsor-form"
-                    class="space-y-4"
-                    onsubmit="handleSponsorSubmit(event)"
-                >
-                    <div class="grid gap-4 md:grid-cols-2">
-                        <div>
-                            <label
-                                for="sponsor-name"
-                                class="text-foreground mb-2 block text-sm font-medium"
-                            >
-                                {t('sponsor.name_label')} *
-                            </label>
-                            <input
-                                type="text"
-                                id="sponsor-name"
-                                name="name"
-                                required
-                                placeholder={t('sponsor.name_placeholder')}
-                                class="w-full rounded-md border border-border/60 bg-background/80 px-3 py-2 text-sm backdrop-blur-sm focus:border-primary/50 focus:outline-none focus:ring-2 focus:ring-primary/20"
-                            />
-                        </div>
-
-                        <div>
-                            <label
-                                for="sponsor-amount"
-                                class="text-foreground mb-2 block text-sm font-medium"
-                            >
-                                {t('sponsor.amount_label')} *
-                            </label>
-                            <input
-                                type="text"
-                                id="sponsor-amount"
-                                name="amount"
-                                required
-                                placeholder={t('sponsor.amount_placeholder')}
-                                class="w-full rounded-md border border-border/60 bg-background/80 px-3 py-2 text-sm backdrop-blur-sm focus:border-primary/50 focus:outline-none focus:ring-2 focus:ring-primary/20"
-                            />
-                        </div>
-                    </div>
-
-                    <div>
-                        <label
-                            for="sponsor-payment"
-                            class="text-foreground mb-2 block text-sm font-medium"
-                        >
-                            {t('sponsor.payment_method_label')} *
-                        </label>
-                        <select
-                            id="sponsor-payment"
-                            name="payment_method"
-                            required
-                            class="w-full rounded-md border border-border/60 bg-background/80 px-3 py-2 text-sm backdrop-blur-sm focus:border-primary/50 focus:outline-none focus:ring-2 focus:ring-primary/20"
-                        >
-                            <option value="">{t('sponsor.payment_method_placeholder')}</option>
-                            <option value="alipay">{t('sponsor.alipay')}</option>
-                            <option value="wechat">{t('sponsor.wechat')}</option>
-                            <option value="btc">{t('sponsor.btc')}</option>
-                            <option value="eth">{t('sponsor.eth')}</option>
-                            <option value="usdt-erc20">{t('sponsor.usdt_erc20')}</option>
-                            <option value="usdt-trc20">{t('sponsor.usdt_trc20')}</option>
-                            <option value="tron">{t('sponsor.tron')}</option>
-                            <option value="other">
-                                {lang === 'zh-cn' ? '其他' : 'Other'}
-                            </option>
-                        </select>
-                    </div>
-
-                    <div>
-                        <label
-                            for="sponsor-message"
-                            class="text-foreground mb-2 block text-sm font-medium"
-                        >
-                            {t('sponsor.message_label')}
-                        </label>
-                        <textarea
-                            id="sponsor-message"
-                            name="message"
-                            rows={3}
-                            placeholder={t('sponsor.message_placeholder')}
-                            class="w-full rounded-md border border-border/60 bg-background/80 px-3 py-2 text-sm backdrop-blur-sm focus:border-primary/50 focus:outline-none focus:ring-2 focus:ring-primary/20 resize-none"
-                        />
-                        <p class="text-muted-foreground mt-1 text-xs">
-                            {lang === 'zh-cn'
-                                ? '支持者及以上级别的赞助者可以在赞助者名单中显示留言'
-                                : 'Supporter tier and above can display messages in sponsor list'}
-                        </p>
-                    </div>
-
-                    <div
-                        id="form-message"
-                        class="hidden rounded-lg p-3 text-sm"
-                    ></div>
-
-                    <button
-                        type="submit"
-                        class="bg-primary text-primary-foreground hover:bg-primary/90 inline-flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition-colors disabled:cursor-not-allowed disabled:opacity-50"
-                    >
-                        <svg
-                            class="h-4 w-4"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            stroke-width="2"
-                        >
-                            <rect x="2" y="4" width="20" height="16" rx="2"></rect>
-                            <path d="m22 7-10 5L2 7"></path>
-                        </svg>
-                        {t('sponsor.submit_button')}
-                    </button>
-                </form>
-            </div>
-
-            <!-- Contact -->
-            <div class="bg-muted/50 rounded-lg p-6 text-center">
-                <h3 class="mb-2 font-semibold">{t('sponsor.contact_title')}</h3>
-                <p class="text-muted-foreground mb-4 text-sm">
-                    {t('sponsor.contact_desc')}
-                </p>
-                <a
-                    href="mailto:rownix101@gmail.com"
-                    class="bg-primary text-primary-foreground hover:bg-primary/90 inline-flex items-center gap-2 rounded-lg px-4 py-2 transition-colors"
-                >
-                    <svg
-                        class="h-4 w-4"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        stroke-width="2"
-                    >
-                        <rect x="2" y="4" width="20" height="16" rx="2"></rect>
-                        <path d="m22 7-10 5L2 7"></path>
-                    </svg>
-                    {t('sponsor.contact_email')}
-                </a>
-            </div>
+      <!-- Non-Monetary Support -->
+      <div class="bg-card rounded-lg border p-6">
+        <h2 class="mb-4 flex items-center gap-2 text-xl font-semibold">
+          <span class="text-2xl">❤️</span>
+          {t('sponsor.non_monetary_title')}
+        </h2>
+        <div class="grid gap-3 md:grid-cols-2">
+          <div class="flex items-center gap-2">
+            <span class="text-green-500">⭐</span>
+            <span class="text-sm">{t('sponsor.non_monetary.star')}</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="text-green-500">🔄</span>
+            <span class="text-sm">{t('sponsor.non_monetary.share')}</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="text-green-500">💬</span>
+            <span class="text-sm">{t('sponsor.non_monetary.comment')}</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="text-green-500">🐛</span>
+            <span class="text-sm">{t('sponsor.non_monetary.feedback')}</span>
+          </div>
         </div>
-    </section>
+      </div>
 
-    <!-- JavaScript for form submission -->
-    <script define:vars={{ lang }}>
-        const translations = {
-            'zh-cn': {
-                validation_error: '请填写所有必填字段',
-                opening_client: '正在唤起邮件客户端，请完成发送。',
-                submit_button: '提交信息'
-            },
-            en: {
-                validation_error: 'Please fill in all required fields',
-                opening_client: 'Opening email client, please complete sending.',
-                submit_button: 'Submit Information'
-            }
-        };
+      <!-- Sponsor List -->
+      <div class="bg-card rounded-lg border p-6">
+        <h2 class="mb-4 flex items-center gap-2 text-xl font-semibold">
+          <span class="text-2xl">🏆</span>
+          {t('sponsor.sponsors_title')}
+        </h2>
+        <p class="text-muted-foreground mb-6">
+          {t('sponsor.sponsors_desc')}
+        </p>
 
-        // Expose the function to global scope
-        window.handleSponsorSubmit = function(event) {
-            event.preventDefault();
+        <!-- Current Sponsors Display -->
+        <div class="space-y-4">
+          {
+            sponsors.length ? (
+              <div class="grid gap-4 sm:grid-cols-2">
+                {sponsors.map((sponsor) => (
+                  <div class="bg-muted/40 border-border/60 rounded-lg border p-4">
+                    <div class="flex items-center justify-between gap-4">
+                      <span class="font-medium">{sponsor.name}</span>
+                      <span class="text-muted-foreground text-sm">
+                        {sponsor.amount}
+                      </span>
+                    </div>
+                    {sponsor.message && (
+                      <p class="text-muted-foreground mt-2 text-sm">
+                        {sponsor.message}
+                      </p>
+                    )}
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div class="text-muted-foreground py-8 text-center">
+                <svg
+                  class="mx-auto mb-4 h-12 w-12 opacity-50"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <path d="M12 2L2 7l10 5 10-5-10-5z" />
+                  <path d="M2 17l10 5 10-5M2 12l10 5 10-5" />
+                </svg>
+                <p class="text-sm">
+                  {lang === 'zh-cn'
+                    ? '暂无赞助者，成为第一个支持者吧！'
+                    : 'No sponsors yet, be the first one!'}
+                </p>
+              </div>
+            )
+          }
+        </div>
+      </div>
 
-            const form = event.target;
-            const formData = new FormData(form);
-            const messageDiv = document.getElementById('form-message');
+      <!-- Add to Sponsor List Form -->
+      <div class="bg-card rounded-lg border p-6">
+        <h2 class="mb-4 flex items-center gap-2 text-xl font-semibold">
+          <span class="text-2xl">📝</span>
+          {t('sponsor.add_to_list')}
+        </h2>
+        <p class="text-muted-foreground mb-6 text-sm">
+          {t('sponsor.add_to_list_desc')}
+        </p>
 
-            // Get form values
-            const name = formData.get('name');
-            const message = formData.get('message') || '';
-            const amount = formData.get('amount');
-            const paymentMethod = formData.get('payment_method');
+        <form
+          id="sponsor-form"
+          class="space-y-4"
+          onsubmit="handleSponsorSubmit(event)"
+        >
+          <div class="grid gap-4 md:grid-cols-2">
+            <div>
+              <label
+                for="sponsor-name"
+                class="text-foreground mb-2 block text-sm font-medium"
+              >
+                {t('sponsor.name_label')} *
+              </label>
+              <input
+                type="text"
+                id="sponsor-name"
+                name="name"
+                required
+                placeholder={t('sponsor.name_placeholder')}
+                class="border-border/60 bg-background/80 focus:border-primary/50 focus:ring-primary/20 w-full rounded-md border px-3 py-2 text-sm backdrop-blur-sm focus:ring-2 focus:outline-none"
+              />
+            </div>
 
-            // Get payment method display name
-            const paymentMethodSelect = document.getElementById('sponsor-payment');
-            const paymentMethodText = paymentMethodSelect.options[paymentMethodSelect.selectedIndex]?.text || paymentMethod;
+            <div>
+              <label
+                for="sponsor-amount"
+                class="text-foreground mb-2 block text-sm font-medium"
+              >
+                {t('sponsor.amount_label')} *
+              </label>
+              <input
+                type="text"
+                id="sponsor-amount"
+                name="amount"
+                required
+                placeholder={t('sponsor.amount_placeholder')}
+                class="border-border/60 bg-background/80 focus:border-primary/50 focus:ring-primary/20 w-full rounded-md border px-3 py-2 text-sm backdrop-blur-sm focus:ring-2 focus:outline-none"
+              />
+            </div>
+          </div>
 
-            // Get translations for current language
-            const t = translations[lang] || translations['zh-cn'];
+          <div>
+            <label
+              for="sponsor-payment"
+              class="text-foreground mb-2 block text-sm font-medium"
+            >
+              {t('sponsor.payment_method_label')} *
+            </label>
+            <select
+              id="sponsor-payment"
+              name="payment_method"
+              required
+              class="border-border/60 bg-background/80 focus:border-primary/50 focus:ring-primary/20 w-full rounded-md border px-3 py-2 text-sm backdrop-blur-sm focus:ring-2 focus:outline-none"
+            >
+              <option value="">{t('sponsor.payment_method_placeholder')}</option
+              >
+              <option value="alipay">{t('sponsor.alipay')}</option>
+              <option value="wechat">{t('sponsor.wechat')}</option>
+              <option value="btc">{t('sponsor.btc')}</option>
+              <option value="eth">{t('sponsor.eth')}</option>
+              <option value="usdt-erc20">{t('sponsor.usdt_erc20')}</option>
+              <option value="usdt-trc20">{t('sponsor.usdt_trc20')}</option>
+              <option value="tron">{t('sponsor.tron')}</option>
+              <option value="other">
+                {lang === 'zh-cn' ? '其他' : 'Other'}
+              </option>
+            </select>
+          </div>
 
-            // Validate required fields
-            if (!name || !amount || !paymentMethod) {
-                messageDiv.className = 'bg-red-50 border border-red-200 text-red-800 dark:bg-red-900/20 dark:border-red-800 dark:text-red-200 rounded-lg p-3 text-sm';
-                messageDiv.textContent = t.validation_error;
-                messageDiv.classList.remove('hidden');
-                return;
-            }
+          <div>
+            <label
+              for="sponsor-message"
+              class="text-foreground mb-2 block text-sm font-medium"
+            >
+              {t('sponsor.message_label')}
+            </label>
+            <textarea
+              id="sponsor-message"
+              name="message"
+              rows={3}
+              placeholder={t('sponsor.message_placeholder')}
+              class="border-border/60 bg-background/80 focus:border-primary/50 focus:ring-primary/20 w-full resize-none rounded-md border px-3 py-2 text-sm backdrop-blur-sm focus:ring-2 focus:outline-none"
+            ></textarea>
+            <p class="text-muted-foreground mt-1 text-xs">
+              {
+                lang === 'zh-cn'
+                  ? '支持者及以上级别的赞助者可以在赞助者名单中显示留言'
+                  : 'Supporter tier and above can display messages in sponsor list'
+              }
+            </p>
+          </div>
 
-            // Construct email content
-            const subject = lang === 'zh-cn'
-                ? `博客赞助信息提交 - ${name}`
-                : `Blog Sponsorship Information - ${name}`;
+          <div id="form-message" class="hidden rounded-lg p-3 text-sm"></div>
 
-            const bodyContent = lang === 'zh-cn'
-                ? `姓名：${name}\n赞助金额：${amount}\n支付方式：${paymentMethodText}\n留言：${message}\n\n(请附上支付凭证截图)`
-                : `Name: ${name}\nAmount: ${amount}\nPayment Method: ${paymentMethodText}\nMessage: ${message}\n\n(Please attach payment receipt screenshot)`;
+          <button
+            type="submit"
+            class="bg-primary text-primary-foreground hover:bg-primary/90 inline-flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition-colors disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            <svg
+              class="h-4 w-4"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <rect x="2" y="4" width="20" height="16" rx="2"></rect>
+              <path d="m22 7-10 5L2 7"></path>
+            </svg>
+            {t('sponsor.submit_button')}
+          </button>
+        </form>
+      </div>
 
-            const mailtoLink = `mailto:rownix101@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(bodyContent)}`;
+      <!-- Contact -->
+      <div class="bg-muted/50 rounded-lg p-6 text-center">
+        <h3 class="mb-2 font-semibold">{t('sponsor.contact_title')}</h3>
+        <p class="text-muted-foreground mb-4 text-sm">
+          {t('sponsor.contact_desc')}
+        </p>
+        <a
+          href="mailto:rownix101@gmail.com"
+          class="bg-primary text-primary-foreground hover:bg-primary/90 inline-flex items-center gap-2 rounded-lg px-4 py-2 transition-colors"
+        >
+          <svg
+            class="h-4 w-4"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+          >
+            <rect x="2" y="4" width="20" height="16" rx="2"></rect>
+            <path d="m22 7-10 5L2 7"></path>
+          </svg>
+          {t('sponsor.contact_email')}
+        </a>
+      </div>
+    </div>
+  </section>
 
-            // Show confirmation message
-            messageDiv.className = 'bg-green-50 border border-green-200 text-green-800 dark:bg-green-900/20 dark:border-green-800 dark:text-green-200 rounded-lg p-3 text-sm';
-            messageDiv.textContent = t.opening_client;
-            messageDiv.classList.remove('hidden');
+  <!-- JavaScript for form submission -->
+  <script define:vars={{ lang }}>
+    const translations = {
+      'zh-cn': {
+        validation_error: '请填写所有必填字段',
+        opening_client: '正在唤起邮件客户端，请完成发送。',
+        submit_button: '提交信息',
+      },
+      en: {
+        validation_error: 'Please fill in all required fields',
+        opening_client: 'Opening email client, please complete sending.',
+        submit_button: 'Submit Information',
+      },
+    }
 
-            // Open email client
-            window.location.href = mailtoLink;
-        };
-    </script>
+    // Expose the function to global scope
+    window.handleSponsorSubmit = function (event) {
+      event.preventDefault()
+
+      const form = event.target
+      const formData = new FormData(form)
+      const messageDiv = document.getElementById('form-message')
+
+      // Get form values
+      const name = formData.get('name')
+      const message = formData.get('message') || ''
+      const amount = formData.get('amount')
+      const paymentMethod = formData.get('payment_method')
+
+      // Get payment method display name
+      const paymentMethodSelect = document.getElementById('sponsor-payment')
+      const paymentMethodText =
+        paymentMethodSelect.options[paymentMethodSelect.selectedIndex]?.text ||
+        paymentMethod
+
+      // Get translations for current language
+      const t = translations[lang] || translations['zh-cn']
+
+      // Validate required fields
+      if (!name || !amount || !paymentMethod) {
+        messageDiv.className =
+          'bg-red-50 border border-red-200 text-red-800 dark:bg-red-900/20 dark:border-red-800 dark:text-red-200 rounded-lg p-3 text-sm'
+        messageDiv.textContent = t.validation_error
+        messageDiv.classList.remove('hidden')
+        return
+      }
+
+      // Construct email content
+      const subject =
+        lang === 'zh-cn'
+          ? `博客赞助信息提交 - ${name}`
+          : `Blog Sponsorship Information - ${name}`
+
+      const bodyContent =
+        lang === 'zh-cn'
+          ? `姓名：${name}\n赞助金额：${amount}\n支付方式：${paymentMethodText}\n留言：${message}\n\n(请附上支付凭证截图)`
+          : `Name: ${name}\nAmount: ${amount}\nPayment Method: ${paymentMethodText}\nMessage: ${message}\n\n(Please attach payment receipt screenshot)`
+
+      const mailtoLink = `mailto:rownix101@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(bodyContent)}`
+
+      // Show confirmation message
+      messageDiv.className =
+        'bg-green-50 border border-green-200 text-green-800 dark:bg-green-900/20 dark:border-green-800 dark:text-green-200 rounded-lg p-3 text-sm'
+      messageDiv.textContent = t.opening_client
+      messageDiv.classList.remove('hidden')
+
+      // Open email client
+      window.location.href = mailtoLink
+    }
+  </script>
 </Layout>

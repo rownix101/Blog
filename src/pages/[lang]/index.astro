@@ -14,7 +14,7 @@ import type { SocialLink } from '@/types'
 import { Icon } from 'astro-icon/components'
 
 export function getStaticPaths() {
-    return [{ params: { lang: 'zh-cn' } }, { params: { lang: 'en' } }]
+  return [{ params: { lang: 'zh-cn' } }, { params: { lang: 'en' } }]
 }
 
 const { lang } = Astro.params
@@ -24,353 +24,337 @@ const l = useLocalizedPath(lang as keyof typeof ui)
 // Error handling for fetching recent posts
 let latestPosts: Awaited<ReturnType<typeof getRecentPosts>> = []
 try {
-    // We need to filter by lang in the future, for now just getting all
-    latestPosts = await getRecentPosts(2, lang)
+  // We need to filter by lang in the future, for now just getting all
+  latestPosts = await getRecentPosts(2, lang)
 } catch (error) {
-    console.error('Error fetching recent posts:', error)
+  console.error('Error fetching recent posts:', error)
 }
 
 // Person Schema for homepage SEO
 const personSchema = {
-    '@context': 'https://schema.org',
-    '@type': 'Person',
-    name: SITE.title,
-    url: SITE.href,
-    description: t('home.description'),
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: SITE.title,
+  url: SITE.href,
+  description: t('home.description'),
 }
 
 // Organization Schema
 const organizationSchema = {
-    '@context': 'https://schema.org',
-    '@type': 'Organization',
-    name: SITE.title,
-    url: SITE.href,
-    description: t('home.description'),
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: SITE.title,
+  url: SITE.href,
+  description: t('home.description'),
 }
 
 // Website Schema
 const websiteSchema = {
-    '@context': 'https://schema.org',
-    '@type': 'WebSite',
-    name: SITE.title,
-    url: SITE.href,
-    description: t('home.description'),
-    potentialAction: {
-        '@type': 'SearchAction',
-        target: {
-            '@type': 'EntryPoint',
-            urlTemplate: `${SITE.href}${l('/blog')}?q={search_term_string}`,
-        },
-        'query-input': 'required name=search_term_string',
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: SITE.title,
+  url: SITE.href,
+  description: t('home.description'),
+  potentialAction: {
+    '@type': 'SearchAction',
+    target: {
+      '@type': 'EntryPoint',
+      urlTemplate: `${SITE.href}${l('/blog')}?q={search_term_string}`,
     },
+    'query-input': 'required name=search_term_string',
+  },
 }
 ---
 
 <Layout class="max-w-3xl" transition:persist="home-layout" lang={lang}>
-    <PageHead slot="head" title={SITE.title} fullTitle={true} />
+  <PageHead slot="head" title={SITE.title} fullTitle={true} />
 
-    <!-- Schema Markup for SEO -->
-    <script
-        type="application/ld+json"
-        is:inline
-        set:html={JSON.stringify(personSchema)}
-    />
-    <script
-        type="application/ld+json"
-        is:inline
-        set:html={JSON.stringify(organizationSchema)}
-    />
-    <script
-        type="application/ld+json"
-        is:inline
-        set:html={JSON.stringify(websiteSchema)}
-    />
+  <!-- Schema Markup for SEO -->
+  <script
+    type="application/ld+json"
+    is:inline
+    set:html={JSON.stringify(personSchema)}
+  />
+  <script
+    type="application/ld+json"
+    is:inline
+    set:html={JSON.stringify(organizationSchema)}
+  />
+  <script
+    type="application/ld+json"
+    is:inline
+    set:html={JSON.stringify(websiteSchema)}
+  />
 
-    <!-- Hero Section - Creative / Indie Style -->
-    <section
-        class="relative overflow-visible py-8 md:py-16"
-        style="min-height: clamp(320px, 45vh, 480px);"
+  <!-- Hero Section - Creative / Indie Style -->
+  <section
+    class="relative overflow-visible py-8 md:py-16"
+    style="min-height: clamp(320px, 45vh, 480px);"
+  >
+    <!-- Decorative Elements with float animation -->
+    <div
+      class="animate-float-slow bg-decorative/20 absolute -top-8 -right-12 h-32 w-32 rounded-full blur-3xl"
+      aria-hidden="true"
     >
-        <!-- Decorative Elements with float animation -->
-        <div
-            class="animate-float-slow bg-decorative/20 absolute -top-8 -right-12 h-32 w-32 rounded-full blur-3xl"
-            aria-hidden="true"
-        >
-        </div>
-        <div
-            class="animate-float bg-primary/10 absolute -bottom-4 -left-8 h-24 w-24 rounded-full blur-2xl"
-            aria-hidden="true"
-        >
-        </div>
+    </div>
+    <div
+      class="animate-float bg-primary/10 absolute -bottom-4 -left-8 h-24 w-24 rounded-full blur-2xl"
+      aria-hidden="true"
+    >
+    </div>
 
-        <!-- Content -->
-        <div class="relative z-10 md:-ml-8 md:mr-2">
-            <div class="flex flex-col gap-10">
-                <!-- Main Content -->
-                <div class="min-w-0 flex-1 space-y-8">
-                    <!-- Heading with offset/rotation effect + entrance animation -->
-                    <div class="space-y-2">
-                        <h1 class="relative">
-                            <span
-                                class="animate-on-load animate-fade-in-up delay-100 text-primary relative mt-1 block text-5xl leading-[1.1] font-bold tracking-tight sm:text-6xl md:text-7xl translate-x-1 rotate-[0.5deg] sm:translate-x-2"
-                            >
-                                {SITE.title}
-                                <!-- Decorative underline -->
-                                <span
-                                    class="from-primary/60 via-decorative/80 to-primary/20 absolute -bottom-2 left-0 h-1 w-3/4 -rotate-1 bg-gradient-to-r"
-                                    aria-hidden="true"></span>
-                            </span>
-                        </h1>
-                        <p
-                            class="animate-on-load animate-fade-in-up delay-200 text-muted-foreground mt-4 max-w-lg text-base leading-relaxed md:text-lg md:pl-1"
-                        >
-                            {t('home.description')}
-                        </p>
-                    </div>
-
-                    <!-- CTA Buttons with slight offset + entrance animation -->
-                    <div
-                        class="animate-on-load animate-fade-in-up delay-300 flex flex-wrap items-center gap-3 md:pl-1"
-                    >
-                        <Link
-                            href={l('/blog')}
-                            class={buttonVariants({
-                                variant: 'default',
-                                size: 'lg',
-                            }) + ' group'}
-                        >
-                            {t('home.read_blog')}
-                            <Icon
-                                name="lucide:arrow-right"
-                                class="size-4 transition-transform group-hover:translate-x-0.5"
-                            />
-                        </Link>
-                        <Link
-                            href={l('/about')}
-                            class={buttonVariants({
-                                variant: 'outline',
-                                size: 'lg',
-                            })}
-                        >
-                            {t('home.about_me')}
-                        </Link>
-                    </div>
-
-                    <!-- Social Icons + entrance animation -->
-                    <div class="animate-on-load animate-fade-in-up delay-400 md:pl-1">
-                        <ul
-                            class="flex flex-wrap items-center gap-2"
-                            role="list"
-                        >
-                            {
-                                SOCIAL_LINKS.map(
-                                    ({ href, label }: SocialLink) => {
-                                        // Handle RSS link with language-specific path
-                                        const finalHref =
-                                            label === 'RSS'
-                                                ? `/${lang}/rss.xml`
-                                                : href
-                                        return (
-                                            <li>
-                                                <Link
-                                                    href={finalHref}
-                                                    aria-label={label}
-                                                    title={label}
-                                                    class={
-                                                        buttonVariants({
-                                                            variant: 'outline',
-                                                            size: 'icon',
-                                                        }) +
-                                                        ' hover:rotate-3 transition-all duration-200'
-                                                    }
-                                                    external={
-                                                        finalHref.startsWith(
-                                                            'http',
-                                                        ) ||
-                                                        finalHref.startsWith(
-                                                            'mailto:',
-                                                        )
-                                                    }
-                                                >
-                                                    <Icon
-                                                        name={
-                                                            ICON_MAP[
-                                                                label as keyof typeof ICON_MAP
-                                                            ] ||
-                                                            'lucide:message-circle-question'
-                                                        }
-                                                        class="size-4"
-                                                    />
-                                                </Link>
-                                            </li>
-                                        )
-                                    },
-                                )
-                            }
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Skills & Technologies (Optional) -->
-    <section class="mt-16 md:-ml-4 md:mr-2">
-        <div class="mb-6 md:pl-2">
-            <h2 class="relative mb-2 inline-block text-2xl font-semibold">
-                {t('home.skills')}
+    <!-- Content -->
+    <div class="relative z-10 md:mr-2 md:-ml-8">
+      <div class="flex flex-col gap-10">
+        <!-- Main Content -->
+        <div class="min-w-0 flex-1 space-y-8">
+          <!-- Heading with offset/rotation effect + entrance animation -->
+          <div class="space-y-2">
+            <h1 class="relative">
+              <span
+                class="animate-on-load animate-fade-in-up text-primary relative mt-1 block translate-x-1 rotate-[0.5deg] text-5xl leading-[1.1] font-bold tracking-tight delay-100 sm:translate-x-2 sm:text-6xl md:text-7xl"
+              >
+                {SITE.title}
+                <!-- Decorative underline -->
                 <span
-                    class="bg-decorative/30 absolute -bottom-1 left-0 h-2 w-full -rotate-1"
-                    aria-hidden="true"></span>
+                  class="from-primary/60 via-decorative/80 to-primary/20 absolute -bottom-2 left-0 h-1 w-3/4 -rotate-1 bg-gradient-to-r"
+                  aria-hidden="true"></span>
+              </span>
+            </h1>
+            <p
+              class="animate-on-load animate-fade-in-up text-muted-foreground mt-4 max-w-lg text-base leading-relaxed delay-200 md:pl-1 md:text-lg"
+            >
+              {t('home.description')}
+            </p>
+          </div>
+
+          <!-- CTA Buttons with slight offset + entrance animation -->
+          <div
+            class="animate-on-load animate-fade-in-up flex flex-wrap items-center gap-3 delay-300 md:pl-1"
+          >
+            <Link
+              href={l('/blog')}
+              class={buttonVariants({
+                variant: 'default',
+                size: 'lg',
+              }) + ' group'}
+            >
+              {t('home.read_blog')}
+              <Icon
+                name="lucide:arrow-right"
+                class="size-4 transition-transform group-hover:translate-x-0.5"
+              />
+            </Link>
+            <Link
+              href={l('/about')}
+              class={buttonVariants({
+                variant: 'outline',
+                size: 'lg',
+              })}
+            >
+              {t('home.about_me')}
+            </Link>
+          </div>
+
+          <!-- Social Icons + entrance animation -->
+          <div class="animate-on-load animate-fade-in-up delay-400 md:pl-1">
+            <ul class="flex flex-wrap items-center gap-2" role="list">
+              {
+                SOCIAL_LINKS.map(({ href, label }: SocialLink) => {
+                  // Handle RSS link with language-specific path
+                  const finalHref = label === 'RSS' ? `/${lang}/rss.xml` : href
+                  return (
+                    <li>
+                      <Link
+                        href={finalHref}
+                        aria-label={label}
+                        title={label}
+                        class={
+                          buttonVariants({
+                            variant: 'outline',
+                            size: 'icon',
+                          }) + ' transition-all duration-200 hover:rotate-3'
+                        }
+                        external={
+                          finalHref.startsWith('http') ||
+                          finalHref.startsWith('mailto:')
+                        }
+                      >
+                        <Icon
+                          name={
+                            ICON_MAP[label as keyof typeof ICON_MAP] ||
+                            'lucide:message-circle-question'
+                          }
+                          class="size-4"
+                        />
+                      </Link>
+                    </li>
+                  )
+                })
+              }
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Skills & Technologies (Optional) -->
+  <section class="mt-16 md:mr-2 md:-ml-4">
+    <div class="mb-6 md:pl-2">
+      <h2 class="relative mb-2 inline-block text-2xl font-semibold">
+        {t('home.skills')}
+        <span
+          class="bg-decorative/30 absolute -bottom-1 left-0 h-2 w-full -rotate-1"
+          aria-hidden="true"></span>
+      </h2>
+      <p class="text-muted-foreground mt-3 text-sm">
+        {t('home.skills_desc')}
+      </p>
+    </div>
+    <ErrorBoundary client:visible transition:persist="skills-error-boundary">
+      <Skills client:visible transition:persist="skills-section" />
+    </ErrorBoundary>
+  </section>
+
+  <!-- Latest from the blog -->
+  {
+    latestPosts && latestPosts.length > 0 && (
+      <section class="mt-16">
+        <div class="mb-6 flex items-center justify-between">
+          <div>
+            <h2 class="relative mb-2 inline-block text-2xl font-semibold">
+              {t('home.latest_posts')}
+              <span
+                class="bg-primary/20 absolute -bottom-1 left-0 h-2 w-full rotate-1"
+                aria-hidden="true"
+              />
             </h2>
             <p class="text-muted-foreground mt-3 text-sm">
-                {t('home.skills_desc')}
+              {t('home.latest_posts_desc')}
             </p>
-        </div>
-        <ErrorBoundary client:visible transition:persist="skills-error-boundary">
-            <Skills client:visible transition:persist="skills-section" />
-        </ErrorBoundary>
-    </section>
-
-    <!-- Latest from the blog -->
-    {
-        latestPosts && latestPosts.length > 0 && (
-            <section class="mt-16">
-                <div class="mb-6 flex items-center justify-between">
-                    <div>
-                        <h2 class="relative mb-2 inline-block text-2xl font-semibold">
-                            {t('home.latest_posts')}
-                            <span
-                                class="bg-primary/20 absolute -bottom-1 left-0 h-2 w-full rotate-1"
-                                aria-hidden="true"
-                            />
-                        </h2>
-                        <p class="text-muted-foreground mt-3 text-sm">
-                            {t('home.latest_posts_desc')}
-                        </p>
-                    </div>
-                    <Link
-                        href={l('/blog')}
-                        class={
-                            buttonVariants({ variant: 'ghost' }) +
-                            ' group hidden items-center gap-1.5 sm:flex'
-                        }
-                    >
-                        {t('home.view_all')}
-                        <Icon
-                            name="lucide:arrow-right"
-                            class="size-4 transition-transform group-hover:translate-x-0.5"
-                        />
-                    </Link>
-                </div>
-
-                <div class="space-y-2">
-                    {latestPosts.map((post) => (
-                        <article>
-                            <BlogCard entry={post} />
-                        </article>
-                    ))}
-                </div>
-
-                <article class="mt-2 sm:hidden">
-                    <Link
-                        href={l('/blog')}
-                        aria-label={t('home.view_all')}
-                        class="group border-border/50 bg-muted/20 hover:bg-muted/40 hover:border-primary/30 block rounded-md border px-2 py-3 transition-all duration-200"
-                    >
-                        <div class="flex items-center gap-3">
-                            <div
-                                class="bg-primary/10 dark:bg-primary/20 group-hover:bg-primary/20 dark:group-hover:bg-primary/30 flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg transition-colors"
-                                aria-hidden="true"
-                            >
-                                <Icon
-                                    name="lucide:library"
-                                    class="text-primary size-5"
-                                />
-                            </div>
-                            <div class="min-w-0 flex-1">
-                                <div class="flex items-center gap-2">
-                                    <span class="text-foreground group-hover:text-primary text-sm font-semibold transition-colors">
-                                        {t('home.view_all')}
-                                    </span>
-                                    <Icon
-                                        name="lucide:arrow-right"
-                                        class="text-primary/70 group-hover:text-primary size-4 shrink-0 transition-all group-hover:translate-x-0.5"
-                                        aria-hidden="true"
-                                    />
-                                </div>
-                            </div>
-                        </div>
-                    </Link>
-                </article>
-            </section>
-        )
-    }
-
-    <!-- CTA Section -->
-    <section class="relative mt-16 sm:mt-28">
-        <!-- Decorative background with float animation -->
-        <div
-            class="animate-float-slow bg-decorative/10 absolute -right-16 top-1/2 h-48 w-48 -translate-y-1/2 rounded-full blur-3xl"
-            aria-hidden="true"
-        >
+          </div>
+          <Link
+            href={l('/blog')}
+            class={
+              buttonVariants({ variant: 'ghost' }) +
+              ' group hidden items-center gap-1.5 sm:flex'
+            }
+          >
+            {t('home.view_all')}
+            <Icon
+              name="lucide:arrow-right"
+              class="size-4 transition-transform group-hover:translate-x-0.5"
+            />
+          </Link>
         </div>
 
-        <div class="relative mx-auto max-w-2xl">
-            <div class="space-y-6 text-left">
-                <p class="text-muted-foreground text-sm">
-                    {t('home.connect_note')}
-                </p>
-                <div class="space-y-3">
-                    <h2
-                        class="text-foreground relative inline-block text-3xl leading-tight font-semibold tracking-tight sm:text-4xl md:text-5xl"
-                    >
-                        <span class="-rotate-1 inline-block">
-                            {t('home.connect')}
-                        </span>
-                    </h2>
+        <div class="space-y-2">
+          {latestPosts.map((post) => (
+            <article>
+              <BlogCard entry={post} />
+            </article>
+          ))}
+        </div>
+
+        <article class="mt-2 sm:hidden">
+          <Link
+            href={l('/blog')}
+            aria-label={t('home.view_all')}
+            class="group border-border/50 bg-muted/20 hover:bg-muted/40 hover:border-primary/30 block rounded-md border px-2 py-3 transition-all duration-200"
+          >
+            <div class="flex items-center gap-3">
+              <div
+                class="bg-primary/10 dark:bg-primary/20 group-hover:bg-primary/20 dark:group-hover:bg-primary/30 flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg transition-colors"
+                aria-hidden="true"
+              >
+                <Icon name="lucide:library" class="text-primary size-5" />
+              </div>
+              <div class="min-w-0 flex-1">
+                <div class="flex items-center gap-2">
+                  <span class="text-foreground group-hover:text-primary text-sm font-semibold transition-colors">
+                    {t('home.view_all')}
+                  </span>
+                  <Icon
+                    name="lucide:arrow-right"
+                    class="text-primary/70 group-hover:text-primary size-4 shrink-0 transition-all group-hover:translate-x-0.5"
+                    aria-hidden="true"
+                  />
                 </div>
-                <p class="text-muted-foreground max-w-xl text-lg leading-relaxed">
-                    {t('home.connect_desc')}
-                </p>
-                <div class="flex flex-wrap gap-3 pt-2">
-                    {SOCIAL_LINKS.filter((link) =>
-                        ['Email', 'GitHub', 'X'].includes(link.label),
-                    ).map((link) => (
-                        <Link
-                            href={link.href}
-                            class="group border-border/60 text-foreground hover:border-primary/60 hover:text-primary inline-flex items-center gap-2 rounded-full border px-4 py-2 text-sm transition-colors"
-                        >
-                            <Icon name={ICON_MAP[link.label]} class="size-4" />
-                            <span>{link.label}</span>
-                        </Link>
-                    ))}
-                </div>
+              </div>
             </div>
-        </div>
-    </section>
-    <!-- Entrance animation trigger -->
-    <script is:inline>
-        document.addEventListener('astro:page-load', () => {
-            // Trigger entrance animations
-            requestAnimationFrame(() => {
-                document.querySelectorAll('.animate-on-load').forEach((el) => {
-                    el.style.opacity = '1'
-                })
-            })
-        })
+          </Link>
+        </article>
+      </section>
+    )
+  }
 
-        // Also trigger on initial load
-        if (document.readyState === 'complete') {
-            document.querySelectorAll('.animate-on-load').forEach((el) => {
-                el.style.opacity = '1'
-            })
-        } else {
-            window.addEventListener('load', () => {
-                document.querySelectorAll('.animate-on-load').forEach((el) => {
-                    el.style.opacity = '1'
-                })
-            })
-        }
-    </script>
+  <!-- CTA Section -->
+  <section class="relative mt-16 sm:mt-28">
+    <!-- Decorative background with float animation -->
+    <div
+      class="animate-float-slow bg-decorative/10 absolute top-1/2 -right-16 h-48 w-48 -translate-y-1/2 rounded-full blur-3xl"
+      aria-hidden="true"
+    >
+    </div>
+
+    <div class="relative mx-auto max-w-2xl">
+      <div class="space-y-6 text-left">
+        <p class="text-muted-foreground text-sm">
+          {t('home.connect_note')}
+        </p>
+        <div class="space-y-3">
+          <h2
+            class="text-foreground relative inline-block text-3xl leading-tight font-semibold tracking-tight sm:text-4xl md:text-5xl"
+          >
+            <span class="inline-block -rotate-1">
+              {t('home.connect')}
+            </span>
+          </h2>
+        </div>
+        <p class="text-muted-foreground max-w-xl text-lg leading-relaxed">
+          {t('home.connect_desc')}
+        </p>
+        <div class="flex flex-wrap gap-3 pt-2">
+          {
+            SOCIAL_LINKS.filter((link) =>
+              ['Email', 'GitHub', 'X'].includes(link.label),
+            ).map((link) => (
+              <Link
+                href={link.href}
+                class="group border-border/60 text-foreground hover:border-primary/60 hover:text-primary inline-flex items-center gap-2 rounded-full border px-4 py-2 text-sm transition-colors"
+              >
+                <Icon name={ICON_MAP[link.label]} class="size-4" />
+                <span>{link.label}</span>
+              </Link>
+            ))
+          }
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- Entrance animation trigger -->
+  <script is:inline>
+    document.addEventListener('astro:page-load', () => {
+      // Trigger entrance animations
+      requestAnimationFrame(() => {
+        document.querySelectorAll('.animate-on-load').forEach((el) => {
+          el.style.opacity = '1'
+        })
+      })
+    })
+
+    // Also trigger on initial load
+    if (document.readyState === 'complete') {
+      document.querySelectorAll('.animate-on-load').forEach((el) => {
+        el.style.opacity = '1'
+      })
+    } else {
+      window.addEventListener('load', () => {
+        document.querySelectorAll('.animate-on-load').forEach((el) => {
+          el.style.opacity = '1'
+        })
+      })
+    }
+  </script>
 </Layout>

@@ -8,18 +8,18 @@ import Layout from '@/layouts/Layout.astro'
 import { getAllTags, getPostsByTag } from '@/lib/data-utils'
 
 export async function getStaticPaths() {
-    const paths = []
-    for (const lang of Object.keys(languages)) {
-        const tagsMap = await getAllTags(lang)
-        const tags = Array.from(tagsMap.keys())
-        for (const tag of tags) {
-            paths.push({
-                params: { lang, id: tag },
-                props: { tag },
-            })
-        }
+  const paths = []
+  for (const lang of Object.keys(languages)) {
+    const tagsMap = await getAllTags(lang)
+    const tags = Array.from(tagsMap.keys())
+    for (const tag of tags) {
+      paths.push({
+        params: { lang, id: tag },
+        props: { tag },
+      })
     }
-    return paths
+  }
+  return paths
 }
 
 const { tag } = Astro.props
@@ -31,21 +31,21 @@ const l = useLocalizedPath(lang as keyof typeof ui)
 ---
 
 <Layout class="max-w-3xl" lang={lang}>
-    <PageHead slot="head" title={`Tag: ${tag}`} />
-    <Breadcrumbs
-        items={[
-            { label: t('nav.tags'), href: l('/tags'), icon: 'lucide:hash' },
-            { label: tag, icon: 'lucide:tag' },
-        ]}
-    />
+  <PageHead slot="head" title={`Tag: ${tag}`} />
+  <Breadcrumbs
+    items={[
+      { label: t('nav.tags'), href: l('/tags'), icon: 'lucide:hash' },
+      { label: tag, icon: 'lucide:tag' },
+    ]}
+  />
 
-    <section class="flex flex-col gap-y-4">
-        <div class="flex items-center gap-2">
-            <h1 class="text-3xl font-bold">Tag: {tag}</h1>
-        </div>
+  <section class="flex flex-col gap-y-4">
+    <div class="flex items-center gap-2">
+      <h1 class="text-3xl font-bold">Tag: {tag}</h1>
+    </div>
 
-        <div class="flex flex-col gap-y-2">
-            {posts.map((post) => <BlogCard entry={post} />)}
-        </div>
-    </section>
+    <div class="flex flex-col gap-y-2">
+      {posts.map((post) => <BlogCard entry={post} />)}
+    </div>
+  </section>
 </Layout>

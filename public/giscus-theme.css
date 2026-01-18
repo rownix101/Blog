@@ -33,7 +33,12 @@ html[data-theme='dark'],
 .gsc-main-content {
   background-color: var(--giscu-background) !important;
   color: var(--giscu-foreground) !important;
-  font-family: var(--font-sans, system-ui, -apple-system, sans-serif) !important;
+  font-family: var(
+    --font-sans,
+    system-ui,
+    -apple-system,
+    sans-serif
+  ) !important;
 }
 
 /* Comments container */
@@ -86,7 +91,12 @@ html[data-theme='dark'],
   border: 1px solid var(--giscu-border) !important;
   border-radius: 0.375rem !important;
   color: var(--giscu-foreground) !important;
-  font-family: var(--font-sans, system-ui, -apple-system, sans-serif) !important;
+  font-family: var(
+    --font-sans,
+    system-ui,
+    -apple-system,
+    sans-serif
+  ) !important;
   font-size: 0.9375rem !important;
   padding: 0.75rem !important;
   transition: all 0.2s ease !important;
@@ -107,7 +117,12 @@ html[data-theme='dark'],
   border-radius: 0.375rem !important;
   color: var(--giscu-primary-foreground) !important;
   cursor: pointer !important;
-  font-family: var(--font-sans, system-ui, -apple-system, sans-serif) !important;
+  font-family: var(
+    --font-sans,
+    system-ui,
+    -apple-system,
+    sans-serif
+  ) !important;
   font-size: 0.875rem !important;
   font-weight: 500 !important;
   padding: 0.5rem 1rem !important;
@@ -115,7 +130,11 @@ html[data-theme='dark'],
 }
 
 .gsc-button:hover {
-  background-color: color-mix(in srgb, var(--giscu-primary) 90%, black) !important;
+  background-color: color-mix(
+    in srgb,
+    var(--giscu-primary) 90%,
+    black
+  ) !important;
   border-color: color-mix(in srgb, var(--giscu-primary) 90%, black) !important;
 }
 

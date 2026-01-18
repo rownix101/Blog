@@ -9,7 +9,7 @@ import { Icon } from 'astro-icon/components'
 import { getCollection, render } from 'astro:content'
 
 export async function getStaticPaths() {
-    return [{ params: { lang: 'zh-cn' } }, { params: { lang: 'en' } }]
+  return [{ params: { lang: 'zh-cn' } }, { params: { lang: 'en' } }]
 }
 
 const { lang } = Astro.params
@@ -17,69 +17,69 @@ const t = useTranslations(lang as keyof typeof ui)
 
 // Get contact email from social links or use placeholder
 const contactEmail =
-    SOCIAL_LINKS.find((link) => link.label === 'Email')?.href.replace(
-        'mailto:',
-        '',
-    ) || 'your@email.com'
+  SOCIAL_LINKS.find((link) => link.label === 'Email')?.href.replace(
+    'mailto:',
+    '',
+  ) || 'your@email.com'
 
 // Get privacy policy content
 const legalDocs = await getCollection('legal')
 const privacyDoc = legalDocs.find((doc) => doc.id === `privacy.${lang}`)
 
 if (!privacyDoc) {
-    throw new Error(`Privacy policy not found for language: ${lang}`)
+  throw new Error(`Privacy policy not found for language: ${lang}`)
 }
 
 const { Content } = await render(privacyDoc)
 ---
 
 <Layout class="max-w-3xl" lang={lang}>
-    <PageHead slot="head" title={privacyDoc.data.title} />
-    <Breadcrumbs
-        items={[{ label: privacyDoc.data.title, icon: 'lucide:shield-check' }]}
-    />
+  <PageHead slot="head" title={privacyDoc.data.title} />
+  <Breadcrumbs
+    items={[{ label: privacyDoc.data.title, icon: 'lucide:shield-check' }]}
+  />
 
-    <article class="prose prose-neutral dark:prose-invert max-w-none">
-        <div class="bg-card/50 mb-6 rounded-lg border p-6">
-            <div class="mb-2 flex items-center gap-3">
-                <Icon name="lucide:shield-check" class="text-primary size-6" />
-                <h1 class="m-0 text-3xl font-bold">{privacyDoc.data.title}</h1>
-            </div>
-            {
-                privacyDoc.data.date && (
-                    <p class="text-muted-foreground m-0 text-sm">
-                        {lang === 'en' ? 'Last updated' : '最后更新'}:{' '}
-                        {privacyDoc.data.date.toISOString().split('T')[0]}
-                    </p>
-                )
-            }
-        </div>
+  <article class="prose prose-neutral dark:prose-invert max-w-none">
+    <div class="bg-card/50 mb-6 rounded-lg border p-6">
+      <div class="mb-2 flex items-center gap-3">
+        <Icon name="lucide:shield-check" class="text-primary size-6" />
+        <h1 class="m-0 text-3xl font-bold">{privacyDoc.data.title}</h1>
+      </div>
+      {
+        privacyDoc.data.date && (
+          <p class="text-muted-foreground m-0 text-sm">
+            {lang === 'en' ? 'Last updated' : '最后更新'}:{' '}
+            {privacyDoc.data.date.toISOString().split('T')[0]}
+          </p>
+        )
+      }
+    </div>
 
-        <section class="mb-8 space-y-6">
-            <Content />
-        </section>
+    <section class="mb-8 space-y-6">
+      <Content />
+    </section>
 
-        <section class="mb-8 space-y-4">
-            <h2 class="text-2xl font-semibold">
-                {lang === 'en' ? 'Contact Us' : '联系我们'}
-            </h2>
-            <div class="bg-muted/30 rounded-lg border p-4">
-                <p class="m-0">
-                    {
-                        lang === 'en'
-                            ? 'This website is operated by Rownix. If you have any questions about this Privacy Policy, please contact us:'
-                            : '本网站由 Rownix 运营。如果您对本隐私政策有任何疑问，请联系我们：'
-                    }
-                </p>
-                <p class="mt-2">
-                    <strong>Email:</strong>
-                    <a
-                        href={`mailto:${contactEmail}`}
-                        class="hover:text-primary underline transition-colors"
-                        >{contactEmail}</a
-                    >
-                </p>
-            </div>
-        </section>
-    </article>
+    <section class="mb-8 space-y-4">
+      <h2 class="text-2xl font-semibold">
+        {lang === 'en' ? 'Contact Us' : '联系我们'}
+      </h2>
+      <div class="bg-muted/30 rounded-lg border p-4">
+        <p class="m-0">
+          {
+            lang === 'en'
+              ? 'This website is operated by Rownix. If you have any questions about this Privacy Policy, please contact us:'
+              : '本网站由 Rownix 运营。如果您对本隐私政策有任何疑问，请联系我们：'
+          }
+        </p>
+        <p class="mt-2">
+          <strong>Email:</strong>
+          <a
+            href={`mailto:${contactEmail}`}
+            class="hover:text-primary underline transition-colors"
+            >{contactEmail}</a
+          >
+        </p>
+      </div>
+    </section>
+  </article>
 </Layout>

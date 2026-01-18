@@ -1,98 +1,180 @@
 ---
 import Breadcrumbs from '@/components/Breadcrumbs.astro'
+import Link from '@/components/Link.astro'
 import PageHead from '@/components/PageHead.astro'
-import { SITE } from '@/consts'
+import { SITE, SOCIAL_LINKS } from '@/consts'
 import { ui } from '@/i18n/ui'
-import { useTranslations } from '@/i18n/utils'
+import { useLocalizedPath, useTranslations } from '@/i18n/utils'
 import Layout from '@/layouts/Layout.astro'
 
 export function getStaticPaths() {
-    return [{ params: { lang: 'zh-cn' } }, { params: { lang: 'en' } }]
+  return [{ params: { lang: 'zh-cn' } }, { params: { lang: 'en' } }]
 }
 
 const { lang } = Astro.params
 const t = useTranslations(lang as keyof typeof ui)
+const l = useLocalizedPath(lang as keyof typeof ui)
+
+const contactLinks = SOCIAL_LINKS.filter((link) =>
+  ['Email', 'GitHub', 'X'].includes(link.label),
+)
 
 // Person Schema for About page
 const personSchema = {
-    '@context': 'https://schema.org',
-    '@type': 'Person',
-    name: SITE.title,
-    url: SITE.href,
-    description: SITE.description,
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: SITE.title,
+  url: SITE.href,
+  description: SITE.description,
 }
 ---
 
 <Layout class="max-w-3xl" lang={lang}>
-    <PageHead slot="head" title={t('nav.about')} />
+  <PageHead slot="head" title={t('nav.about')} />
 
-    <!-- Person Schema for About page SEO -->
-    <script
-        type="application/ld+json"
-        is:inline
-        set:html={JSON.stringify(personSchema)}
-    />
+  <!-- Person Schema for About page SEO -->
+  <script
+    type="application/ld+json"
+    is:inline
+    set:html={JSON.stringify(personSchema)}
+  />
 
-    <Breadcrumbs items={[{ label: t('nav.about'), icon: 'lucide:user' }]} />
+  <Breadcrumbs items={[{ label: t('nav.about'), icon: 'lucide:user' }]} />
 
-    <section class="flex flex-col gap-8">
-        <!-- Header -->
-        <div class="flex flex-col gap-4">
-            <div>
-                <h1 class="text-3xl font-bold md:text-4xl">{t('nav.about')}</h1>
-                <p class="text-muted-foreground mt-1 font-mono text-sm">
-                    {
-                        lang === 'en'
-                            ? 'Learn more about this blog'
-                            : '了解更多关于本博客的信息'
-                    }
-                </p>
-            </div>
-        </div>
+  <section class="flex flex-col gap-8">
+    <!-- Header -->
+    <div class="flex flex-col gap-4">
+      <div>
+        <h1 class="text-3xl font-bold md:text-4xl">{t('nav.about')}</h1>
+        <p class="text-muted-foreground mt-1 font-mono text-sm">
+          {
+            lang === 'en'
+              ? 'A pragmatic notebook on shipping and learning'
+              : '一份务实的记录：边做边学，顺手分享'
+          }
+        </p>
+      </div>
+    </div>
 
-        <!-- Main Content -->
-        <div class="prose prose-sm dark:prose-invert max-w-none space-y-6">
+    <!-- Main Content -->
+    <div class="prose prose-sm dark:prose-invert max-w-none space-y-6">
+      {
+        lang === 'en' ? (
+          <>
             <p class="text-muted-foreground leading-relaxed">
-                {
-                    lang === 'en' ? (
-                        <>
-                            Welcome to{' '}
-                            <strong class="text-primary">{SITE.title}</strong>!
-                            This is a placeholder about page. Customize this
-                            content to tell your visitors about yourself, your
-                            blog, or your interests.
-                        </>
-                    ) : (
-                        <>
-                            欢迎来到{' '}
-                            <strong class="text-primary">{SITE.title}</strong>！
-                            这是一个关于页面的占位符。自定义此内容以向访问者讲述您自己、您的博客或您的兴趣。
-                        </>
-                    )
-                }
+              I write about the problems I hit while building and operating
+              things: performance, tooling, web infrastructure, and whatever
+              makes shipping easier. The bias here is simple: skip mysticism,
+              keep it reusable.
             </p>
 
-            <p class="text-muted-foreground leading-relaxed">
-                {
-                    lang === 'en' ? (
-                        <>
-                            You can edit this page by modifying{' '}
-                            <code class="bg-muted rounded px-1.5 py-0.5 text-sm">
-                                src/pages/[lang]/about.astro
-                            </code>
-                            .
-                        </>
-                    ) : (
-                        <>
-                            您可以通过修改{' '}
-                            <code class="bg-muted rounded px-1.5 py-0.5 text-sm">
-                                src/pages/[lang]/about.astro
-                            </code>{' '}
-                            来编辑此页面。
-                        </>
-                    )
-                }
+            <h2>What you will find here</h2>
+            <ul>
+              <li>Real-world tradeoffs (not "best practices" in a vacuum)</li>
+              <li>Small tools and workflows that save time</li>
+              <li>
+                Notes on modern runtimes and platforms (Cloudflare/Vercel, Bun,
+                etc.)
+              </li>
+            </ul>
+
+            <h2>Recommended reads</h2>
+            <p>If you are new, these posts capture the vibe of the blog:</p>
+            <ul>
+              <li>
+                <Link href={l('/blog/daily-but-no-time')} underline>
+                  Grow Your Blog Audience Fast in 3 Minutes
+                </Link>
+                — distribution, structure, and writing that can be found.
+              </li>
+              <li>
+                <Link href={l('/blog/serverless-effort-vs-reward')} underline>
+                  Is All the Serverless Hassle Really Worth It?
+                </Link>
+                — pragmatic take: uptime and ops matter more than hype.
+              </li>
+              <li>
+                <Link
+                  href={l('/blog/use-xget-to-accelerate-downloads')}
+                  underline
+                >
+                  Accelerate Your Downloads with xget
+                </Link>
+                — build small utilities, ship them, share them.
+              </li>
+            </ul>
+
+            <h2>Elsewhere</h2>
+            <p>
+              You can find me on:{' '}
+              {contactLinks.map((link, index) => (
+                <>
+                  <Link href={link.href} underline>
+                    {link.label}
+                  </Link>
+                  {index < contactLinks.length - 1 ? ', ' : ''}
+                </>
+              ))}
+              .
             </p>
-        </div>
-    </section>
+          </>
+        ) : (
+          <>
+            <p class="text-muted-foreground leading-relaxed">
+              我写的是自己正在踩的坑：性能与工具链、Web
+              基础设施、运维与部署，以及任何能让“把东西做出来并上线”更轻松的经验。
+              这个博客的偏好很明确：少点玄学，多点可复用。
+            </p>
+
+            <h2>你能在这里看到什么</h2>
+            <ul>
+              <li>真实的取舍和踩坑记录（不讲空泛的“最佳实践”）</li>
+              <li>能立刻用上的小工具与工作流</li>
+              <li>新运行时与平台相关的笔记（Cloudflare/Vercel、Bun 等）</li>
+            </ul>
+
+            <h2>建议从这几篇开始</h2>
+            <p>新读者入口页就该长这样：先给你几篇最能代表风格的文章。</p>
+            <ul>
+              <li>
+                <Link href={l('/blog/daily-but-no-time')} underline>
+                  3分钟教你快速提高你的博客受众范围
+                </Link>
+                — 关于分发、结构，以及如何让文章更容易被看到。
+              </li>
+              <li>
+                <Link href={l('/blog/serverless-effort-vs-reward')} underline>
+                  大费周章的搞serverless值得吗
+                </Link>
+                — 务实视角：稳定性与运维成本，比“上云就快”更重要。
+              </li>
+              <li>
+                <Link
+                  href={l('/blog/use-xget-to-accelerate-downloads')}
+                  underline
+                >
+                  使用 xget 加速你的下载
+                </Link>
+                — 做工具、部署公共实例、把方案写清楚分享出去。
+              </li>
+            </ul>
+
+            <h2>联系我</h2>
+            <p>
+              你可以在这里找到我：{' '}
+              {contactLinks.map((link, index) => (
+                <>
+                  <Link href={link.href} underline>
+                    {link.label}
+                  </Link>
+                  {index < contactLinks.length - 1 ? '，' : ''}
+                </>
+              ))}
+              。
+            </p>
+          </>
+        )
+      }
+    </div>
+  </section>
 </Layout>

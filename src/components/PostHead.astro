@@ -27,35 +27,36 @@ const modifiedTime = publishedTime
 
 // Article Schema for better SEO and AI/GEO optimization
 const articleSchema = {
-  "@context": "https://schema.org",
-  "@type": "BlogPosting",
-  "headline": title,
-  "description": description,
-  "image": postImage,
-  "datePublished": publishedTime,
-  "dateModified": modifiedTime,
-  "author": {
-    "@type": "Person",
-    "name": author,
-    "url": SITE.href
+  '@context': 'https://schema.org',
+  '@type': 'BlogPosting',
+  headline: title,
+  description: description,
+  image: postImage,
+  datePublished: publishedTime,
+  dateModified: modifiedTime,
+  author: {
+    '@type': 'Person',
+    name: author,
+    url: SITE.href,
   },
-  "publisher": {
-    "@type": "Organization",
-    "name": SITE.title,
-    "url": SITE.href,
-    "logo": {
-      "@type": "ImageObject",
-      "url": new URL('/reworkedmeroxdc1.webp', Astro.site).href
-    }
+  publisher: {
+    '@type': 'Organization',
+    name: SITE.title,
+    url: SITE.href,
+    logo: {
+      '@type': 'ImageObject',
+      url: new URL('/reworkedmeroxdc1.webp', Astro.site).href,
+    },
   },
-  "mainEntityOfPage": {
-    "@type": "WebPage",
-    "@id": postUrl
+  mainEntityOfPage: {
+    '@type': 'WebPage',
+    '@id': postUrl,
   },
-  "url": postUrl,
-  ...(post.data.tags && post.data.tags.length > 0 && {
-    "keywords": post.data.tags.join(", ")
-  })
+  url: postUrl,
+  ...(post.data.tags &&
+    post.data.tags.length > 0 && {
+      keywords: post.data.tags.join(', '),
+    }),
 }
 ---
 
@@ -94,4 +95,8 @@ const articleSchema = {
 <meta name="twitter:creator" content={author} />
 
 <!-- Article Schema Markup for AI/GEO and Rich Snippets -->
-<script type="application/ld+json" is:inline set:html={JSON.stringify(articleSchema)} />
+<script
+  type="application/ld+json"
+  is:inline
+  set:html={JSON.stringify(articleSchema)}
+/>
