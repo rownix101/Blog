@@ -21,6 +21,9 @@ import tailwindcss from '@tailwindcss/vite'
 
 export default defineConfig({
   site: 'https://www.rownix.dev', // Update with your domain
+  session: {
+    driver: 'memory',
+  },
   i18n: {
     defaultLocale: 'zh-cn',
     locales: ['zh-cn', 'en'],
@@ -35,8 +38,7 @@ export default defineConfig({
   },
   output: 'static',
   adapter: cloudflare({
-    // Disable session features for static blog
-    enableSessions: false,
+    imageService: 'compile',
   }),
   // Static output with Cloudflare Pages support
   integrations: [
@@ -92,6 +94,17 @@ export default defineConfig({
     // Type assertion needed due to Vite plugin type incompatibility between Astro and @tailwindcss/vite
     // This is the recommended approach per Astro documentation for Vite plugins
     plugins: [tailwindcss() as any],
+    ssr: {
+      external: [
+        'node:fs/promises',
+        'node:path',
+        'node:buffer',
+        'node:crypto',
+        'node:module',
+        'fs',
+        'path',
+      ],
+    },
     build: {
       minify: 'esbuild',
       chunkSizeWarningLimit: 1000,
