@@ -10,6 +10,8 @@ pnpm-debug.log*
 .env.production
 .DS_Store
 .idea/
+.obsidian/
+**/.obsidian/
 teaser.pptx
 ~$teaser.pptx
 
