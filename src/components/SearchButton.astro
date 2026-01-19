@@ -28,6 +28,7 @@ const buttonClass =
 <script>
   ;(function () {
     let searchApiPromise
+    let lastLang
     const getLang = () =>
       document.querySelector('[data-search-button]')?.dataset.searchLang ||
       'zh-cn'
@@ -38,8 +39,9 @@ const buttonClass =
         target.isContentEditable)
 
     const openSearch = async () => {
-      if (!searchApiPromise) {
-        const lang = getLang()
+      const lang = getLang()
+      if (!searchApiPromise || lastLang !== lang) {
+        lastLang = lang
         searchApiPromise = import('@/components/react/search-client').then(
           (mod) => mod.initSearchDialog({ lang }),
         )

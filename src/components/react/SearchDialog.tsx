@@ -44,7 +44,7 @@ const getStorageKeys = (lang: string) => ({
 })
 
 // Cache version - increment when index structure changes
-const INDEX_VERSION = '1.0'
+const INDEX_VERSION = '1.1'
 
 // Calculate relevance score
 function calculateRelevanceScore(
@@ -224,6 +224,16 @@ const SearchDialog: React.FC<SearchDialogProps> = ({
   const scrollContainerRef = useRef<HTMLDivElement>(null)
   const listboxId = 'search-results-listbox'
 
+  useEffect(() => {
+    setQuery('')
+    setResults([])
+    setSearchIndex([])
+    setRecentPosts([])
+    setIndex(null)
+    setSelectedIndex(0)
+    setError(null)
+  }, [lang])
+
   // Load search index (with caching)
   useEffect(() => {
     if (!open) return
@@ -266,7 +276,9 @@ const SearchDialog: React.FC<SearchDialogProps> = ({
       setError(null)
 
       try {
-        const response = await fetch('/api/search-index.json')
+        const response = await fetch(
+          `/api/search-index/${encodeURIComponent(lang)}.json`,
+        )
         if (!response.ok) throw new Error('Failed to load search index')
         const data: SearchResult[] = await response.json()
 
@@ -321,7 +333,7 @@ const SearchDialog: React.FC<SearchDialogProps> = ({
     return () => {
       cancelled = true
     }
-  }, [open, index, searchIndex.length, recentPosts.length])
+  }, [open, index, searchIndex.length, recentPosts.length, lang])
 
   // Perform search with fuzzy matching and improved relevance
   const performSearch = useCallback(
