@@ -16,6 +16,7 @@ const buttonClass =
   type="button"
   class={buttonClass}
   data-search-button
+  data-search-lang={lang}
   title="Search (⌘K)"
   aria-label="Search blog posts"
   aria-haspopup="dialog"
@@ -24,9 +25,12 @@ const buttonClass =
   <span class="sr-only">Search</span>
 </button>
 
-<script define:vars={{ lang }}>
+<script>
   ;(function () {
     let searchApiPromise
+    const getLang = () =>
+      document.querySelector('[data-search-button]')?.dataset.searchLang ||
+      'zh-cn'
     const isTypingTarget = (target) =>
       target &&
       (target.tagName === 'INPUT' ||
@@ -35,7 +39,8 @@ const buttonClass =
 
     const openSearch = async () => {
       if (!searchApiPromise) {
-        searchApiPromise = import('/src/components/react/search-client').then(
+        const lang = getLang()
+        searchApiPromise = import('@/components/react/search-client').then(
           (mod) => mod.initSearchDialog({ lang }),
         )
       }
