@@ -2,12 +2,12 @@
 import Breadcrumbs from '@/components/Breadcrumbs.astro'
 import PageHead from '@/components/PageHead.astro'
 import { SITE } from '@/consts'
-import { ui } from '@/i18n/ui'
+import { languages, ui } from '@/i18n/ui'
 import { useTranslations } from '@/i18n/utils'
 import Layout from '@/layouts/Layout.astro'
 
 export function getStaticPaths() {
-  return [{ params: { lang: 'zh-cn' } }, { params: { lang: 'en' } }]
+  return Object.keys(languages).map((lang) => ({ params: { lang } }))
 }
 
 const { lang } = Astro.params
@@ -199,7 +199,7 @@ const sponsorSchema = {
               </div>
             </div>
             <p class="text-muted-foreground mt-1 text-xs">
-              {lang === 'en' ? 'Scan with Alipay app' : '使用支付宝扫码'}
+              {t('sponsor.alipay_scan')}
             </p>
           </div>
 
@@ -225,7 +225,7 @@ const sponsorSchema = {
               </div>
             </div>
             <p class="text-muted-foreground mt-1 text-xs">
-              {lang === 'en' ? 'Scan with WeChat app' : '使用微信扫码'}
+              {t('sponsor.wechat_scan')}
             </p>
           </div>
         </div>
@@ -493,11 +493,7 @@ const sponsorSchema = {
                   <path d="M12 2L2 7l10 5 10-5-10-5z" />
                   <path d="M2 17l10 5 10-5M2 12l10 5 10-5" />
                 </svg>
-                <p class="text-sm">
-                  {lang === 'zh-cn'
-                    ? '暂无赞助者，成为第一个支持者吧！'
-                    : 'No sponsors yet, be the first one!'}
-                </p>
+                <p class="text-sm">{t('sponsor.no_sponsors')}</p>
               </div>
             )
           }
@@ -577,9 +573,7 @@ const sponsorSchema = {
               <option value="usdt-erc20">{t('sponsor.usdt_erc20')}</option>
               <option value="usdt-trc20">{t('sponsor.usdt_trc20')}</option>
               <option value="tron">{t('sponsor.tron')}</option>
-              <option value="other">
-                {lang === 'zh-cn' ? '其他' : 'Other'}
-              </option>
+              <option value="other">{t('sponsor.payment_method_other')}</option>
             </select>
           </div>
 
@@ -598,11 +592,7 @@ const sponsorSchema = {
               class="border-border/60 bg-background/80 focus:border-primary/50 focus:ring-primary/20 w-full resize-none rounded-md border px-3 py-2 text-sm backdrop-blur-sm focus:ring-2 focus:outline-none"
             ></textarea>
             <p class="text-muted-foreground mt-1 text-xs">
-              {
-                lang === 'zh-cn'
-                  ? '支持者及以上级别的赞助者可以在赞助者名单中显示留言'
-                  : 'Supporter tier and above can display messages in sponsor list'
-              }
+              {t('sponsor.message_hint')}
             </p>
           </div>
 
@@ -660,11 +650,23 @@ const sponsorSchema = {
         validation_error: '请填写所有必填字段',
         opening_client: '正在唤起邮件客户端，请完成发送。',
         submit_button: '提交信息',
+        subject: '博客赞助信息提交 - {name}',
+        body: '姓名：{name}\n赞助金额：{amount}\n支付方式：{payment_method}\n留言：{message}\n\n(请附上支付凭证截图)',
       },
       en: {
         validation_error: 'Please fill in all required fields',
         opening_client: 'Opening email client, please complete sending.',
         submit_button: 'Submit Information',
+        subject: 'Blog Sponsorship Information - {name}',
+        body: 'Name: {name}\nAmount: {amount}\nPayment Method: {payment_method}\nMessage: {message}\n\n(Please attach payment receipt screenshot)',
+      },
+      ja: {
+        validation_error: '必須項目をすべて入力してください',
+        opening_client:
+          'メールクライアントを開いています。送信を完了してください。',
+        submit_button: '情報を送信',
+        subject: 'ブログ支援情報 - {name}',
+        body: '名前：{name}\n金額：{amount}\n支払い方法：{payment_method}\nメッセージ：{message}\n\n(支払いのスクリーンショットを添付してください)',
       },
     }
 
@@ -700,16 +702,13 @@ const sponsorSchema = {
         return
       }
 
-      // Construct email content
-      const subject =
-        lang === 'zh-cn'
-          ? `博客赞助信息提交 - ${name}`
-          : `Blog Sponsorship Information - ${name}`
+      const subject = t.subject.replace('{name}', name)
 
-      const bodyContent =
-        lang === 'zh-cn'
-          ? `姓名：${name}\n赞助金额：${amount}\n支付方式：${paymentMethodText}\n留言：${message}\n\n(请附上支付凭证截图)`
-          : `Name: ${name}\nAmount: ${amount}\nPayment Method: ${paymentMethodText}\nMessage: ${message}\n\n(Please attach payment receipt screenshot)`
+      const bodyContent = t.body
+        .replace('{name}', name)
+        .replace('{amount}', amount)
+        .replace('{payment_method}', paymentMethodText)
+        .replace('{message}', message)
 
       const mailtoLink = `mailto:rownix101@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(bodyContent)}`
 

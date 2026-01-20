@@ -2,8 +2,10 @@
 // 动态处理语言重定向
 export const prerender = false
 
-const supportedLanguages = ['zh-cn', 'en']
-const defaultLanguage = 'zh-cn'
+import { defaultLang, languages } from '@/i18n/ui'
+
+const supportedLanguages = Object.keys(languages)
+const defaultLanguage = defaultLang
 
 // 1. 检查 Cookie
 const cookieHeader = Astro.request.headers.get('Cookie')

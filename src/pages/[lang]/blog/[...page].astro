@@ -38,7 +38,11 @@ const years = Object.keys(postsByYear).sort((a, b) => parseInt(b) - parseInt(a))
 
 const translatedBlogLabel = t('nav.blog')
 const translatedPageLabel =
-  lang === 'en' ? `Page ${page.currentPage}` : `第 ${page.currentPage} 页`
+  lang === 'en'
+    ? `Page ${page.currentPage}`
+    : lang === 'ja'
+      ? `第 ${page.currentPage} ページ`
+      : `第 ${page.currentPage} 页`
 ---
 
 <Layout class="max-w-3xl" lang={lang}>

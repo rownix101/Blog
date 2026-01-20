@@ -15,7 +15,38 @@ interface TermsConsentProps {
 
 export function TermsConsent({ lang }: TermsConsentProps) {
   const [open, setOpen] = useState(false)
-  const isEn = lang === 'en'
+  const locale = lang === 'ja' || lang === 'en' ? lang : 'zh-cn'
+  const text = {
+    'zh-cn': {
+      title: '服务条款与隐私政策',
+      desc: '请阅读并接受我们的服务条款和隐私政策以继续使用本网站。',
+      agreePrefix: '点击“接受”即表示您同意我们的',
+      terms: '服务条款',
+      privacy: '隐私政策',
+      decline: '拒绝',
+      accept: '接受',
+    },
+    en: {
+      title: 'Terms of Service & Privacy Policy',
+      desc: 'Please read and accept our Terms of Service and Privacy Policy to continue using this website.',
+      agreePrefix: 'By clicking "Accept", you agree to our',
+      terms: 'Terms of Service',
+      privacy: 'Privacy Policy',
+      decline: 'Decline',
+      accept: 'Accept',
+    },
+    ja: {
+      title: '利用規約とプライバシーポリシー',
+      desc: '本サイトを継続してご利用いただくには、利用規約とプライバシーポリシーへの同意が必要です。',
+      agreePrefix: '「同意する」をクリックすると、',
+      terms: '利用規約',
+      privacy: 'プライバシーポリシー',
+      decline: '同意しない',
+      accept: '同意する',
+    },
+  }[locale]
+  const conjunction = locale === 'en' ? 'and' : locale === 'ja' ? 'と' : '和'
+  const endPunctuation = locale === 'en' ? '.' : '。'
 
   useEffect(() => {
     const accepted = localStorage.getItem('terms_accepted')
@@ -62,49 +93,27 @@ export function TermsConsent({ lang }: TermsConsentProps) {
         onInteractOutside={(e) => e.preventDefault()}
       >
         <DialogHeader>
-          <DialogTitle>
-            {isEn ? 'Terms of Service & Privacy Policy' : '服务条款与隐私政策'}
-          </DialogTitle>
-          <DialogDescription>
-            {isEn
-              ? 'Please read and accept our Terms of Service and Privacy Policy to continue using this website.'
-              : '请阅读并接受我们的服务条款和隐私政策以继续使用本网站。'}
-          </DialogDescription>
+          <DialogTitle>{text.title}</DialogTitle>
+          <DialogDescription>{text.desc}</DialogDescription>
         </DialogHeader>
         <div className="flex flex-col gap-4 py-4">
           <p className="text-muted-foreground text-sm">
-            {isEn ? (
-              <>
-                By clicking "Accept", you agree to our{' '}
-                <a href="/en/terms" className="text-primary underline">
-                  Terms of Service
-                </a>{' '}
-                and{' '}
-                <a href="/en/privacy" className="text-primary underline">
-                  Privacy Policy
-                </a>
-                .
-              </>
-            ) : (
-              <>
-                点击“接受”即表示您同意我们的
-                <a href="/zh-cn/terms" className="text-primary underline">
-                  服务条款
-                </a>
-                和
-                <a href="/zh-cn/privacy" className="text-primary underline">
-                  隐私政策
-                </a>
-                。
-              </>
-            )}
+            {text.agreePrefix}
+            <a href={`/${locale}/terms`} className="text-primary underline">
+              {text.terms}
+            </a>{' '}
+            {conjunction}
+            <a href={`/${locale}/privacy`} className="text-primary underline">
+              {text.privacy}
+            </a>
+            {endPunctuation}
           </p>
         </div>
         <DialogFooter className="gap-2 sm:gap-0">
           <Button variant="outline" onClick={handleDecline}>
-            {isEn ? 'Decline' : '拒绝'}
+            {text.decline}
           </Button>
-          <Button onClick={handleAccept}>{isEn ? 'Accept' : '接受'}</Button>
+          <Button onClick={handleAccept}>{text.accept}</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

@@ -106,10 +106,3 @@ export const ICON_MAP: IconMap = {
   Email: 'lucide:mail',
   RSS: 'lucide:rss',
 }
-
-// Newsletter consent text (centralized for GDPR compliance)
-export const NEWSLETTER_CONSENT_TEXT = {
-  text: 'I agree to receive newsletter emails.',
-  privacyLink: '/privacy',
-  privacyText: 'Privacy Policy',
-}

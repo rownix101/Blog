@@ -39,7 +39,9 @@ const ogLocale =
     ? 'zh_CN'
     : lang === 'en'
       ? 'en_US'
-      : SITE.locale.replace('-', '_')
+      : lang === 'ja'
+        ? 'ja_JP'
+        : SITE.locale.replace('-', '_')
 const webPageSchema = {
   '@context': 'https://schema.org',
   '@type': 'WebPage',

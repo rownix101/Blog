@@ -1,22 +1,28 @@
 ---
 import Breadcrumbs from '@/components/Breadcrumbs.astro'
 import PageHead from '@/components/PageHead.astro'
-import { ui } from '@/i18n/ui'
+import { languages, ui } from '@/i18n/ui'
 import { useTranslations } from '@/i18n/utils'
 import Layout from '@/layouts/Layout.astro'
 import { Icon } from 'astro-icon/components'
 import { getCollection, render } from 'astro:content'
 
 export async function getStaticPaths() {
-  return [{ params: { lang: 'zh-cn' } }, { params: { lang: 'en' } }]
+  return Object.keys(languages).map((lang) => ({ params: { lang } }))
 }
 
 const { lang } = Astro.params
-const t = useTranslations(lang as keyof typeof ui)
+const locale = (lang || 'zh-cn').toLowerCase()
+const t = useTranslations(locale as keyof typeof ui)
 
 // Get terms content
 const legalDocs = await getCollection('legal')
-const termsDoc = legalDocs.find((doc) => doc.id === `terms.${lang}`)
+const preferredLangs = [locale, 'en', 'zh-cn']
+const termsDoc = preferredLangs
+  .map((preferredLang) =>
+    legalDocs.find((doc) => doc.id === `terms.${preferredLang}`),
+  )
+  .find(Boolean)
 
 if (!termsDoc) {
   throw new Error(`Terms of service not found for language: ${lang}`)
@@ -25,7 +31,7 @@ if (!termsDoc) {
 const { Content } = await render(termsDoc)
 ---
 
-<Layout class="max-w-3xl" lang={lang}>
+<Layout class="max-w-3xl" lang={locale}>
   <PageHead slot="head" title={termsDoc.data.title} />
   <Breadcrumbs
     items={[{ label: termsDoc.data.title, icon: 'lucide:file-text' }]}
@@ -40,7 +46,7 @@ const { Content } = await render(termsDoc)
       {
         termsDoc.data.date && (
           <p class="text-muted-foreground m-0 text-sm">
-            {lang === 'en' ? 'Last updated' : '最后更新'}:{' '}
+            {t('legal.last_updated')}:{' '}
             {termsDoc.data.date.toISOString().split('T')[0]}
           </p>
         )

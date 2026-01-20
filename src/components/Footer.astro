@@ -17,9 +17,9 @@ import SocialIcons from './SocialIcons.astro'
 const t = useTranslations(lang as keyof typeof ui)
 const l = useLocalizedPath(lang as keyof typeof ui)
 const statusPageHref =
-  lang === 'en'
-    ? 'https://uptimeflare.rownix.dev/en'
-    : 'https://uptimeflare.rownix.dev/zh-cn'
+  lang === 'zh-cn'
+    ? 'https://uptimeflare.rownix.dev/zh-cn'
+    : 'https://uptimeflare.rownix.dev/en'
 
 const isExternalLink = (href: string) => {
   return href.startsWith('http')
@@ -44,7 +44,7 @@ const isExternalLink = (href: string) => {
         </div>
         <div class="w-full md:w-auto md:flex-shrink-0">
           <ErrorBoundary client:visible>
-            <Newsletter client:visible />
+            <Newsletter client:visible lang={lang} />
           </ErrorBoundary>
         </div>
       </div>

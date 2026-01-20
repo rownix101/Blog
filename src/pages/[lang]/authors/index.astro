@@ -13,17 +13,14 @@ export function getStaticPaths() {
 
 const { lang } = Astro.params
 const authors = await getAllAuthors()
+const authorsLabel = lang === 'en' ? 'Authors' : lang === 'ja' ? '著者' : '作者'
 
 const l = useLocalizedPath(lang as keyof typeof ui)
 ---
 
 <Layout class="max-w-3xl" lang={lang}>
-  <PageHead slot="head" title={lang === 'en' ? 'Authors' : '作者'} />
-  <Breadcrumbs
-    items={[
-      { label: lang === 'en' ? 'Authors' : '作者', icon: 'lucide:users' },
-    ]}
-  />
+  <PageHead slot="head" title={authorsLabel} />
+  <Breadcrumbs items={[{ label: authorsLabel, icon: 'lucide:users' }]} />
 
   <section class="flex flex-col gap-y-4">
     {

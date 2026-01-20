@@ -1,11 +1,9 @@
 import type { APIRoute } from 'astro'
 import { getAllPosts } from '@/lib/data-utils'
+import { languages } from '@/i18n/ui'
 
 export function getStaticPaths() {
-  return [
-    { params: { lang: 'zh-cn' } },
-    { params: { lang: 'en' } },
-  ]
+  return Object.keys(languages).map((lang) => ({ params: { lang } }))
 }
 
 export const prerender = true

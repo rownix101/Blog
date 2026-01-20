@@ -12,28 +12,37 @@ export function getStaticPaths() {
 
 const { lang } = Astro.params
 const l = useLocalizedPath(lang as any)
+const isEn = lang === 'en'
+const isJa = lang === 'ja'
+const pageTitle = isEn
+  ? 'Subscription Confirmed'
+  : isJa
+    ? '購読確認'
+    : '订阅已确认'
+const headingText = isEn
+  ? 'Subscription Confirmed!'
+  : isJa
+    ? '購読が確認されました！'
+    : '订阅已确认！'
+const bodyText = isEn
+  ? "Thank you for subscribing to our newsletter. You're all set to receive the latest updates."
+  : isJa
+    ? 'ニュースレターのご購読ありがとうございます。最新情報をお届けします。'
+    : '感谢您订阅我们的新闻通讯。您已准备好接收最新动态。'
+const backText = isEn ? 'Go to home page' : isJa ? 'ホームへ戻る' : '返回首页'
 ---
 
 <Layout class="max-w-3xl" lang={lang}>
-  <PageHead
-    slot="head"
-    title={lang === 'en' ? 'Subscription Confirmed' : '订阅已确认'}
-  />
+  <PageHead slot="head" title={pageTitle} />
 
   <section
     class="flex flex-col items-center justify-center gap-y-4 text-center"
   >
     <div class="max-w-md">
       <h1 class="mb-4 text-3xl font-medium">
-        {lang === 'en' ? 'Subscription Confirmed!' : '订阅已确认！'}
+        {headingText}
       </h1>
-      <p class="prose">
-        {
-          lang === 'en'
-            ? "Thank you for subscribing to our newsletter. You're all set to receive the latest updates."
-            : '感谢您订阅我们的新闻通讯。您已准备好接收最新动态。'
-        }
-      </p>
+      <p class="prose">{bodyText}</p>
     </div>
     <a
       href={l('/')}
@@ -41,7 +50,7 @@ const l = useLocalizedPath(lang as any)
     >
       <span class="transition-transform group-hover:-translate-x-1">&larr;</span
       >
-      {lang === 'en' ? 'Go to home page' : '返回首页'}
+      {backText}
     </a>
   </section>
 </Layout>

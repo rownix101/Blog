@@ -15,6 +15,7 @@ const t = useTranslations(lang)
 const giscusLangMap = {
   'zh-cn': 'zh-CN',
   en: 'en',
+  ja: 'ja',
 }
 const giscusLang = giscusLangMap[lang] || 'en'
 
@@ -108,7 +109,7 @@ const unifiedId = getUnifiedIdentifier(Astro.url.pathname)
   }
 </style>
 
-<script define:vars={{ GISCUS }}>
+<script define:vars={{ GISCUS, giscusLangMap, languages }}>
   // Listen for Giscus metadata events
   window.addEventListener('message', (event) => {
     if (event.origin !== 'https://giscus.app') return
@@ -135,7 +136,6 @@ const unifiedId = getUnifiedIdentifier(Astro.url.pathname)
   function getUnifiedIdentifier(pathname) {
     const segments = pathname.split('/').filter(Boolean)
     // Remove language prefix if it exists
-    const languages = { 'zh-cn': '中文', en: 'English' }
     if (segments.length > 0 && segments[0] in languages) {
       return '/' + segments.slice(1).join('/')
     }
@@ -167,10 +167,6 @@ const unifiedId = getUnifiedIdentifier(Astro.url.pathname)
 
     // Get the current language from the page
     const lang = document.documentElement.lang || 'zh-cn'
-    const giscusLangMap = {
-      'zh-cn': 'zh-CN',
-      en: 'en',
-    }
     const giscusLang = giscusLangMap[lang] || 'en'
 
     // Get unified identifier for the current page
