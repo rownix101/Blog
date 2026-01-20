@@ -3,17 +3,24 @@ import Breadcrumbs from '@/components/Breadcrumbs.astro'
 import Link from '@/components/Link.astro'
 import PageHead from '@/components/PageHead.astro'
 import { SITE, SOCIAL_LINKS } from '@/consts'
-import { ui } from '@/i18n/ui'
+import { languages, ui } from '@/i18n/ui'
 import { useLocalizedPath, useTranslations } from '@/i18n/utils'
 import Layout from '@/layouts/Layout.astro'
 
 export function getStaticPaths() {
-  return [{ params: { lang: 'zh-cn' } }, { params: { lang: 'en' } }]
+  return Object.keys(languages).map((lang) => ({ params: { lang } }))
 }
 
 const { lang } = Astro.params
 const t = useTranslations(lang as keyof typeof ui)
 const l = useLocalizedPath(lang as keyof typeof ui)
+const isEn = lang === 'en'
+const isJa = lang === 'ja'
+const tagline = isEn
+  ? 'A pragmatic notebook on shipping and learning'
+  : isJa
+    ? '出荷と学びを記録する実用ノート'
+    : '一份务实的记录：边做边学，顺手分享'
 
 const contactLinks = SOCIAL_LINKS.filter((link) =>
   ['Email', 'GitHub', 'X'].includes(link.label),
@@ -47,11 +54,7 @@ const personSchema = {
       <div>
         <h1 class="text-3xl font-bold md:text-4xl">{t('nav.about')}</h1>
         <p class="text-muted-foreground mt-1 font-mono text-sm">
-          {
-            lang === 'en'
-              ? 'A pragmatic notebook on shipping and learning'
-              : '一份务实的记录：边做边学，顺手分享'
-          }
+          {tagline}
         </p>
       </div>
     </div>
@@ -59,7 +62,7 @@ const personSchema = {
     <!-- Main Content -->
     <div class="prose prose-sm dark:prose-invert max-w-none space-y-6">
       {
-        lang === 'en' ? (
+        isEn ? (
           <>
             <p class="text-muted-foreground leading-relaxed">
               I write about the problems I hit while building and operating
@@ -116,6 +119,63 @@ const personSchema = {
                 </>
               ))}
               .
+            </p>
+          </>
+        ) : isJa ? (
+          <>
+            <p class="text-muted-foreground leading-relaxed">
+              開発や運用でぶつかる問題について書いています。パフォーマンス、
+              ツール、Web インフラ、そして「出荷を楽にする工夫」。
+              方針はシンプルです。神秘化せず、再利用できる形にまとめること。
+            </p>
+
+            <h2>ここで得られること</h2>
+            <ul>
+              <li>
+                現場のトレードオフ（空虚な「ベストプラクティス」ではなく）
+              </li>
+              <li>時間を節約する小さなツールやワークフロー</li>
+              <li>最新のランタイムやプラットフォームの実践的メモ</li>
+            </ul>
+
+            <h2>おすすめ記事</h2>
+            <p>初めての方におすすめの雰囲気がわかる記事：</p>
+            <ul>
+              <li>
+                <Link href={l('/blog/daily-but-no-time')} underline>
+                  Grow Your Blog Audience Fast in 3 Minutes
+                </Link>
+                — 配信、構成、発見されやすい書き方について。
+              </li>
+              <li>
+                <Link href={l('/blog/serverless-effort-vs-reward')} underline>
+                  Is All the Serverless Hassle Really Worth It?
+                </Link>
+                — 熱狂よりも運用・稼働率の現実にフォーカス。
+              </li>
+              <li>
+                <Link
+                  href={l('/blog/use-xget-to-accelerate-downloads')}
+                  underline
+                >
+                  Accelerate Your Downloads with xget
+                </Link>
+                — 小さなツールを作って出荷し、共有する。
+              </li>
+            </ul>
+
+            <h2>他の場所</h2>
+            <p>
+              こちらでも活動しています：{' '}
+              {contactLinks.map((link, index) => (
+                <>
+                  <Link href={link.href} underline>
+                    {link.label}
+                  </Link>
+                  {index < contactLinks.length - 1 ? ', ' : ''}
+                </>
+              ))}
+              。
             </p>
           </>
         ) : (

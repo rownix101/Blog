@@ -24,6 +24,8 @@ export async function getStaticPaths() {
 const { author } = Astro.props
 const { lang, id } = Astro.params
 const posts = await getPostsByAuthor(id as string, lang)
+const authorsLabel = lang === 'en' ? 'Authors' : lang === 'ja' ? '著者' : '作者'
+const postsLabel = lang === 'en' ? 'Posts' : lang === 'ja' ? '記事' : '文章'
 
 const l = useLocalizedPath(lang as keyof typeof ui)
 ---
@@ -33,7 +35,7 @@ const l = useLocalizedPath(lang as keyof typeof ui)
   <Breadcrumbs
     items={[
       {
-        label: lang === 'en' ? 'Authors' : '作者',
+        label: authorsLabel,
         href: l('/authors'),
         icon: 'lucide:users',
       },
@@ -49,7 +51,7 @@ const l = useLocalizedPath(lang as keyof typeof ui)
 
     <div class="flex flex-col gap-y-4">
       <h2 class="text-2xl font-semibold">
-        {lang === 'en' ? 'Posts' : '文章'}
+        {postsLabel}
       </h2>
       <div class="flex flex-col gap-y-2">
         {posts.map((post) => <BlogCard entry={post} />)}

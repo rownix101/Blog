@@ -7,16 +7,23 @@ import {
   ArrowRight,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import { ui } from '@/i18n/ui'
+import { useLocalizedPath, useTranslations } from '@/i18n/utils'
 import { cn } from '@/lib/utils'
-import { NEWSLETTER_CONSENT_TEXT } from '@/consts'
 
 interface NewsletterProps {
   className?: string
+  lang?: keyof typeof ui
 }
 
 type Status = 'idle' | 'loading' | 'success' | 'error'
 
-const Newsletter: React.FC<NewsletterProps> = ({ className }) => {
+const Newsletter: React.FC<NewsletterProps> = ({
+  className,
+  lang = 'zh-cn',
+}) => {
+  const t = useTranslations(lang)
+  const l = useLocalizedPath(lang)
   const [email, setEmail] = useState('')
   const [consent, setConsent] = useState(false)
   const [status, setStatus] = useState<Status>('idle')
@@ -32,20 +39,20 @@ const Newsletter: React.FC<NewsletterProps> = ({ className }) => {
 
     if (!email.trim()) {
       setStatus('error')
-      setMessage('Please enter your email address')
+      setMessage(t('newsletter.error_email_required'))
       return
     }
 
     if (!validateEmail(email)) {
       setStatus('error')
-      setMessage('Please enter a valid email address')
+      setMessage(t('newsletter.error_email_invalid'))
       return
     }
 
     // GDPR compliance: Require explicit consent
     if (!consent) {
       setStatus('error')
-      setMessage('Please accept the privacy policy to subscribe')
+      setMessage(t('newsletter.error_consent_required'))
       return
     }
 
@@ -64,11 +71,11 @@ const Newsletter: React.FC<NewsletterProps> = ({ className }) => {
       const data = await response.json()
 
       if (!response.ok) {
-        throw new Error(data.error || 'Failed to subscribe')
+        throw new Error(data.error || t('newsletter.error_subscribe_failed'))
       }
 
       setStatus('success')
-      setMessage('Successfully subscribed! Please check your email to confirm.')
+      setMessage(t('newsletter.success'))
       setEmail('')
       setConsent(false)
 
@@ -80,9 +87,7 @@ const Newsletter: React.FC<NewsletterProps> = ({ className }) => {
     } catch (error) {
       setStatus('error')
       setMessage(
-        error instanceof Error
-          ? error.message
-          : 'Something went wrong. Please try again later.',
+        error instanceof Error ? error.message : t('newsletter.error_generic'),
       )
     }
   }
@@ -97,10 +102,10 @@ const Newsletter: React.FC<NewsletterProps> = ({ className }) => {
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              placeholder="Enter your email"
+              placeholder={t('newsletter.email_placeholder')}
               disabled={status === 'loading'}
               className="border-border/60 bg-background/80 text-foreground placeholder:text-muted-foreground/60 focus:ring-primary/20 focus:border-primary/50 h-10 w-full rounded-md border pr-4 pl-10 text-sm backdrop-blur-sm transition-all focus:ring-2 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50"
-              aria-label="Email address"
+              aria-label={t('newsletter.email_label')}
               required
             />
           </div>
@@ -114,12 +119,12 @@ const Newsletter: React.FC<NewsletterProps> = ({ className }) => {
             {status === 'loading' ? (
               <>
                 <Loader2 className="h-4 w-4 animate-spin" />
-                <span>Subscribing...</span>
+                <span>{t('newsletter.subscribing')}</span>
               </>
             ) : (
               <>
                 <Mail className="h-4 w-4" />
-                <span>Subscribe</span>
+                <span>{t('newsletter.subscribe')}</span>
                 <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
               </>
             )}
@@ -141,14 +146,14 @@ const Newsletter: React.FC<NewsletterProps> = ({ className }) => {
             htmlFor="newsletter-consent-footer"
             className="text-muted-foreground cursor-pointer text-xs leading-relaxed"
           >
-            {NEWSLETTER_CONSENT_TEXT.text}{' '}
+            {t('newsletter.consent_text')}{' '}
             <a
-              href={NEWSLETTER_CONSENT_TEXT.privacyLink}
+              href={l('/privacy')}
               className="hover:text-foreground underline transition-colors"
               target="_blank"
               rel="noopener noreferrer"
             >
-              {NEWSLETTER_CONSENT_TEXT.privacyText}
+              {t('footer.privacy')}
             </a>
           </label>
         </div>

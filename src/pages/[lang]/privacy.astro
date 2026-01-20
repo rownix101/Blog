@@ -2,18 +2,19 @@
 import Breadcrumbs from '@/components/Breadcrumbs.astro'
 import PageHead from '@/components/PageHead.astro'
 import { SOCIAL_LINKS } from '@/consts'
-import { ui } from '@/i18n/ui'
+import { languages, ui } from '@/i18n/ui'
 import { useTranslations } from '@/i18n/utils'
 import Layout from '@/layouts/Layout.astro'
 import { Icon } from 'astro-icon/components'
 import { getCollection, render } from 'astro:content'
 
 export async function getStaticPaths() {
-  return [{ params: { lang: 'zh-cn' } }, { params: { lang: 'en' } }]
+  return Object.keys(languages).map((lang) => ({ params: { lang } }))
 }
 
 const { lang } = Astro.params
-const t = useTranslations(lang as keyof typeof ui)
+const locale = (lang || 'zh-cn').toLowerCase()
+const t = useTranslations(locale as keyof typeof ui)
 
 // Get contact email from social links or use placeholder
 const contactEmail =
@@ -24,7 +25,12 @@ const contactEmail =
 
 // Get privacy policy content
 const legalDocs = await getCollection('legal')
-const privacyDoc = legalDocs.find((doc) => doc.id === `privacy.${lang}`)
+const preferredLangs = [locale, 'en', 'zh-cn']
+const privacyDoc = preferredLangs
+  .map((preferredLang) =>
+    legalDocs.find((doc) => doc.id === `privacy.${preferredLang}`),
+  )
+  .find(Boolean)
 
 if (!privacyDoc) {
   throw new Error(`Privacy policy not found for language: ${lang}`)
@@ -33,7 +39,7 @@ if (!privacyDoc) {
 const { Content } = await render(privacyDoc)
 ---
 
-<Layout class="max-w-3xl" lang={lang}>
+<Layout class="max-w-3xl" lang={locale}>
   <PageHead slot="head" title={privacyDoc.data.title} />
   <Breadcrumbs
     items={[{ label: privacyDoc.data.title, icon: 'lucide:shield-check' }]}
@@ -48,7 +54,7 @@ const { Content } = await render(privacyDoc)
       {
         privacyDoc.data.date && (
           <p class="text-muted-foreground m-0 text-sm">
-            {lang === 'en' ? 'Last updated' : '最后更新'}:{' '}
+            {t('legal.last_updated')}:{' '}
             {privacyDoc.data.date.toISOString().split('T')[0]}
           </p>
         )
@@ -60,17 +66,9 @@ const { Content } = await render(privacyDoc)
     </section>
 
     <section class="mb-8 space-y-4">
-      <h2 class="text-2xl font-semibold">
-        {lang === 'en' ? 'Contact Us' : '联系我们'}
-      </h2>
+      <h2 class="text-2xl font-semibold">{t('legal.contact_us')}</h2>
       <div class="bg-muted/30 rounded-lg border p-4">
-        <p class="m-0">
-          {
-            lang === 'en'
-              ? 'This website is operated by Rownix. If you have any questions about this Privacy Policy, please contact us:'
-              : '本网站由 Rownix 运营。如果您对本隐私政策有任何疑问，请联系我们：'
-          }
-        </p>
+        <p class="m-0">{t('legal.privacy_contact_desc')}</p>
         <p class="mt-2">
           <strong>Email:</strong>
           <a
