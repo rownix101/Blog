@@ -13,12 +13,15 @@
 ## 申请步骤
 
 ### 1. 准备信息
+
 确保你的网站：
+
 - ✅ 可以正常访问
 - ✅ 已添加本站友链
 - ✅ 内容健康向上
 
 ### 2. 添加到 friends.yaml
+
 在你的 Fork 中，编辑 `src/data/friends/friends.yaml` 文件，添加以下内容：
 
 ```yaml
@@ -35,6 +38,7 @@
 ```
 
 ### 3. 提交 Pull Request
+
 - 提交信息：`Add friend link: [你的网站名称]`
 - PR 标题：`Add friend link: [你的网站名称]`
 - 等待审核
@@ -57,7 +61,9 @@
 请在你的网站添加本站链接：
 
 ```html
-<a href="https://www.rownix.dev" target="_blank" rel="noopener">Rownix's Blog</a>
+<a href="https://www.rownix.dev" target="_blank" rel="noopener"
+  >Rownix's Blog</a
+>
 ```
 
 ## 审核流程
@@ -79,7 +85,8 @@
 ## 有问题？
 
 如有疑问，可以：
-- 创建 [Issue](https://github.com/rownix101/Blog/issues/new?assignees=&labels=friend-application&template=friend-application.md)
+
+- 创建 [Issue](https://github.com/rownix101/Blog/issues/new?assignees=&labels=friend-application&template=friend-application.yml)
 - 发送邮件联系
 
 ---

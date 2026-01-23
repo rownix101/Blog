@@ -1,0 +1,109 @@
+name: Friend Link Application
+description: Apply to be added to the friends list (no fork required)
+title: 'Friend Link Application: [Your Website Name]'
+labels:
+  - friend-application
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for applying for a friend link.
+
+        After you submit this issue, a bot will open a Pull Request that adds your entry to `src/data/friends/friends.yaml`.
+
+        Please make sure you've linked back to this blog: https://www.rownix.dev
+
+  - type: input
+    id: website_name
+    attributes:
+      label: Website Name
+      placeholder: Your website name
+    validations:
+      required: true
+
+  - type: input
+    id: website_url
+    attributes:
+      label: Website URL
+      description: Full URL including https://
+      placeholder: https://example.com
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: Brief description (10-200 characters)
+      placeholder: Tell us what your site is about
+    validations:
+      required: true
+
+  - type: input
+    id: avatar_url
+    attributes:
+      label: Avatar URL (optional)
+      description: URL to your site logo/avatar (https://...)
+      placeholder: https://example.com/avatar.png
+    validations:
+      required: false
+
+  - type: dropdown
+    id: category
+    attributes:
+      label: Category (optional)
+      options:
+        - 技术
+        - 生活
+        - 学习
+        - 设计
+        - 其他
+    validations:
+      required: false
+
+  - type: input
+    id: contact_email
+    attributes:
+      label: Contact Email
+      placeholder: your@email.com
+    validations:
+      required: true
+
+  - type: input
+    id: github_username
+    attributes:
+      label: GitHub Username (optional)
+      placeholder: username
+    validations:
+      required: false
+
+  - type: input
+    id: reciprocal_url
+    attributes:
+      label: Reciprocal Link URL
+      description: Where can we find the link back to this blog?
+      placeholder: https://example.com/friends
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Requirements Checklist
+      options:
+        - label: My website is active and accessible
+          required: true
+        - label: My website has high-quality content and design
+          required: true
+        - label: I have added a link back to this blog (https://www.rownix.dev)
+          required: true
+        - label: My website contains appropriate and safe content
+          required: true
+
+  - type: textarea
+    id: notes
+    attributes:
+      label: Additional Notes (optional)
+      placeholder: Anything else you'd like us to know
+    validations:
+      required: false
