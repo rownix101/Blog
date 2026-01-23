@@ -47,6 +47,7 @@ const description =
           <a
             href="https://github.com/rownix101/Blog/issues/new?assignees=&labels=friend-application&template=friend-application.yml"
             target="_blank"
+            rel="noopener noreferrer"
             class="bg-primary text-primary-foreground hover:bg-primary/90 inline-flex w-full items-center justify-center rounded-lg px-6 py-3 font-medium transition-colors"
           >
             <svg
@@ -64,199 +65,6 @@ const description =
           </a>
         </div>
 
-        <div class="relative mb-8">
-          <div class="absolute inset-0 flex items-center">
-            <span class="w-full border-t"></span>
-          </div>
-          <div class="relative flex justify-center text-xs uppercase">
-            <span class="bg-background text-muted-foreground px-2">
-              {lang === 'zh-cn' ? '或者' : 'OR'}
-            </span>
-          </div>
-        </div>
-
-        <div class="mb-4">
-          <h3 class="font-semibold">
-            {
-              lang === 'zh-cn'
-                ? '生成配置信息（可选）'
-                : 'Generate Configuration (Optional)'
-            }
-          </h3>
-          <p class="text-muted-foreground text-sm">
-            {
-              lang === 'zh-cn'
-                ? '如果您需要手动生成 YAML，可以使用此表单。'
-                : 'Use this form if you need to generate YAML manually.'
-            }
-          </p>
-        </div>
-
-        <form id="friendApplicationForm" class="space-y-6" novalidate>
-          <div>
-            <label for="name" class="mb-2 block text-sm font-medium">
-              {t['friends.form.name'] || 'Website Name'} *
-            </label>
-            <input
-              type="text"
-              id="name"
-              name="name"
-              required
-              class="bg-background border-border focus:ring-primary w-full rounded-lg border px-4 py-2 focus:border-transparent focus:ring-2 focus:outline-none"
-              placeholder={t['friends.form.name_placeholder'] ||
-                'Your website name'}
-            />
-          </div>
-
-          <div>
-            <label for="url" class="mb-2 block text-sm font-medium">
-              {t['friends.form.url'] || 'Website URL'} *
-            </label>
-            <input
-              type="url"
-              id="url"
-              name="url"
-              required
-              class="bg-background border-border focus:ring-primary w-full rounded-lg border px-4 py-2 focus:border-transparent focus:ring-2 focus:outline-none"
-              placeholder="https://example.com"
-            />
-          </div>
-
-          <div>
-            <label for="description" class="mb-2 block text-sm font-medium">
-              {t['friends.form.description'] || 'Description'} *
-            </label>
-            <textarea
-              id="description"
-              name="description"
-              required
-              rows={3}
-              class="bg-background border-border focus:ring-primary w-full rounded-lg border px-4 py-2 focus:border-transparent focus:ring-2 focus:outline-none"
-              placeholder={t['friends.form.description_placeholder'] ||
-                'Brief description of your website'}></textarea>
-          </div>
-
-          <div>
-            <label for="avatar" class="mb-2 block text-sm font-medium">
-              {t['friends.form.avatar'] || 'Avatar URL'}
-            </label>
-            <input
-              type="url"
-              id="avatar"
-              name="avatar"
-              class="bg-background border-border focus:ring-primary w-full rounded-lg border px-4 py-2 focus:border-transparent focus:ring-2 focus:outline-none"
-              placeholder="https://example.com/avatar.png"
-            />
-          </div>
-
-          <div>
-            <label for="category" class="mb-2 block text-sm font-medium">
-              {t['friends.form.category'] || 'Category'}
-            </label>
-            <select
-              id="category"
-              name="category"
-              class="bg-background border-border focus:ring-primary w-full rounded-lg border px-4 py-2 focus:border-transparent focus:ring-2 focus:outline-none"
-            >
-              <option value=""
-                >{
-                  t['friends.form.select_category'] || 'Select category'
-                }</option
-              >
-              <option value="技术"
-                >{t['friends.category.tech'] || 'Technology'}</option
-              >
-              <option value="生活"
-                >{t['friends.category.life'] || 'Life'}</option
-              >
-              <option value="学习"
-                >{t['friends.category.study'] || 'Learning'}</option
-              >
-              <option value="设计"
-                >{t['friends.category.design'] || 'Design'}</option
-              >
-              <option value="其他"
-                >{t['friends.category.other'] || 'Other'}</option
-              >
-            </select>
-          </div>
-
-          <div>
-            <label for="contact" class="mb-2 block text-sm font-medium">
-              {t['friends.form.contact'] || 'Contact Email'} *
-            </label>
-            <input
-              type="email"
-              id="contact"
-              name="contact"
-              required
-              class="bg-background border-border focus:ring-primary w-full rounded-lg border px-4 py-2 focus:border-transparent focus:ring-2 focus:outline-none"
-              placeholder="your@email.com"
-            />
-          </div>
-
-          <div>
-            <label for="github" class="mb-2 block text-sm font-medium">
-              {t['friends.form.github'] || 'GitHub Username'}
-            </label>
-            <input
-              type="text"
-              id="github"
-              name="github"
-              class="bg-background border-border focus:ring-primary w-full rounded-lg border px-4 py-2 focus:border-transparent focus:ring-2 focus:outline-none"
-              placeholder="username"
-            />
-          </div>
-
-          <div class="flex items-start gap-2">
-            <input
-              type="checkbox"
-              id="reciprocal"
-              name="reciprocal"
-              required
-              class="mt-1"
-            />
-            <label for="reciprocal" class="text-muted-foreground text-sm">
-              {
-                t['friends.form.reciprocal'] ||
-                  'I have added a link to this blog on my website'
-              }
-            </label>
-          </div>
-
-          <button
-            type="button"
-            id="copyYamlBtn"
-            onclick="copyYaml()"
-            class="bg-primary text-primary-foreground hover:bg-primary/90 w-full rounded-lg px-6 py-3 transition-colors disabled:cursor-not-allowed disabled:opacity-50"
-          >
-            {
-              t['friends.copy_yaml'] ||
-                (lang === 'zh-cn' ? '一键复制 YAML' : 'Copy YAML')
-            }
-          </button>
-        </form>
-
-        <div
-          id="errorMessage"
-          class="bg-destructive/10 border-destructive/20 text-destructive mt-4 hidden rounded-lg border p-4 text-sm whitespace-pre-line"
-        >
-        </div>
-        <div
-          id="successMessage"
-          class="mt-4 hidden rounded-lg border border-green-200 bg-green-50 p-4 text-sm text-green-800"
-        >
-          {
-            lang === 'zh-cn'
-              ? '已复制到剪贴板。请前往 GitHub Issue 粘贴配置。'
-              : 'Copied to clipboard. Please paste into the GitHub Issue.'
-          }
-        </div>
-
-        <!-- Hidden data for JavaScript -->
-        <div id="copySuccessText" class="hidden">
-          {t['friends.copied'] || 'Copied!'}
-        </div>
       </div>
 
       <!-- Instructions -->
@@ -272,51 +80,39 @@ const description =
                   class="bg-primary text-primary-foreground flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full text-xs font-semibold"
                   >1</span
                 >
-                <span
-                  >{
-                    t['friends.instruction1'] ||
-                      'Fill in the form with your website information'
-                  }</span
-                >
+                <span>
+                  {
+                    lang === 'zh-cn'
+                      ? '先在你的网站添加本站友链（确保可访问）'
+                      : 'Add our link to your site first (ensure it is accessible)'
+                  }
+                </span>
               </li>
               <li class="flex gap-2">
                 <span
                   class="bg-primary text-primary-foreground flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full text-xs font-semibold"
                   >2</span
                 >
-                <span
-                  >{
-                    t['friends.instruction2'] ||
-                      'Make sure you have linked back to this blog'
-                  }</span
-                >
+                <span>
+                  {
+                    lang === 'zh-cn'
+                      ? '点击左侧按钮前往 GitHub 创建 Issue'
+                      : 'Click the button on the left to create a GitHub Issue'
+                  }
+                </span>
               </li>
               <li class="flex gap-2">
                 <span
                   class="bg-primary text-primary-foreground flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full text-xs font-semibold"
                   >3</span
                 >
-                <span
-                  >{
-                    t['friends.instruction3'] ||
-                      (lang === 'zh-cn'
-                        ? '复制 YAML 片段并检查预览'
-                        : 'Copy the YAML snippet and review the preview')
-                  }</span
-                >
-              </li>
-              <li class="flex gap-2">
-                <span
-                  class="bg-primary text-primary-foreground flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full text-xs font-semibold"
-                  >4</span
-                >
-                <span
-                  >{
+                <span>
+                  {
                     lang === 'zh-cn'
-                      ? '点击“create an issue”，并将复制的 YAML 粘贴到 Issue 描述中'
-                      : 'Click "create an issue" and paste the copied YAML into the Issue description'
-                  }</span
-                >
+                      ? '按模板填写并提交，机器人会自动创建 PR'
+                      : 'Fill out the template and submit; the bot will create a PR automatically'
+                  }
+                </span>
               </li>
             </ol>
           </div>
@@ -376,298 +172,4 @@ const description =
     </div>
   </div>
 
-  <script
-    define:vars={{
-      lang,
-      errorName:
-        t['friends.form.error_name'] ||
-        (lang === 'zh-cn'
-          ? '站点名称至少需要2个字符'
-          : 'Website name must be at least 2 characters'),
-      errorUrl:
-        t['friends.form.error_url'] ||
-        (lang === 'zh-cn'
-          ? '请输入有效的网站地址'
-          : 'Please enter a valid website URL'),
-      errorDescription:
-        t['friends.form.error_description'] ||
-        (lang === 'zh-cn'
-          ? '站点描述至少需要10个字符'
-          : 'Description must be at least 10 characters'),
-      errorContact:
-        t['friends.form.error_contact'] ||
-        (lang === 'zh-cn'
-          ? '请输入有效的联系邮箱'
-          : 'Please enter a valid contact email'),
-      errorReciprocal:
-        t['friends.form.error_reciprocal'] ||
-        (lang === 'zh-cn'
-          ? '请确认已添加本站友链'
-          : 'Please confirm you have added this blog link'),
-      errorAvatar:
-        t['friends.form.error_avatar'] ||
-        (lang === 'zh-cn' ? '头像链接格式无效' : 'Avatar URL is invalid'),
-      previewEmpty:
-        t['friends.yaml_preview.empty'] ||
-        (lang === 'zh-cn'
-          ? '填写表单以生成 YAML 预览。'
-          : 'Fill in the form to generate the YAML preview.'),
-    }}
-  >
-    const translations = {
-      errorName,
-      errorUrl,
-      errorDescription,
-      errorContact,
-      errorReciprocal,
-      errorAvatar,
-      previewEmpty,
-    }
-
-    const form = document.getElementById('friendApplicationForm')
-    const errorDiv = document.getElementById('errorMessage')
-    const successDiv = document.getElementById('successMessage')
-    const copyBtn = document.getElementById('copyYamlBtn')
-    const copySuccessText =
-      document.getElementById('copySuccessText')?.textContent || 'Copied!'
-    const createdAt = new Date().toISOString()
-    const idSeed = Date.now()
-    let hasInteracted = false
-
-    // Helper functions
-    function generateFriendId(name, url) {
-      const nameSlug = (name || 'your-site')
-        .toLowerCase()
-        .replace(/[^a-z0-9]/g, '-')
-      const urlSlug = (url || 'example.com')
-        .replace(/^https?:\/\//, '')
-        .split('/')[0]
-        .replace(/[^a-z0-9]/g, '-')
-      return `${nameSlug}-${urlSlug}-${idSeed}`
-    }
-
-    function normalizeSiteUrl(value) {
-      const trimmed = (value || '').trim()
-      if (!trimmed) return ''
-      if (/^https?:\/\//i.test(trimmed)) return trimmed
-      return `https://${trimmed}`
-    }
-
-    function normalizeAssetUrl(value) {
-      const trimmed = (value || '').trim()
-      if (!trimmed) return ''
-      if (/^(data:|blob:)/i.test(trimmed)) return trimmed
-      if (trimmed.startsWith('/')) return trimmed
-      if (/^https?:\/\//i.test(trimmed)) return trimmed
-      return `https://${trimmed}`
-    }
-
-    function escapeYamlString(value) {
-      return (value || '')
-        .replace(/\\/g, '\\\\')
-        .replace(/"/g, '\\"')
-        .replace(/\n/g, ' ')
-        .trim()
-    }
-
-    function buildYaml(data) {
-      const lines = [
-        `- id: "${escapeYamlString(data.id)}"`,
-        `  name: "${escapeYamlString(data.name)}"`,
-        `  url: "${escapeYamlString(data.url)}"`,
-        `  description: "${escapeYamlString(data.description)}"`,
-      ]
-
-      if (data.avatar) {
-        lines.push(`  avatar: "${escapeYamlString(data.avatar)}"`)
-      }
-
-      if (data.category) {
-        lines.push(`  category: "${escapeYamlString(data.category)}"`)
-      }
-
-      lines.push(`  contact: "${escapeYamlString(data.contact)}"`)
-      lines.push(`  addedAt: "${createdAt}"`)
-      lines.push('  status: active')
-      lines.push('  rel: friend')
-      return lines.join('\n')
-    }
-
-    function getFormValues() {
-      if (!form) return null
-      const formData = new FormData(form)
-      const rawUrl = (formData.get('url') || '').toString()
-      const rawAvatar = (formData.get('avatar') || '').toString()
-      const url = normalizeSiteUrl(rawUrl)
-      const avatar = normalizeAssetUrl(rawAvatar)
-      const data = {
-        name: (formData.get('name') || '').toString().trim(),
-        url,
-        description: (formData.get('description') || '').toString().trim(),
-        avatar: avatar || '',
-        category: (formData.get('category') || '').toString().trim(),
-        contact: (formData.get('contact') || '').toString().trim(),
-        github: (formData.get('github') || '').toString().trim(),
-        reciprocal: formData.get('reciprocal') === 'on',
-      }
-      return {
-        ...data,
-        id: generateFriendId(data.name, data.url),
-      }
-    }
-
-    function isValidHttpUrl(url) {
-      try {
-        const parsed = new URL(url)
-        return parsed.protocol === 'http:' || parsed.protocol === 'https:'
-      } catch {
-        return false
-      }
-    }
-
-    function isValidEmail(email) {
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-      return emailRegex.test(email)
-    }
-
-    function validateData(data) {
-      const errors = []
-
-      if (!data.name || data.name.trim().length < 2) {
-        errors.push(translations.errorName)
-      }
-
-      if (!data.url || !isValidHttpUrl(data.url)) {
-        errors.push(translations.errorUrl)
-      }
-
-      if (!data.description || data.description.trim().length < 10) {
-        errors.push(translations.errorDescription)
-      }
-
-      if (!data.contact || !isValidEmail(data.contact)) {
-        errors.push(translations.errorContact)
-      }
-
-      if (data.avatar) {
-        const isRelativeAvatar = data.avatar.startsWith('/')
-        const isDataAvatar = data.avatar.startsWith('data:')
-        const isBlobAvatar = data.avatar.startsWith('blob:')
-        if (
-          !isRelativeAvatar &&
-          !isDataAvatar &&
-          !isBlobAvatar &&
-          !isValidHttpUrl(data.avatar)
-        ) {
-          errors.push(translations.errorAvatar)
-        }
-      }
-
-      if (!data.reciprocal) {
-        errors.push(translations.errorReciprocal)
-      }
-
-      return errors
-    }
-
-    function hasAnyData(data) {
-      return (
-        data.name ||
-        data.url ||
-        data.description ||
-        data.avatar ||
-        data.category ||
-        data.contact ||
-        data.github
-      )
-    }
-
-    function updatePreview() {
-      if (!form) return
-      const data = getFormValues()
-      if (!data) return
-
-      if (!data.reciprocal) {
-        if (copyBtn) copyBtn.disabled = true
-        return
-      }
-
-      const errors = validateData(data)
-
-      if (hasInteracted) {
-        if (errors.length > 0) {
-          if (errorDiv) {
-            errorDiv.textContent = errors.join('\n')
-            errorDiv.classList.remove('hidden')
-          }
-        } else {
-          if (errorDiv) errorDiv.classList.add('hidden')
-        }
-      }
-
-      if (copyBtn) {
-        copyBtn.disabled = errors.length > 0
-      }
-    }
-
-    function handleInputChange() {
-      hasInteracted = true
-      if (successDiv) successDiv.classList.add('hidden')
-      updatePreview()
-    }
-
-    if (form) {
-      const fields = form.querySelectorAll('input, textarea, select')
-      fields.forEach((field) => {
-        field.addEventListener('input', handleInputChange)
-        field.addEventListener('blur', handleInputChange)
-      })
-      form.addEventListener('submit', (event) => {
-        event.preventDefault()
-        window.copyYaml()
-      })
-    }
-
-    updatePreview()
-
-    // Copy YAML functionality
-    window.copyYaml = async function () {
-      hasInteracted = true
-      updatePreview()
-
-      const data = getFormValues()
-      if (!data) return
-      const errors = validateData(data)
-
-      if (errors.length > 0) {
-        if (errorDiv) {
-          errorDiv.textContent = errors.join('\n')
-          errorDiv.classList.remove('hidden')
-        }
-        if (successDiv) successDiv.classList.add('hidden')
-        return
-      }
-
-      const yamlText = buildYaml(data)
-      try {
-        await navigator.clipboard.writeText(yamlText)
-        sessionStorage.setItem('friendApplicationData', JSON.stringify(data))
-        sessionStorage.setItem(
-          'friendApplicationPrepared',
-          JSON.stringify(yamlText),
-        )
-        if (successDiv) successDiv.classList.remove('hidden')
-        if (copyBtn) {
-          const originalText = copyBtn.textContent
-          copyBtn.textContent = copySuccessText
-          setTimeout(() => {
-            copyBtn.textContent = originalText
-          }, 2000)
-        }
-        // window.location.href = `/${lang}/friends/guide`
-      } catch (err) {
-        console.error('Failed to copy YAML:', err)
-      }
-    }
-  </script>
 </Layout>

@@ -14,12 +14,6 @@ const description =
   t['friends.guide_desc'] ||
   'Step-by-step guide to submit friend link application'
 
-// Get template content
-const templateContent = await fetch(
-  new URL('../../../.github/FRIEND_APPLICATION_TEMPLATE.md', Astro.url),
-)
-  .then((res) => res.text())
-  .catch(() => '')
 ---
 
 <Layout title={title} description={description}>
@@ -44,60 +38,13 @@ const templateContent = await fetch(
     <div class="grid gap-8 lg:grid-cols-3">
       <!-- Main Content -->
       <div class="space-y-8 lg:col-span-2">
-        <!-- Step 1: Copy Template -->
+        <!-- Step 1: Create Issue -->
         <section class="bg-card rounded-lg border p-6">
           <div class="mb-4 flex items-center gap-3">
             <div
               class="bg-primary text-primary-foreground flex h-8 w-8 items-center justify-center rounded-full font-semibold"
             >
               1
-            </div>
-            <h2 class="text-xl font-semibold">
-              {lang === 'zh-cn' ? '准备配置信息' : 'Prepare Configuration'}
-            </h2>
-          </div>
-          <p class="text-muted-foreground mb-4">
-            {
-              lang === 'zh-cn'
-                ? '如果你还没有生成 YAML 配置，请先回到申请页填写表单。'
-                : "If you haven't generated your YAML configuration yet, please go back to the application page first."
-            }
-          </p>
-
-          <div class="bg-muted/50 rounded-lg p-4">
-            <div class="mb-2 flex items-center justify-between">
-              <h3 class="text-sm font-semibold">
-                {t['friends.guide.template_title'] || 'Application Template'}
-              </h3>
-              <button
-                id="copyTemplateBtn"
-                class="bg-primary text-primary-foreground hover:bg-primary/90 rounded px-3 py-1 text-sm transition-colors"
-              >
-                {t['friends.copy'] || 'Copy'}
-              </button>
-            </div>
-            <pre
-              class="bg-background overflow-x-auto rounded border p-3 text-sm"><code id="templateContent">{t['friends.guide.template_content'] || ''}</code></pre>
-            <div id="prefilledTemplate" class="hidden">
-              <p class="text-muted-foreground mb-2 text-sm">
-                {
-                  t['friends.guide.your_data'] ||
-                    'Your application data is ready:'
-                }
-              </p>
-              <pre
-                class="overflow-x-auto rounded border border-emerald-200 bg-emerald-50 p-3 text-sm text-emerald-900 dark:border-emerald-900/60 dark:bg-emerald-950/40 dark:text-emerald-100"><code id="userYamlEntry" /></pre>
-            </div>
-          </div>
-        </section>
-
-          <!-- Step 2: Create Issue -->
-        <section class="bg-card rounded-lg border p-6">
-          <div class="mb-4 flex items-center gap-3">
-            <div
-              class="bg-primary text-primary-foreground flex h-8 w-8 items-center justify-center rounded-full font-semibold"
-            >
-              2
             </div>
             <h2 class="text-xl font-semibold">
               {t['friends.guide.step2.title'] || 'Create GitHub Issue'}
@@ -130,7 +77,7 @@ const templateContent = await fetch(
             <div
               class="bg-primary text-primary-foreground flex h-8 w-8 items-center justify-center rounded-full font-semibold"
             >
-              3
+              2
             </div>
             <h2 class="text-xl font-semibold">
               {t['friends.guide.step3.title'] || 'Fill & Submit'}
@@ -167,7 +114,7 @@ const templateContent = await fetch(
             <div
               class="bg-primary text-primary-foreground flex h-8 w-8 items-center justify-center rounded-full font-semibold"
             >
-              4
+              3
             </div>
             <h2 class="text-xl font-semibold">
               {t['friends.guide.step4.title'] || 'Wait for Review'}
@@ -252,7 +199,7 @@ const templateContent = await fetch(
             {t['friends.review_timeline'] || 'Review Timeline'}
           </h3>
           <div class="space-y-2 text-sm text-amber-800">
-            <div className="flex items-center gap-2">
+            <div class="flex items-center gap-2">
               <div class="h-2 w-2 rounded-full bg-amber-600"></div>
               <span
                 >{
@@ -260,7 +207,7 @@ const templateContent = await fetch(
                 }</span
               >
             </div>
-            <div className="flex items-center gap-2">
+            <div class="flex items-center gap-2">
               <div class="h-2 w-2 rounded-full bg-amber-600"></div>
               <span
                 >{
@@ -268,7 +215,7 @@ const templateContent = await fetch(
                 }</span
               >
             </div>
-            <div className="flex items-center gap-2">
+            <div class="flex items-center gap-2">
               <div class="h-2 w-2 rounded-full bg-amber-600"></div>
               <span
                 >{
@@ -300,167 +247,4 @@ const templateContent = await fetch(
     </div>
   </div>
 
-  <script>
-    // Check for application data from sessionStorage
-    const storedData = sessionStorage.getItem('friendApplicationData')
-    const storedPrepared = sessionStorage.getItem('friendApplicationPrepared')
-
-    if (storedData && storedPrepared) {
-      try {
-        const applicationData = JSON.parse(storedData)
-        const preparedContent = JSON.parse(storedPrepared)
-
-        // Update page title to show it's for their application
-        const titleElement = document.querySelector('h1')
-        if (titleElement) {
-          titleElement.textContent = titleElement.textContent.replace(
-            '{t["friends.guide_title"] || "Friend Application Guide"}',
-            applicationData.name
-              ? `${applicationData.name} - 申请指南`
-              : '友链申请指南',
-          )
-        }
-
-        // Update Step 1 to show their prepared content
-        const prefilledSection = document.getElementById('prefilledTemplate')
-        const userYamlEntry = document.getElementById('userYamlEntry')
-        const templateBlock = document
-          .getElementById('templateContent')
-          ?.closest('pre')
-        const templateSection = document
-          .querySelector('#templateContent')
-          ?.closest('section')
-
-        if (prefilledSection && userYamlEntry && templateSection) {
-          if (templateBlock) templateBlock.style.display = 'none'
-
-          // Show their prepared content section
-          prefilledSection.classList.remove('hidden')
-          userYamlEntry.textContent = preparedContent
-
-          // Update the section title
-          const sectionTitle = templateSection.querySelector('h2')
-          if (sectionTitle) {
-            sectionTitle.textContent = '1. 您的申请已准备好'
-          }
-
-          // Update description
-          const sectionDesc = templateSection.querySelector(
-            '.text-muted-foreground',
-          )
-          if (sectionDesc) {
-            sectionDesc.textContent = `您的友链申请信息已自动生成，直接复制下方内容即可。网站：${applicationData.name}`
-          }
-        }
-
-        // Build PR title/body for copy
-        const prCopyBlock = document.getElementById('prCopyBlock')
-        const prTitleText = document.getElementById('prTitleText')
-        const prBodyText = document.getElementById('prBodyText')
-        const copyTitleBtn = document.getElementById('copyPrTitleBtn')
-        const copyBodyBtn = document.getElementById('copyPrBodyBtn')
-
-        if (prCopyBlock && prTitleText && prBodyText) {
-          prCopyBlock.classList.remove('hidden')
-          const siteName = applicationData.name || 'My Site'
-          const prTitle = `Add friend link: ${siteName}`
-          const prBody = [
-            '## Friend Link Application',
-            '',
-            `- Website: ${applicationData.name || ''}`,
-            `- URL: ${applicationData.url || ''}`,
-            `- Description: ${applicationData.description || ''}`,
-            `- Category: ${applicationData.category || ''}`,
-            `- Contact: ${applicationData.contact || ''}`,
-            '',
-            '```yaml',
-            preparedContent,
-            '```',
-          ].join('\n')
-
-          prTitleText.textContent = prTitle
-          prBodyText.textContent = prBody
-
-          if (copyTitleBtn) {
-            copyTitleBtn.addEventListener('click', async () => {
-              await navigator.clipboard.writeText(prTitle)
-            })
-          }
-
-          if (copyBodyBtn) {
-            copyBodyBtn.addEventListener('click', async () => {
-              await navigator.clipboard.writeText(prBody)
-            })
-          }
-        }
-
-        // Clear sessionStorage after use
-        sessionStorage.removeItem('friendApplicationData')
-        sessionStorage.removeItem('friendApplicationPrepared')
-      } catch (error) {
-        console.error('Error processing application data:', error)
-      }
-    }
-
-    // Copy template functionality
-    document
-      .getElementById('copyTemplateBtn')
-      ?.addEventListener('click', async function () {
-        // Prioritize user's prepared content if available
-        const userYamlEntry = document.getElementById('userYamlEntry')
-        const templateContent =
-          userYamlEntry &&
-          !userYamlEntry.parentElement.classList.contains('hidden')
-            ? userYamlEntry.textContent
-            : document.getElementById('templateContent').textContent
-
-        const originalText = this.textContent
-
-        try {
-          await navigator.clipboard.writeText(templateContent)
-          const copySuccessText =
-            document.getElementById('copySuccessText')?.textContent || 'Copied!'
-          this.textContent = copySuccessText
-          this.classList.add('bg-green-600', 'hover:bg-green-700')
-          this.classList.remove('bg-primary', 'hover:bg-primary/90')
-
-          setTimeout(() => {
-            this.textContent = originalText
-            this.classList.remove('bg-green-600', 'hover:bg-green-700')
-            this.classList.add('bg-primary', 'hover:bg-primary/90')
-          }, 2000)
-        } catch (err) {
-          console.error('Failed to copy template:', err)
-        }
-      })
-
-    // Copy PR description functionality
-    document
-      .getElementById('copyPRDescriptionBtn')
-      ?.addEventListener('click', async function () {
-        const prDescription = document.getElementById(
-          'prDescriptionPreview',
-        )?.textContent
-        if (!prDescription) return
-
-        const originalText = this.textContent
-
-        try {
-          await navigator.clipboard.writeText(prDescription)
-          const copySuccessText =
-            document.getElementById('copySuccessText').textContent
-          this.textContent = copySuccessText
-          this.classList.add('bg-green-600', 'hover:bg-green-700')
-          this.classList.remove('bg-secondary', 'hover:bg-secondary/90')
-
-          setTimeout(() => {
-            this.textContent = originalText
-            this.classList.remove('bg-green-600', 'hover:bg-green-700')
-            this.classList.add('bg-secondary', 'hover:bg-secondary/90')
-          }, 2000)
-        } catch (err) {
-          console.error('Failed to copy PR description:', err)
-        }
-      })
-  </script>
 </Layout>
