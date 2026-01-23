@@ -1,0 +1,100 @@
+name: Friend Application (Issue -> PR)
+
+on:
+  issues:
+    types:
+      - opened
+      - labeled
+
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+
+concurrency:
+  group: friend-issue-to-pr-${{ github.event.issue.number }}
+  cancel-in-progress: false
+
+jobs:
+  create-pr:
+    if: github.event_name == 'issues' && (
+      github.event.action == 'opened' ||
+      (github.event.action == 'labeled' && github.event.label.name == 'friend-application')
+      )
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Prepare friends.yaml change
+        id: prepare
+        run: node scripts/friend-issue-to-pr.mjs
+
+      - name: Create Pull Request
+        id: cpr
+        if: steps.prepare.outputs.result == 'ok'
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          base: master
+          branch: ${{ steps.prepare.outputs.branch }}
+          delete-branch: true
+          commit-message: ${{ steps.prepare.outputs.pr_title }}
+          title: ${{ steps.prepare.outputs.pr_title }}
+          body: ${{ steps.prepare.outputs.pr_body }}
+          labels: |
+            friend-application
+
+      - name: Comment on issue (PR created)
+        if: steps.prepare.outputs.result == 'ok'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const issueNumber = context.payload.issue.number
+            const prUrl = '${{ steps.cpr.outputs.pull-request-url }}'
+
+            if (!prUrl) {
+              core.warning('No PR URL produced')
+              return
+            }
+
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: issueNumber,
+              body: `✅ 已为你的友链申请自动创建 PR：${prUrl}\n\n请在 PR 里等待审核。`,
+            })
+
+      - name: Comment on issue (validation failed)
+        if: steps.prepare.outputs.result == 'invalid'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const issueNumber = context.payload.issue.number
+            const msg = `${{ toJSON(steps.prepare.outputs.error_message) }}`
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: issueNumber,
+              body: `❌ 友链申请信息校验失败：\n\n${msg}\n\n请编辑此 Issue 补全/修正信息后重新加一次 label \`friend-application\` 触发处理。`,
+            })
+
+      - name: Comment on issue (duplicate)
+        if: steps.prepare.outputs.result == 'duplicate'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const issueNumber = context.payload.issue.number
+            const msg = `${{ toJSON(steps.prepare.outputs.error_message) }}`
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: issueNumber,
+              body: `⚠️ 未创建 PR：检测到重复条目。\n\n${msg}`,
+            })

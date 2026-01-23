@@ -26,6 +26,18 @@ export const friendsData: FriendsData = {
       "addedAt": "2026-01-03T14:27:01.997Z",
       "status": "active",
       "rel": "friend"
+    },
+    {
+      "id": "-----------cs-gt-tc-1768053141185",
+      "name": "天码行空的小破站",
+      "url": "https://cs.gt.tc",
+      "description": "To be bright~",
+      "avatar": "https://weavatar.com/avatar/75f9692805b439a703cabc302b85a47d07a9c67a0879c346aa70342fd5ccc596?s=96&r=g",
+      "category": "技术",
+      "contact": "xy122333@outlook.com",
+      "addedAt": "2026-01-10T13:52:21.185Z",
+      "status": "active",
+      "rel": "friend"
     }
   ],
   "pending": [],
