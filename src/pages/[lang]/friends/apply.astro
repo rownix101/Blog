@@ -32,6 +32,66 @@ const description =
     <div class="grid gap-8 lg:grid-cols-2">
       <!-- Application Form -->
       <div>
+        <!-- Primary Method: GitHub Issue -->
+        <div class="bg-card mb-8 rounded-lg border p-6 shadow-sm">
+          <h2 class="mb-4 text-xl font-bold">
+            {t['friends.guide.step2.title'] || 'Create GitHub Issue'}
+          </h2>
+          <p class="text-muted-foreground mb-6">
+            {
+              lang === 'zh-cn'
+                ? '推荐方式：直接前往 GitHub 创建 Issue，机器人将自动为您处理申请。'
+                : 'Recommended: Simply create an Issue on GitHub. Our bot will handle the rest automatically.'
+            }
+          </p>
+          <a
+            href="https://github.com/rownix101/Blog/issues/new?assignees=&labels=friend-application&template=friend-application.yml"
+            target="_blank"
+            class="bg-primary text-primary-foreground hover:bg-primary/90 inline-flex w-full items-center justify-center rounded-lg px-6 py-3 font-medium transition-colors"
+          >
+            <svg
+              class="mr-2 h-5 w-5"
+              fill="currentColor"
+              viewBox="0 0 24 24"
+              aria-hidden="true"
+            >
+              <path
+                fill-rule="evenodd"
+                d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"
+                clip-rule="evenodd"></path>
+            </svg>
+            {t['friends.guide.step2.title'] || 'Go to GitHub Issue'}
+          </a>
+        </div>
+
+        <div class="relative mb-8">
+          <div class="absolute inset-0 flex items-center">
+            <span class="w-full border-t"></span>
+          </div>
+          <div class="relative flex justify-center text-xs uppercase">
+            <span class="bg-background text-muted-foreground px-2">
+              {lang === 'zh-cn' ? '或者' : 'OR'}
+            </span>
+          </div>
+        </div>
+
+        <div class="mb-4">
+          <h3 class="font-semibold">
+            {
+              lang === 'zh-cn'
+                ? '生成配置信息（可选）'
+                : 'Generate Configuration (Optional)'
+            }
+          </h3>
+          <p class="text-muted-foreground text-sm">
+            {
+              lang === 'zh-cn'
+                ? '如果您需要手动生成 YAML，可以使用此表单。'
+                : 'Use this form if you need to generate YAML manually.'
+            }
+          </p>
+        </div>
+
         <form id="friendApplicationForm" class="space-y-6" novalidate>
           <div>
             <label for="name" class="mb-2 block text-sm font-medium">
@@ -187,10 +247,9 @@ const description =
           class="mt-4 hidden rounded-lg border border-green-200 bg-green-50 p-4 text-sm text-green-800"
         >
           {
-            t['friends.success_message'] ||
-              (lang === 'zh-cn'
-                ? '已复制到剪贴板。下一步请添加到 friends.yaml 并提交 PR。'
-                : 'Copied to clipboard. Next, add to friends.yaml and open a PR.')
+            lang === 'zh-cn'
+              ? '已复制到剪贴板。请前往 GitHub Issue 粘贴配置。'
+              : 'Copied to clipboard. Please paste into the GitHub Issue.'
           }
         </div>
 
@@ -253,10 +312,9 @@ const description =
                 >
                 <span
                   >{
-                    t['friends.instruction4'] ||
-                      (lang === 'zh-cn'
-                        ? '将 YAML 添加到 friends.yaml 并提交 PR'
-                        : 'Add it to friends.yaml and open a PR')
+                    lang === 'zh-cn'
+                      ? '点击“create an issue”，并将复制的 YAML 粘贴到 Issue 描述中'
+                      : 'Click "create an issue" and paste the copied YAML into the Issue description'
                   }</span
                 >
               </li>
@@ -303,20 +361,14 @@ const description =
             <div class="text-xs text-amber-700">
               <strong
                 >{
-                  t['friends.alternative_title'] || 'Alternative Method:'
+                  lang === 'zh-cn' ? '自动化流程：' : 'Automated Process:'
                 }</strong
               ><br />
               {
-                t['friends.alternative_desc'] ||
-                  'If you prefer not to fork, you can also'
+                lang === 'zh-cn'
+                  ? '提交 Issue 后，机器人会自动验证并为你创建 PR（无需 Fork）。'
+                  : 'After submitting the Issue, our bot validates it and creates a PR for you (no fork needed).'
               }
-              <a
-                href="https://github.com/rownix101/Blog/issues/new?assignees=&labels=friend-application&template=friend-application.yml"
-                target="_blank"
-                class="text-amber-900 underline hover:no-underline"
-                >{t['friends.create_issue'] || 'create an issue'}</a
-              >
-              {t['friends.with_your_info'] || 'with your information'}
             </div>
           </div>
         </div>
@@ -612,7 +664,7 @@ const description =
             copyBtn.textContent = originalText
           }, 2000)
         }
-        window.location.href = `/${lang}/friends/guide`
+        // window.location.href = `/${lang}/friends/guide`
       } catch (err) {
         console.error('Failed to copy YAML:', err)
       }

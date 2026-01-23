@@ -7,13 +7,19 @@ export const POST: APIRoute = async ({ request }) => {
   try {
     const body = await request.json()
     const application: FriendApplication = body.application
-    const lang = body.lang || 'zh-cn' // Get language from request body
+    const lang = body.lang || 'zh-cn'
 
     // Validate required fields
-    if (!application || !application.name || !application.url || !application.description || !application.contact) {
+    if (
+      !application ||
+      !application.name ||
+      !application.url ||
+      !application.description ||
+      !application.contact
+    ) {
       return new Response(
         JSON.stringify({ error: 'Missing required fields' }),
-        { status: 400, headers: { 'Content-Type': 'application/json' } }
+        { status: 400, headers: { 'Content-Type': 'application/json' } },
       )
     }
 
@@ -28,24 +34,24 @@ export const POST: APIRoute = async ({ request }) => {
       contact: application.contact,
       addedAt: new Date().toISOString(),
       status: 'active',
-      rel: 'friend'
+      rel: 'friend',
     }
 
     // Generate YAML content for the new friend only
     // Since we can't read/write files on Cloudflare Pages, we'll generate the YAML entry
     const yaml = await import('js-yaml')
-    const newFriendYaml = yaml.dump([newFriend], {
-      indent: 2,
-      lineWidth: -1,
-      noRefs: true,
-      sortKeys: false
-    }).trim()
+    const newFriendYaml = yaml
+      .dump([newFriend], {
+        indent: 2,
+        lineWidth: -1,
+        noRefs: true,
+        sortKeys: false,
+      })
+      .trim()
 
     // Generate GitHub URLs and instructions
     const githubRepo = 'rownix101/Blog'
-    const forkUrl = `https://github.com/${githubRepo}/fork`
-    const editUrl = `https://github.com/${githubRepo}/edit/main/src/data/friends/friends.yaml`
-    const prUrl = `https://github.com/${githubRepo}/compare/main...quick-pr?template=friend-application.md&title=Add+friend+link:+${encodeURIComponent(application.name)}`
+    const issueUrl = `https://github.com/${githubRepo}/issues/new?assignees=&labels=friend-application&template=friend-application.yml`
 
     // Return prepared content and instructions
     const guideUrl = `/${lang}/friends/guide`
@@ -57,36 +63,36 @@ export const POST: APIRoute = async ({ request }) => {
         applicationData: application,
         preparedContent: newFriendYaml,
         instructions: {
-          forkUrl,
-          editUrl,
-          prUrl,
+          issueUrl,
           fileName: 'friends.yaml',
           filePath: 'src/data/friends/friends.yaml',
           commitMessage: `Add friend link: ${application.name}`,
           prTitle: `Add friend link: ${application.name}`,
           prBody: generatePersonalizedPRBody(application, lang),
-          note: 'This is a YAML entry for the new friend. Please add it to the friends.yaml file manually.'
-        }
+          note: 'This endpoint generates a YAML snippet.',
+        },
       }),
       {
         status: 200,
         headers: {
           'Content-Type': 'application/json',
-          'X-Redirect-To': guideUrl
-        }
-      }
+          'X-Redirect-To': guideUrl,
+        },
+      },
     )
-
   } catch (error) {
     console.error('Error submitting friend application:', error)
-    return new Response(
-      JSON.stringify({ error: 'Internal server error' }),
-      { status: 500, headers: { 'Content-Type': 'application/json' } }
-    )
+    return new Response(JSON.stringify({ error: 'Internal server error' }), {
+      status: 500,
+      headers: { 'Content-Type': 'application/json' },
+    })
   }
 }
 
-function generatePersonalizedPRBody(app: FriendApplication, lang: string): string {
+function generatePersonalizedPRBody(
+  app: FriendApplication,
+  lang: string,
+): string {
   const isZh = lang === 'zh-cn'
 
   if (isZh) {
@@ -104,12 +110,16 @@ function generatePersonalizedPRBody(app: FriendApplication, lang: string): strin
 | **GitHub** | ${app.applicantGithub ? `[@${app.applicantGithub}](https://github.com/${app.applicantGithub})` : '未提供'} |
 | **提交时间** | ${new Date(app.submittedAt).toLocaleDateString('zh-CN')} |
 
-${app.avatar ? `
+${
+  app.avatar
+    ? `
 ### 🖼️ 网站头像
 
 ![${app.name} 头像](${app.avatar})
 
-` : ''}
+`
+    : ''
+}
 
 ### ✅ 申请清单
 
@@ -152,12 +162,16 @@ ${app.applicantGithub ? `**申请人**: [@${app.applicantGithub}](https://github
 | **GitHub** | ${app.applicantGithub ? `[@${app.applicantGithub}](https://github.com/${app.applicantGithub})` : 'Not provided'} |
 | **Submitted** | ${new Date(app.submittedAt).toLocaleDateString()} |
 
-${app.avatar ? `
+${
+  app.avatar
+    ? `
 ### 🖼️ Website Avatar
 
 ![${app.name} Avatar](${app.avatar})
 
-` : ''}
+`
+    : ''
+}
 
 ### ✅ Application Checklist
 
