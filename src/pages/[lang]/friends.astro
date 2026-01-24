@@ -1,7 +1,8 @@
 ---
 import FriendCard from '@/components/FriendCard'
+import PageHead from '@/components/PageHead.astro'
 import { SITE } from '@/consts'
-import { languages, ui, type Lang } from '@/i18n/ui'
+import { languages, ui } from '@/i18n/ui'
 import Layout from '@/layouts/Layout.astro'
 import { getApprovedFriends, getFriendCategories } from '@/lib/friends-utils'
 
@@ -10,7 +11,7 @@ export async function getStaticPaths() {
 }
 
 const { lang } = Astro.params
-const t = ui[lang as Lang]
+const t = ui[lang as keyof typeof ui]
 const allFriends = getApprovedFriends()
 const categories = getFriendCategories()
 
@@ -24,7 +25,8 @@ const description =
   'Discover amazing blogs and websites from our friends'
 ---
 
-<Layout title={title} description={description}>
+<Layout lang={lang}>
+  <PageHead slot="head" title={title} description={description} />
   <div class="container mx-auto max-w-4xl px-4 py-12">
     <!-- Header -->
     <header class="mb-12 text-center">
@@ -88,19 +90,14 @@ const description =
       ) : (
         <div class="py-12 text-center">
           <div class="text-muted-foreground mb-4">
-            {selectedCategory
-              ? t['friends.no_friends_in_category'] ||
-                'No friends found in this category'
-              : t['friends.no_friends_yet'] || 'No friends added yet'}
+            {t['friends.no_friends_yet'] || 'No friends added yet'}
           </div>
-          {!selectedCategory && (
-            <a
-              href={`/${lang}/friends/apply`}
-              class="text-primary hover:underline"
-            >
-              {t['friends.be_first'] || 'Be the first to apply!'}
-            </a>
-          )}
+          <a
+            href={`/${lang}/friends/apply`}
+            class="text-primary hover:underline"
+          >
+            {t['friends.be_first'] || 'Be the first to apply!'}
+          </a>
         </div>
       )
     }

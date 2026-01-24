@@ -14,7 +14,11 @@ const l = (path: string) => `/${lang}${path}`
 const supportedLanguages = Object.keys(languages)
 const isEn = lang === 'en'
 const isJa = lang === 'ja'
-const titleText = isEn ? 'Page not found' : isJa ? 'ページが見つかりません' : '页面未找到'
+const titleText = isEn
+  ? 'Page not found'
+  : isJa
+    ? 'ページが見つかりません'
+    : '页面未找到'
 const descText = isEn
   ? "Oops! The page you're looking for doesn't exist."
   : isJa
