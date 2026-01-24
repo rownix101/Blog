@@ -258,11 +258,19 @@ const authorSchema = {
   {
     ANALYTICS.google && (
       <>
-        <script is:inline define:vars={{ gaId: ANALYTICS.google }}>
-          window.dataLayer = window.dataLayer || [] window.gtag = function (){' '}
-          {window.dataLayer.push(arguments)}
-          window.gtag('js', new Date()) window.gtag('config', gaId)
-        </script>
+        <script
+          is:inline
+          define:vars={{ gaId: ANALYTICS.google }}
+          set:html={`;(function () {
+  window.dataLayer = window.dataLayer || []
+  function gtag() {
+    window.dataLayer.push(arguments)
+  }
+  window.gtag = gtag
+  window.gtag('js', new Date())
+  window.gtag('config', gaId)
+})()`}
+        />
         <script
           is:inline
           async
