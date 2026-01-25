@@ -1,0 +1,43 @@
+---
+import Comments from '@/components/react/Comments'
+import { languages } from '@/i18n/ui'
+import { useTranslations } from '@/i18n/utils'
+
+interface Props {
+  lang: keyof typeof import('@/i18n/ui').ui
+  className?: string
+}
+
+const { lang, className = '' } = Astro.props
+const t = useTranslations(lang)
+
+// Create a unified identifier by removing language prefix from the pathname
+// This ensures all language versions share the same comment section
+function getUnifiedIdentifier(pathname: string): string {
+  const segments = pathname.split('/').filter(Boolean)
+  // Remove language prefix if it exists
+  if (segments.length > 0 && segments[0] in languages) {
+    return '/' + segments.slice(1).join('/')
+  }
+  return pathname
+}
+
+const postId = getUnifiedIdentifier(Astro.url.pathname)
+---
+
+<section
+  class={`mt-12 pt-8 w-full ${className}`}
+  aria-labelledby="comments-title"
+>
+  <!-- Decorative separator -->
+  <div class="mb-8 flex items-center justify-center">
+    <div class="bg-border h-px max-w-32 flex-1"></div>
+    <div class="text-muted-foreground px-4 text-sm">💬</div>
+    <div class="bg-border h-px max-w-32 flex-1"></div>
+  </div>
+  <h2 id="comments-title" class="mb-6 text-center text-2xl font-medium">
+    {t('comments.title') || 'Comments'}
+  </h2>
+
+  <Comments client:load postId={postId} lang={lang} />
+</section>

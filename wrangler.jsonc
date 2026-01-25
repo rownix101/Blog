@@ -1,10 +1,25 @@
 {
-    "$schema": "node_modules/wrangler/config-schema.json",
-    "name": "blog",
-    "compatibility_date": "2025-11-18",
-    "compatibility_flags": ["nodejs_compat"],
-    "pages_build_output_dir": "./dist",
-    "observability": {
-        "enabled": true
-    }
+	"$schema": "node_modules/wrangler/config-schema.json",
+	"name": "blog",
+	"compatibility_date": "2025-11-18",
+	"compatibility_flags": [
+		"nodejs_compat"
+	],
+	"pages_build_output_dir": "./dist",
+	"observability": {
+		"enabled": true
+	},
+	"d1_databases": [
+		{
+			"binding": "DB",
+			"database_name": "blog-comments",
+			"database_id": "7383dd87-6090-4930-952d-cce35888bd49"
+		},
+		{
+			"binding": "blog_comments",
+			"database_name": "blog-comments",
+			"database_id": "7383dd87-6090-4930-952d-cce35888bd49",
+			"remote": true
+		}
+	]
 }

@@ -30,3 +30,13 @@
   addedAt: '2026-01-10T13:52:21.185Z'
   status: active
   rel: friend
+
+- id: 'geekertao-s-blog-www-geekertao-com-1769318188391'
+  name: "Geekertao's blog"
+  url: 'https://www.geekertao.com/'
+  description: '不为梦想本身奋斗。。那个提出梦想的自己。。'
+  avatar: 'https://obj.geekertao.top/geekertao.jpg'
+  contact: 'Geekertao@qq.com'
+  addedAt: '2026-01-25T05:16:28.391Z'
+  status: active
+  rel: friend

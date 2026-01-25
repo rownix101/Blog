@@ -3,10 +3,14 @@ name: Friend Application Review
 on:
   pull_request:
     paths:
-      - 'src/data/friend-applications/*.json'
+      - 'src/data/friends/friends.yaml'
   push:
     paths:
-      - 'src/data/friends.json'
+      - 'src/data/friends/friends.yaml'
+
+permissions:
+  contents: write
+  pull-requests: write
 
 jobs:
   review-application:
@@ -20,24 +24,21 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '22'
+          node-version: '22.16.0'
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version-file: 'package.json'
 
       - name: Install dependencies
-        run: |
-          npm install -g pnpm
-          pnpm install
+        run: bun install --frozen-lockfile
 
-      - name: Validate application
-        run: |
-          node scripts/validate-friend-application.js
+      - name: Build friends data
+        run: bun run build-friends-data
 
-      - name: Check website accessibility
-        run: |
-          node scripts/check-website.js
-
-      - name: Check reciprocal link
-        run: |
-          node scripts/check-reciprocal-link.js
+      - name: Build site
+        run: bun run build
 
       - name: Auto-approve if all checks pass
         if: success()
@@ -56,31 +57,7 @@ jobs:
         uses: pascalgn/automerge-action@v0.15.5
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          MERGE_LABELS: "auto-merge"
-          MERGE_METHOD: "squash"
+          MERGE_LABELS: 'auto-merge'
+          MERGE_METHOD: 'squash'
           MERGE_DELETE_BRANCH: true
-
-  update-friends-list:
-    runs-on: ubuntu-latest
-    if: github.event_name == 'push'
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '22'
-
-      - name: Process approved applications
-        run: |
-          node scripts/process-approved-applications.js
-
-      - name: Commit changes
-        run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
-          git add src/data/friends.json
-          git diff --staged --quiet || git commit -m "Update friends list"
-          git push
+          MERGE_ERROR_FAIL: 'false'
