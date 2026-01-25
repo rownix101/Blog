@@ -1,17 +1,16 @@
 import type { APIRoute } from 'astro'
 import {
   createComment,
-  getCommentsByPostIdWithUser,
-  getUserById,
+  getCommentsByPostIdsWithUser,
   validateSession,
 } from '@/lib/db'
+import { languages } from '@/i18n/ui'
 import { generateId, sanitizeHTML } from '@/lib/auth'
 import { verifyTurnstileToken } from '@/lib/turnstile'
 import {
   validatePostId,
   validateCommentContent,
   checkSpam,
-  validateAndSanitizeInput,
   RateLimiter,
 } from '@/lib/validation'
 
@@ -23,10 +22,49 @@ const commentRateLimiter = new RateLimiter({
 
 export const prerender = false
 
+type CloudflareBindings = {
+  DB?: D1Database
+  COMMENT_KV?: KVNamespace
+}
+
+function getBindings(locals: App.Locals): CloudflareBindings | undefined {
+  if (locals.runtime?.env) {
+    return locals.runtime.env
+  }
+  return (locals as unknown as { env?: CloudflareBindings }).env
+}
+
+function normalizePostId(postId: string): string {
+  const raw = postId.trim()
+  const withLeadingSlash = raw.startsWith('/') ? raw : `/${raw}`
+  const segments = withLeadingSlash.split('/').filter(Boolean)
+
+  if (segments.length > 0 && segments[0] in languages) {
+    return '/' + segments.slice(1).join('/')
+  }
+
+  return withLeadingSlash
+}
+
+function getPostIdCandidates(postId: string): string[] {
+  const normalized = normalizePostId(postId)
+  const candidates = new Set<string>()
+
+  candidates.add(normalized)
+  candidates.add(postId)
+
+  for (const lang of Object.keys(languages)) {
+    candidates.add(`/${lang}${normalized}`)
+  }
+
+  return [...candidates]
+}
+
 // GET - Get comments for a post
 export const GET: APIRoute = async ({ request, url, locals }) => {
   try {
-    const postId = url.searchParams.get('post_id')
+    const postId =
+      url.searchParams.get('post_id') ?? url.searchParams.get('postId')
 
     if (!postId) {
       return new Response(JSON.stringify({ error: 'post_id is required' }), {
@@ -36,7 +74,8 @@ export const GET: APIRoute = async ({ request, url, locals }) => {
     }
 
     // Validate post ID
-    const postIdValidation = validatePostId(postId)
+    const normalizedPostId = normalizePostId(postId)
+    const postIdValidation = validatePostId(normalizedPostId)
     if (!postIdValidation.valid) {
       return new Response(JSON.stringify({ error: postIdValidation.error }), {
         status: 400,
@@ -45,7 +84,7 @@ export const GET: APIRoute = async ({ request, url, locals }) => {
     }
 
     // Get D1 database
-    const db = (locals.runtime as any).env.DB
+    const db = getBindings(locals)?.DB
     if (!db) {
       return new Response(JSON.stringify({ error: 'Database not available' }), {
         status: 500,
@@ -53,7 +92,8 @@ export const GET: APIRoute = async ({ request, url, locals }) => {
       })
     }
 
-    const comments = await getCommentsByPostIdWithUser(db, postId)
+    const postIds = getPostIdCandidates(postId)
+    const comments = await getCommentsByPostIdsWithUser(db, postIds)
 
     return new Response(JSON.stringify({ comments }), {
       status: 200,
@@ -122,7 +162,7 @@ export const POST: APIRoute = async ({ request, url, locals }) => {
     }
 
     // Get D1 database
-    const db = (locals.runtime as any).env.DB
+    const db = getBindings(locals)?.DB
     if (!db) {
       return new Response(JSON.stringify({ error: 'Database not available' }), {
         status: 500,
@@ -142,8 +182,9 @@ export const POST: APIRoute = async ({ request, url, locals }) => {
 
     const user = validUser
 
-    // Validate post ID
-    const postIdValidation = validatePostId(post_id)
+    // Normalize + validate post ID
+    const normalizedPostId = normalizePostId(post_id)
+    const postIdValidation = validatePostId(normalizedPostId)
     if (!postIdValidation.valid) {
       return new Response(JSON.stringify({ error: postIdValidation.error }), {
         status: 400,
@@ -207,7 +248,7 @@ export const POST: APIRoute = async ({ request, url, locals }) => {
     const commentId = generateId()
     const comment = await createComment(db, {
       id: commentId,
-      post_id,
+      post_id: normalizedPostId,
       user_id: user.id,
       parent_id: parent_id || null,
       content: sanitizedContent,

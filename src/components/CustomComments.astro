@@ -40,5 +40,5 @@ const postId = propPostId || getUnifiedIdentifier(Astro.url.pathname)
     {t('comments.title') || 'Comments'}
   </h2>
 
-  <Comments client:load postId={postId} lang={lang} />
+  <Comments client:visible postId={postId} lang={lang} />
 </section>

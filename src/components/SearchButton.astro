@@ -9,7 +9,7 @@ interface Props {
 const { lang = 'zh-cn' } = Astro.props
 const buttonClass =
   buttonVariants({ variant: 'outline', size: 'icon' }) +
-  ' size-9 border md:border-0 md:bg-transparent md:hover:bg-muted md:-my-2 md:-me-2 md:size-8'
+  ' size-11 border md:border-0 md:bg-transparent md:hover:bg-muted md:-my-2 md:-me-2 md:size-9'
 ---
 
 <button
@@ -27,16 +27,30 @@ const buttonClass =
 
 <script>
   ;(function () {
-    let searchApiPromise
-    let lastLang
-    const getLang = () =>
-      document.querySelector('[data-search-button]')?.dataset.searchLang ||
-      'zh-cn'
-    const isTypingTarget = (target) =>
-      target &&
-      (target.tagName === 'INPUT' ||
-        target.tagName === 'TEXTAREA' ||
-        target.isContentEditable)
+    /** @typedef {{ open: () => void }} SearchApi */
+    /** @type {Promise<SearchApi> | null} */
+    let searchApiPromise = null
+    /** @type {string | null} */
+    let lastLang = null
+
+    /** @type {Window & { __searchDialogInit?: boolean }} */
+    const win = window
+
+    const getLang = () => {
+      const el = document.querySelector('[data-search-button]')
+      if (!el || !(el instanceof HTMLElement)) return 'zh-cn'
+      return el.dataset.searchLang || 'zh-cn'
+    }
+
+    const isTypingTarget = (target) => {
+      const el = target instanceof HTMLElement ? target : null
+      return (
+        !!el &&
+        (el.tagName === 'INPUT' ||
+          el.tagName === 'TEXTAREA' ||
+          el.isContentEditable)
+      )
+    }
 
     const openSearch = async () => {
       const lang = getLang()
@@ -52,26 +66,27 @@ const buttonClass =
 
     const bindButton = () => {
       const button = document.querySelector('[data-search-button]')
-      if (!button || button.dataset.searchBound) return
+      if (!button || !(button instanceof HTMLElement)) return
+      if (button.dataset.searchBound) return
       button.dataset.searchBound = 'true'
       button.addEventListener('click', () => {
-        openSearch()
+        void openSearch()
       })
     }
 
     bindButton()
     document.addEventListener('astro:after-swap', bindButton)
 
-    if (!window.__searchDialogInit) {
-      window.__searchDialogInit = true
-      window.addEventListener('keydown', (e) => {
+    if (!win.__searchDialogInit) {
+      win.__searchDialogInit = true
+      win.addEventListener('keydown', (e) => {
         if (
           (e.metaKey || e.ctrlKey) &&
           e.key === 'k' &&
           !isTypingTarget(e.target)
         ) {
           e.preventDefault()
-          openSearch()
+          void openSearch()
         }
       })
     }

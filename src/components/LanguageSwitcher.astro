@@ -24,7 +24,7 @@ const basePath = getPathWithoutLang(currentPath)
   <div class="group relative">
     <button
       class={buttonVariants({ variant: 'ghost', size: 'sm' }) +
-        ' flex items-center gap-1.5 px-2'}
+        ' flex h-11 items-center gap-1.5 px-3 md:h-9'}
       aria-label="选择语言"
     >
       <Icon name="lucide:globe" class="size-4" />
@@ -36,7 +36,7 @@ const basePath = getPathWithoutLang(currentPath)
     </button>
 
     <div
-      class="bg-popover invisible absolute top-full right-0 z-50 mt-1 w-32 rounded-md border p-1 opacity-0 shadow-md transition-all duration-200 group-hover:visible group-hover:opacity-100"
+      class="bg-popover invisible absolute top-full right-0 z-50 mt-1 w-32 rounded-md border p-1 opacity-0 shadow-md transition-all duration-200 group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100"
     >
       {
         Object.entries(languages).map(([code, label]) => {

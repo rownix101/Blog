@@ -7,6 +7,7 @@ import Footer from '@/components/Footer.astro'
 import Head from '@/components/Head.astro'
 import Header from '@/components/Header.astro'
 import { TermsConsent } from '@/components/TermsConsent'
+import { languages } from '@/i18n/ui'
 import { cn } from '@/lib/utils'
 
 interface Props {
@@ -15,11 +16,13 @@ interface Props {
   lang?: string
 }
 
-const {
-  class: className,
-  hideFloatingSidebar = false,
-  lang = 'zh-cn',
-} = Astro.props
+const props = Astro.props as Props
+const className = props.class
+const hideFloatingSidebar = props.hideFloatingSidebar ?? false
+
+const langRaw = props.lang ?? 'zh-cn'
+const lang: keyof typeof languages =
+  langRaw in languages ? (langRaw as keyof typeof languages) : 'zh-cn'
 ---
 
 <!doctype html>
@@ -28,7 +31,7 @@ const {
     <slot name="head" />
   </Head>
   <body
-    class="flex h-fit min-h-screen flex-col gap-y-6 font-sans"
+    class="flex h-fit min-h-screen flex-col gap-y-6 overflow-x-clip font-sans"
     transition:persist
   >
     <!-- Skip to main content link for accessibility -->
@@ -69,17 +72,6 @@ const {
           return currentPath === targetPath && !href.includes('#')
         }
 
-        // Handle touch events first (mobile) - must be non-passive to prevent default
-        function handleTouchStart(e) {
-          const link = e.target.closest('a[data-internal-link="true"]')
-          if (link && shouldPreventNavigation(link)) {
-            e.preventDefault()
-            e.stopPropagation()
-            e.stopImmediatePropagation()
-            return false
-          }
-        }
-
         // Handle click events (desktop and mobile fallback)
         function handleClick(e) {
           const link = e.target.closest('a[data-internal-link="true"]')
@@ -92,16 +84,11 @@ const {
         }
 
         // Use capture phase to intercept before Astro's view transitions
-        // Touch events must be non-passive to allow preventDefault
-        document.addEventListener('touchstart', handleTouchStart, {
-          passive: false,
-          capture: true,
-        })
         document.addEventListener('click', handleClick, true)
       })()
     </script>
     <header
-      class="bg-background/50 divide-border sticky top-0 z-50 divide-y backdrop-blur-sm xl:divide-none xl:bg-transparent xl:backdrop-blur-none"
+      class="bg-background/50 divide-border sticky top-0 z-50 divide-y backdrop-blur-sm pt-[env(safe-area-inset-top,0px)] xl:divide-none xl:bg-transparent xl:backdrop-blur-none"
     >
       <Header lang={lang} />
       <slot name="subposts-navigation" />
@@ -110,7 +97,7 @@ const {
     <main
       id="main-content"
       class={cn(
-        'w-full mx-auto flex grow flex-col gap-y-6 px-4 pb-20',
+        'w-full mx-auto flex grow flex-col gap-y-6 px-4 pb-[calc(5rem+env(safe-area-inset-bottom,0px))]',
         className,
       )}
       tabindex="-1"

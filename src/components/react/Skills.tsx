@@ -49,8 +49,8 @@ const Skills: React.FC = () => {
   return (
     <div className="z-30 mt-10 flex w-full flex-col">
       <div className="relative mx-auto w-full max-w-xl">
-        <div className="bg-primary/10 absolute -top-4 -left-6 h-16 w-16 rounded-full blur-2xl" />
-        <div className="bg-decorative/20 absolute -right-8 bottom-0 h-20 w-20 rounded-full blur-2xl" />
+        <div className="bg-primary/10 absolute -top-4 left-0 h-16 w-16 rounded-full blur-2xl sm:-left-6" />
+        <div className="bg-decorative/20 absolute right-0 bottom-0 h-20 w-20 rounded-full blur-2xl sm:-right-8" />
         <div className="relative flex flex-wrap items-center gap-3 md:gap-4">
           {focusSkills.map((skill) => {
             const IconComponent = getIcon(skill.logo)

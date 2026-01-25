@@ -59,7 +59,9 @@ export default function Comments({
 
   const fetchComments = async () => {
     try {
-      const response = await fetch(`/api/comments?post_id=${postId}`)
+      const response = await fetch(
+        `/api/comments?post_id=${encodeURIComponent(postId)}`,
+      )
       if (response.ok) {
         const data = await response.json()
         setComments(data.comments || [])
