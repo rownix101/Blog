@@ -42,6 +42,7 @@ declare global {
   namespace App {
     type CloudflareRuntime = import('@astrojs/cloudflare').Runtime<{
       DB: D1Database
+      COMMENT_KV: KVNamespace
     }>
     interface Locals extends CloudflareRuntime {}
   }

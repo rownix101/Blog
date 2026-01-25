@@ -1,19 +1,12 @@
 import type { APIRoute } from 'astro'
 import { COMMENTS } from '@/consts'
 import { createUser, getUserByEmail, getUserByUsername } from '@/lib/db'
-import {
-  generateId,
-  generateToken,
-  hashPassword,
-  sanitizeHTML,
-} from '@/lib/auth'
-import { sendVerificationEmail } from '@/lib/email'
-import { createTwoFactorToken } from '@/lib/db'
+import { generateId, hashPassword, sanitizeHTML } from '@/lib/auth'
+import { getVerificationCode, deleteVerificationCode } from '@/lib/kv'
 import {
   validateEmail,
   validateUsername,
   validatePassword,
-  validateAndSanitizeInput,
   RateLimiter,
 } from '@/lib/validation'
 
@@ -62,12 +55,15 @@ export const POST: APIRoute = async ({ request, locals }) => {
       })
     }
 
-    const { email, username, password } = body
+    const { email, username, password, code } = body
 
     // Validate input presence
-    if (!email || !username || !password) {
+    if (!email || !username || !password || !code) {
       return new Response(
-        JSON.stringify({ error: 'Email, username, and password are required' }),
+        JSON.stringify({
+          error:
+            'Email, username, password, and verification code are required',
+        }),
         { status: 400, headers: { 'Content-Type': 'application/json' } },
       )
     }
@@ -99,13 +95,18 @@ export const POST: APIRoute = async ({ request, locals }) => {
       })
     }
 
-    // Get D1 database
+    // Get D1 database and KV
     const db = locals.runtime?.env.DB
-    if (!db) {
-      return new Response(JSON.stringify({ error: 'Database not available' }), {
-        status: 500,
-        headers: { 'Content-Type': 'application/json' },
-      })
+    const kv = locals.runtime?.env.COMMENT_KV
+
+    if (!db || !kv) {
+      return new Response(
+        JSON.stringify({ error: 'Database or KV not available' }),
+        {
+          status: 500,
+          headers: { 'Content-Type': 'application/json' },
+        },
+      )
     }
 
     const hasPasswordHash = await hasUsersPasswordHashColumn(db)
@@ -139,6 +140,18 @@ export const POST: APIRoute = async ({ request, locals }) => {
       })
     }
 
+    // Verify code from KV
+    const storedCode = await getVerificationCode(kv, email.toLowerCase())
+    if (!storedCode || storedCode !== code) {
+      return new Response(
+        JSON.stringify({ error: 'Invalid or expired verification code' }),
+        {
+          status: 400,
+          headers: { 'Content-Type': 'application/json' },
+        },
+      )
+    }
+
     // Create user
     const userId = generateId()
     const hashedPassword = await hashPassword(password)
@@ -149,35 +162,16 @@ export const POST: APIRoute = async ({ request, locals }) => {
       email: email.toLowerCase(),
       username: sanitizedUsername,
       password_hash: hashedPassword,
-      email_verified: 0,
+      email_verified: 1, // Verified!
     })
 
-    // Generate verification code
-    const verificationCode = generateToken(6)
-    const verificationToken = generateId()
-    const expiresAt = Math.floor(Date.now() / 1000) + 15 * 60 // 15 minutes
-
-    await createTwoFactorToken(db, {
-      id: verificationToken,
-      user_id: userId,
-      token: verificationCode,
-      type: 'email',
-      expires_at: expiresAt,
-    })
-
-    // Send verification email
-    try {
-      await sendVerificationEmail(email, verificationCode)
-    } catch (error) {
-      console.error('Failed to send verification email:', error)
-      // Continue with registration even if email fails
-    }
+    // Delete used code
+    await deleteVerificationCode(kv, email.toLowerCase())
 
     // Return user data (without sensitive info)
     return new Response(
       JSON.stringify({
-        message:
-          'Registration successful. Please check your email for verification code.',
+        message: 'Registration successful.',
         user: {
           id: user.id,
           email: user.email,

@@ -204,8 +204,7 @@ export function createSessionToken(userId: string): string {
   return `${encoded}.${signature}`
 }
 
-// Verify a session token
-export function verifySessionToken(
+export function decodeSessionToken(
   token: string,
 ): { userId: string; createdAt: number } | null {
   try {

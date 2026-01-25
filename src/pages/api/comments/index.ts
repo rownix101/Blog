@@ -1,8 +1,19 @@
 import type { APIRoute } from 'astro'
-import { getCommentsByPostIdWithUser, createComment, getUserById, deleteComment, updateComment } from '@/lib/db'
+import {
+  createComment,
+  getCommentsByPostIdWithUser,
+  getUserById,
+  validateSession,
+} from '@/lib/db'
 import { generateId, sanitizeHTML } from '@/lib/auth'
 import { verifyTurnstileToken } from '@/lib/turnstile'
-import { validatePostId, validateCommentContent, checkSpam, validateAndSanitizeInput, RateLimiter } from '@/lib/validation'
+import {
+  validatePostId,
+  validateCommentContent,
+  checkSpam,
+  validateAndSanitizeInput,
+  RateLimiter,
+} from '@/lib/validation'
 
 // Rate limiter for comment creation
 const commentRateLimiter = new RateLimiter({
@@ -20,8 +31,8 @@ export const GET: APIRoute = async ({ url, locals }) => {
     if (!postId) {
       return new Response(JSON.stringify({ error: 'post_id is required' }), {
         status: 400,
-        headers: { 'Content-Type': 'application/json' } },
-      )
+        headers: { 'Content-Type': 'application/json' },
+      })
     }
 
     // Validate post ID
@@ -29,8 +40,8 @@ export const GET: APIRoute = async ({ url, locals }) => {
     if (!postIdValidation.valid) {
       return new Response(JSON.stringify({ error: postIdValidation.error }), {
         status: 400,
-        headers: { 'Content-Type': 'application/json' } },
-      )
+        headers: { 'Content-Type': 'application/json' },
+      })
     }
 
     // Get D1 database
@@ -38,29 +49,32 @@ export const GET: APIRoute = async ({ url, locals }) => {
     if (!db) {
       return new Response(JSON.stringify({ error: 'Database not available' }), {
         status: 500,
-        headers: { 'Content-Type': 'application/json' } },
-      )
+        headers: { 'Content-Type': 'application/json' },
+      })
     }
 
     const comments = await getCommentsByPostIdWithUser(db, postId)
 
     return new Response(JSON.stringify({ comments }), {
       status: 200,
-      headers: { 'Content-Type': 'application/json' } },
-    )
+      headers: { 'Content-Type': 'application/json' },
+    })
   } catch (error) {
     console.error('Get comments error:', error)
     return new Response(JSON.stringify({ error: 'Internal server error' }), {
       status: 500,
-      headers: { 'Content-Type': 'application/json' } },
-    )
+      headers: { 'Content-Type': 'application/json' },
+    })
   }
 }
 
 // POST - Create a new comment
 export const POST: APIRoute = async ({ request, url, locals }) => {
   // Rate limiting
-  const clientIp = request.headers.get('cf-connecting-ip') || request.headers.get('x-forwarded-for') || 'unknown'
+  const clientIp =
+    request.headers.get('cf-connecting-ip') ||
+    request.headers.get('x-forwarded-for') ||
+    'unknown'
   const rateLimitCheck = commentRateLimiter.check(clientIp)
 
   if (!rateLimitCheck.allowed) {
@@ -73,7 +87,9 @@ export const POST: APIRoute = async ({ request, url, locals }) => {
         status: 429,
         headers: {
           'Content-Type': 'application/json',
-          'Retry-After': Math.ceil((rateLimitCheck.resetTime - Date.now()) / 1000).toString(),
+          'Retry-After': Math.ceil(
+            (rateLimitCheck.resetTime - Date.now()) / 1000,
+          ).toString(),
         },
       },
     )
@@ -84,20 +100,25 @@ export const POST: APIRoute = async ({ request, url, locals }) => {
     const { post_id, content, parent_id, turnstile_token } = body
 
     if (!post_id || !content) {
-      return new Response(JSON.stringify({ error: 'post_id and content are required' }), {
-        status: 400,
-        headers: { 'Content-Type': 'application/json' } },
+      return new Response(
+        JSON.stringify({ error: 'post_id and content are required' }),
+        {
+          status: 400,
+          headers: { 'Content-Type': 'application/json' },
+        },
       )
     }
 
     // Get session token from cookie
-    const sessionToken = request.headers.get('cookie')?.match(/session_token=([^;]+)/)?.[1]
+    const sessionToken = request.headers
+      .get('cookie')
+      ?.match(/session_token=([^;]+)/)?.[1]
 
     if (!sessionToken) {
       return new Response(JSON.stringify({ error: 'Not authenticated' }), {
         status: 401,
-        headers: { 'Content-Type': 'application/json' } },
-      )
+        headers: { 'Content-Type': 'application/json' },
+      })
     }
 
     // Get D1 database
@@ -105,27 +126,28 @@ export const POST: APIRoute = async ({ request, url, locals }) => {
     if (!db) {
       return new Response(JSON.stringify({ error: 'Database not available' }), {
         status: 500,
-        headers: { 'Content-Type': 'application/json' } },
-      )
+        headers: { 'Content-Type': 'application/json' },
+      })
     }
 
     // Verify session and get user
-    const { verifySessionToken } = await import('@/lib/auth')
-    const sessionData = verifySessionToken(sessionToken)
+    const { user: validUser } = await validateSession(db, sessionToken)
 
-    if (!sessionData) {
+    if (!validUser) {
       return new Response(JSON.stringify({ error: 'Invalid session' }), {
         status: 401,
-        headers: { 'Content-Type': 'application/json' } },
-      )
+        headers: { 'Content-Type': 'application/json' },
+      })
     }
+
+    const user = validUser
 
     const user = await getUserById(db, sessionData.userId)
     if (!user) {
       return new Response(JSON.stringify({ error: 'User not found' }), {
         status: 404,
-        headers: { 'Content-Type': 'application/json' } },
-      )
+        headers: { 'Content-Type': 'application/json' },
+      })
     }
 
     // Validate post ID
@@ -133,8 +155,8 @@ export const POST: APIRoute = async ({ request, url, locals }) => {
     if (!postIdValidation.valid) {
       return new Response(JSON.stringify({ error: postIdValidation.error }), {
         status: 400,
-        headers: { 'Content-Type': 'application/json' } },
-      )
+        headers: { 'Content-Type': 'application/json' },
+      })
     }
 
     // Validate content
@@ -142,8 +164,8 @@ export const POST: APIRoute = async ({ request, url, locals }) => {
     if (!contentValidation.valid) {
       return new Response(JSON.stringify({ error: contentValidation.error }), {
         status: 400,
-        headers: { 'Content-Type': 'application/json' } },
-      )
+        headers: { 'Content-Type': 'application/json' },
+      })
     }
 
     // Sanitize content
@@ -152,21 +174,35 @@ export const POST: APIRoute = async ({ request, url, locals }) => {
     // Check for spam
     const spamCheck = checkSpam(sanitizedContent)
     if (spamCheck.isSpam) {
-      return new Response(JSON.stringify({ error: spamCheck.reason || 'Comment contains spam content' }), {
-        status: 400,
-        headers: { 'Content-Type': 'application/json' } },
+      return new Response(
+        JSON.stringify({
+          error: spamCheck.reason || 'Comment contains spam content',
+        }),
+        {
+          status: 400,
+          headers: { 'Content-Type': 'application/json' },
+        },
       )
     }
 
     // Verify Turnstile token
     if (turnstile_token) {
-      const remoteIp = request.headers.get('cf-connecting-ip') || request.headers.get('x-forwarded-for') || undefined
-      const turnstileValid = await verifyTurnstileToken(turnstile_token, remoteIp)
+      const remoteIp =
+        request.headers.get('cf-connecting-ip') ||
+        request.headers.get('x-forwarded-for') ||
+        undefined
+      const turnstileValid = await verifyTurnstileToken(
+        turnstile_token,
+        remoteIp,
+      )
 
       if (!turnstileValid) {
-        return new Response(JSON.stringify({ error: 'Failed to verify you are human' }), {
-          status: 400,
-          headers: { 'Content-Type': 'application/json' } },
+        return new Response(
+          JSON.stringify({ error: 'Failed to verify you are human' }),
+          {
+            status: 400,
+            headers: { 'Content-Type': 'application/json' },
+          },
         )
       }
     }
@@ -199,15 +235,21 @@ export const POST: APIRoute = async ({ request, url, locals }) => {
       },
     }
 
-    return new Response(JSON.stringify({ message: 'Comment created successfully', comment: commentWithUser }), {
-      status: 201,
-      headers: { 'Content-Type': 'application/json' } },
+    return new Response(
+      JSON.stringify({
+        message: 'Comment created successfully',
+        comment: commentWithUser,
+      }),
+      {
+        status: 201,
+        headers: { 'Content-Type': 'application/json' },
+      },
     )
   } catch (error) {
     console.error('Create comment error:', error)
     return new Response(JSON.stringify({ error: 'Internal server error' }), {
       status: 500,
-      headers: { 'Content-Type': 'application/json' } },
-    )
+      headers: { 'Content-Type': 'application/json' },
+    })
   }
 }

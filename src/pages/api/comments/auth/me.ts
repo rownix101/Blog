@@ -1,18 +1,20 @@
 import type { APIRoute } from 'astro'
-import { getUserById } from '@/lib/db'
+import { getUserById, validateSession } from '@/lib/db'
 
 export const prerender = false
 
 export const GET: APIRoute = async ({ request, locals }) => {
   try {
     // Get session token from cookie
-    const sessionToken = request.headers.get('cookie')?.match(/session_token=([^;]+)/)?.[1]
+    const sessionToken = request.headers
+      .get('cookie')
+      ?.match(/session_token=([^;]+)/)?.[1]
 
     if (!sessionToken) {
       return new Response(JSON.stringify({ error: 'Not authenticated' }), {
         status: 401,
-        headers: { 'Content-Type': 'application/json' } },
-      )
+        headers: { 'Content-Type': 'application/json' },
+      })
     }
 
     // Get D1 database
@@ -20,27 +22,18 @@ export const GET: APIRoute = async ({ request, locals }) => {
     if (!db) {
       return new Response(JSON.stringify({ error: 'Database not available' }), {
         status: 500,
-        headers: { 'Content-Type': 'application/json' } },
-      )
+        headers: { 'Content-Type': 'application/json' },
+      })
     }
 
     // Verify session and get user
-    const { verifySessionToken } = await import('@/lib/auth')
-    const sessionData = verifySessionToken(sessionToken)
+    const { user } = await validateSession(db, sessionToken)
 
-    if (!sessionData) {
+    if (!user) {
       return new Response(JSON.stringify({ error: 'Invalid session' }), {
         status: 401,
-        headers: { 'Content-Type': 'application/json' } },
-      )
-    }
-
-    const user = await getUserById(db, sessionData.userId)
-    if (!user) {
-      return new Response(JSON.stringify({ error: 'User not found' }), {
-        status: 404,
-        headers: { 'Content-Type': 'application/json' } },
-      )
+        headers: { 'Content-Type': 'application/json' },
+      })
     }
 
     // Return user data (without sensitive info)
@@ -62,7 +55,7 @@ export const GET: APIRoute = async ({ request, locals }) => {
     console.error('Get user error:', error)
     return new Response(JSON.stringify({ error: 'Internal server error' }), {
       status: 500,
-      headers: { 'Content-Type': 'application/json' } },
-    )
+      headers: { 'Content-Type': 'application/json' },
+    })
   }
 }

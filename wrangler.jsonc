@@ -1,25 +1,29 @@
 {
-	"$schema": "node_modules/wrangler/config-schema.json",
-	"name": "blog",
-	"compatibility_date": "2025-11-18",
-	"compatibility_flags": [
-		"nodejs_compat"
-	],
-	"pages_build_output_dir": "./dist",
-	"observability": {
-		"enabled": true
-	},
-	"d1_databases": [
-		{
-			"binding": "DB",
-			"database_name": "blog-comments",
-			"database_id": "7383dd87-6090-4930-952d-cce35888bd49"
-		},
-		{
-			"binding": "blog_comments",
-			"database_name": "blog-comments",
-			"database_id": "7383dd87-6090-4930-952d-cce35888bd49",
-			"remote": true
-		}
-	]
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "blog",
+  "compatibility_date": "2025-11-18",
+  "compatibility_flags": ["nodejs_compat"],
+  "pages_build_output_dir": "./dist",
+  "observability": {
+    "enabled": true,
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "blog-comments",
+      "database_id": "7383dd87-6090-4930-952d-cce35888bd49",
+    },
+    {
+      "binding": "blog_comments",
+      "database_name": "blog-comments",
+      "database_id": "7383dd87-6090-4930-952d-cce35888bd49",
+      "remote": true,
+    },
+  ],
+  "kv_namespaces": [
+    {
+      "binding": "COMMENT_KV",
+      "id": "c5cd0a2503f54e9f8cf8566022a3d6cd",
+    },
+  ],
 }
