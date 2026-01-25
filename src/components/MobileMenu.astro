@@ -1,10 +1,8 @@
 ---
-import Link from '@/components/Link.astro'
-import { buttonVariants } from '@/components/ui/button'
+import MobileMenuSheet from '@/components/react/MobileMenuSheet'
 import { NAV_LINKS } from '@/consts'
-import { ui } from '@/i18n/ui'
+import { languages, ui } from '@/i18n/ui'
 import { useLocalizedPath, useTranslations } from '@/i18n/utils'
-import { Icon } from 'astro-icon/components'
 
 interface Props {
   lang?: string
@@ -13,58 +11,49 @@ interface Props {
 const { lang = 'zh-cn' } = Astro.props as Props
 const t = useTranslations(lang as keyof typeof ui)
 const l = useLocalizedPath(lang as keyof typeof ui)
+const currentPath = Astro.url.pathname
 
 const isExternalLink = (href: string) => {
   return href.startsWith('http')
 }
+
+const getPathWithoutLang = (pathname: string): string => {
+  const segments = pathname.split('/').filter(Boolean)
+  if (segments.length > 0 && segments[0] in languages) {
+    return '/' + segments.slice(1).join('/')
+  }
+  return pathname
+}
+
+const basePath = getPathWithoutLang(currentPath)
+
+const menuItems = NAV_LINKS.map((item) => {
+  const isExternal = isExternalLink(item.href)
+  const isInsideLink = item.label.toLowerCase() === 'inside'
+  const translatedLabel =
+    t(`nav.${item.label.toLowerCase()}` as any) || item.label
+  return {
+    href: isExternal ? item.href : l(item.href),
+    label: translatedLabel,
+    isExternal,
+    isInside: isInsideLink,
+  }
+})
+
+const languageItems = Object.entries(languages).map(([code, label]) => {
+  return {
+    code,
+    label,
+    href: `/${code}${basePath}`,
+    isActive: code === lang,
+  }
+})
 ---
 
-<details class="relative md:hidden">
-  <summary
-    class={buttonVariants({ variant: 'outline', size: 'icon' }) +
-      ' list-none [&::-webkit-details-marker]:hidden'}
-    aria-label="Toggle menu"
-  >
-    <Icon name="lucide:menu" class="h-5 w-5" />
-    <span class="sr-only">Toggle menu</span>
-  </summary>
-  <div
-    class="bg-background border-border absolute right-0 mt-2 w-56 rounded-md border p-2 shadow-lg"
-  >
-    <nav class="flex flex-col gap-1">
-      {
-        NAV_LINKS.map((item) => {
-          const isExternal = isExternalLink(item.href)
-          const isInsideLink = item.label.toLowerCase() === 'inside'
-          const translatedLabel =
-            t(`nav.${item.label.toLowerCase()}` as any) || item.label
-          const localizedHref = isExternal ? item.href : l(item.href)
-          return (
-            <Link
-              href={localizedHref}
-              class={
-                isInsideLink
-                  ? 'text-primary hover:text-primary/80 flex items-center gap-2 rounded-md px-3 py-2 text-base font-medium capitalize transition-colors'
-                  : 'text-foreground/80 hover:text-foreground flex items-center gap-2 rounded-md px-3 py-2 text-base capitalize transition-colors'
-              }
-              external={isExternal}
-            >
-              <span>{translatedLabel}</span>
-              {isExternal && (
-                <Icon
-                  name="lucide:external-link"
-                  class={
-                    isInsideLink
-                      ? 'text-primary size-3.5 flex-shrink-0 opacity-80'
-                      : 'size-3.5 flex-shrink-0 opacity-70'
-                  }
-                  aria-hidden="true"
-                />
-              )}
-            </Link>
-          )
-        })
-      }
-    </nav>
-  </div>
-</details>
+<MobileMenuSheet
+  items={menuItems}
+  languages={languageItems}
+  searchLabel={t('menu.search')}
+  languageLabel={t('menu.language')}
+  client:load
+/>

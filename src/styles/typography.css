@@ -52,7 +52,7 @@
 
     :where(h2):not(:where(.not-prose, .not-prose *))::before {
       content: '';
-      @apply bg-primary/30 absolute -left-4 top-1/2 h-6 w-1 -translate-y-1/2 rounded-full;
+      @apply bg-primary/30 absolute top-1/2 -left-4 h-6 w-1 -translate-y-1/2 rounded-full;
     }
 
     :where(h3):not(:where(.not-prose, .not-prose *)) {
@@ -61,7 +61,7 @@
 
     :where(h3):not(:where(.not-prose, .not-prose *))::before {
       content: '';
-      @apply bg-decorative/40 absolute -left-3 top-1/2 h-4 w-0.5 -translate-y-1/2 rounded-full;
+      @apply bg-decorative/40 absolute top-1/2 -left-3 h-4 w-0.5 -translate-y-1/2 rounded-full;
     }
 
     :where(h4):not(:where(.not-prose, .not-prose *)) {
@@ -75,7 +75,7 @@
     :where(a):not(:where(.not-prose, .not-prose *)) {
       @apply text-primary/90 hover:text-primary font-medium break-words transition-all duration-200;
       @apply decoration-primary/30 hover:decoration-primary underline decoration-2 underline-offset-2;
-      @apply hover:bg-primary/5 hover:px-0.5 hover:-mx-0.5 rounded;
+      @apply hover:bg-primary/5 rounded md:hover:-mx-0.5 md:hover:px-0.5;
     }
 
     :where(strong):not(:where(.not-prose, .not-prose *)) {
@@ -87,7 +87,7 @@
     }
 
     :where(ol):not(:where(.not-prose, .not-prose *)) {
-      @apply marker:text-primary/50 marker:font-medium my-5 ml-6 list-decimal [&>li]:mt-2;
+      @apply marker:text-primary/50 my-5 ml-6 list-decimal marker:font-medium [&>li]:mt-2;
       @apply [&[type='A']]:list-[upper-alpha] [&[type='I']]:list-[upper-roman] [&[type='a']]:list-[lower-alpha] [&[type='i']]:list-[lower-roman];
     }
 
@@ -110,7 +110,7 @@
 
     :where(blockquote):not(:where(.not-prose, .not-prose *))::before {
       content: '';
-      @apply absolute left-0 top-0 bottom-0 w-0.5 rounded-full;
+      @apply absolute top-0 bottom-0 left-0 w-0.5 rounded-full;
       background: linear-gradient(
         180deg,
         var(--primary) 0%,
@@ -146,8 +146,8 @@
     }
 
     :where(img, video, figure, .expressive-code):not(
-        :where(.not-prose, .not-prose *)
-      ) {
+      :where(.not-prose, .not-prose *)
+    ) {
       @apply mx-auto my-6;
     }
 

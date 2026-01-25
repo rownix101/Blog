@@ -331,43 +331,73 @@ export async function getCommentsByPostIdWithUser(
   db: D1Database,
   postId: string,
 ): Promise<CommentWithUser[]> {
+  return getCommentsByPostIdsWithUser(db, [postId])
+}
+
+export async function getCommentsByPostIdsWithUser(
+  db: D1Database,
+  postIds: string[],
+): Promise<CommentWithUser[]> {
+  if (postIds.length === 0) {
+    return []
+  }
+
+  const placeholders = postIds.map(() => '?').join(', ')
   const query = `
-    SELECT comments.*, users.* FROM comments
+    SELECT
+      comments.id AS comment_id,
+      comments.post_id AS comment_post_id,
+      comments.user_id AS comment_user_id,
+      comments.parent_id AS comment_parent_id,
+      comments.content AS comment_content,
+      comments.status AS comment_status,
+      comments.created_at AS comment_created_at,
+      comments.updated_at AS comment_updated_at,
+      users.id AS user_id,
+      users.email AS user_email,
+      users.username AS user_username,
+      users.avatar_url AS user_avatar_url,
+      users.created_at AS user_created_at,
+      users.updated_at AS user_updated_at,
+      users.email_verified AS user_email_verified,
+      users.two_factor_enabled AS user_two_factor_enabled,
+      users.two_factor_secret AS user_two_factor_secret
+    FROM comments
     JOIN users ON comments.user_id = users.id
-    WHERE comments.post_id = ? AND comments.status = 'approved'
+    WHERE comments.post_id IN (${placeholders}) AND comments.status = 'approved'
     ORDER BY comments.created_at ASC
   `
 
   const result = await db
     .prepare(query)
-    .bind(postId)
-    .all()
+    .bind(...postIds)
+    .all<Record<string, unknown>>()
 
-  const comments = (result.results || []) as any[]
+  const rows = result.results || []
   const commentMap = new Map<string, CommentWithUser>()
   const rootComments: CommentWithUser[] = []
 
   // Build comment map and separate root comments
-  for (const row of comments) {
+  for (const row of rows) {
     const comment: CommentWithUser = {
-      id: row.id,
-      post_id: row.post_id,
-      user_id: row.user_id,
-      parent_id: row.parent_id,
-      content: row.content,
-      status: row.status,
-      created_at: row.created_at,
-      updated_at: row.updated_at,
+      id: row.comment_id as string,
+      post_id: row.comment_post_id as string,
+      user_id: row.comment_user_id as string,
+      parent_id: row.comment_parent_id as string | null,
+      content: row.comment_content as string,
+      status: row.comment_status as CommentWithUser['status'],
+      created_at: row.comment_created_at as number,
+      updated_at: row.comment_updated_at as number,
       user: {
-        id: row.id_1,
-        email: row.email,
-        username: row.username,
-        avatar_url: row.avatar_url,
-        created_at: row.created_at_1,
-        updated_at: row.updated_at_1,
-        email_verified: row.email_verified,
-        two_factor_enabled: row.two_factor_enabled,
-        two_factor_secret: row.two_factor_secret,
+        id: row.user_id as string,
+        email: row.user_email as string,
+        username: row.user_username as string,
+        avatar_url: row.user_avatar_url as string | null,
+        created_at: row.user_created_at as number,
+        updated_at: row.user_updated_at as number,
+        email_verified: row.user_email_verified as number,
+        two_factor_enabled: row.user_two_factor_enabled as number,
+        two_factor_secret: row.user_two_factor_secret as string | null,
       },
       replies: [],
     }

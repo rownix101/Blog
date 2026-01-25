@@ -42,7 +42,7 @@ const isExternalLink = (href: string) => {
         class="bg-primary absolute -top-1 -right-2 h-1.5 w-1.5 rounded-full opacity-0 transition-opacity group-hover:opacity-100"
         aria-hidden="true"></span>
     </Link>
-    <div class="flex items-center gap-2 md:gap-4">
+    <div class="ml-auto flex items-center gap-2 md:gap-4">
       <nav class="hidden items-center gap-5 text-sm md:flex">
         {
           NAV_LINKS.map((item) => {
@@ -79,13 +79,17 @@ const isExternalLink = (href: string) => {
       </nav>
       <div class="bg-border/40 hidden h-5 w-px md:block" aria-hidden="true">
       </div>
-      <SearchButton lang={lang} />
-      <LanguageSwitcher />
-      <MobileMenu lang={lang} />
-      <ThemeToggle transition:persist />
-    </div>
-  </div>
-</header>
+      <div class="hidden md:block">
+        <SearchButton lang={lang} />
+      </div>
+      <div class="hidden md:block">
+        <LanguageSwitcher />
+      </div>
+       <MobileMenu lang={lang} />
+       <ThemeToggle transition:persist />
+     </div>
+   </div>
+ </header>
 
 <style>
   .nav-link {

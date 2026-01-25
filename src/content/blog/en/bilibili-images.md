@@ -6,7 +6,6 @@ tags:
   - daily
   - image-hosting
   - cdn
-commentId: /blog/bilibili-image
 ---
 
 **⚠️ Disclaimer: This article is for technical learning and research only. Do not use it for any illegal purpose or abusive behavior. You must comply with applicable laws/regulations and the platform’s terms of service. Any consequences caused by improper use are solely your responsibility.**
