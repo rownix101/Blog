@@ -3,8 +3,12 @@
 @custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
 
 @theme inline {
-  --font-sans: Geist, ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
-  --font-mono: Geist Mono, ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+  --font-sans:
+    Geist, ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji',
+    'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+  --font-mono:
+    Geist Mono, ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+    'Liberation Mono', 'Courier New', monospace;
   --font-display: Geist, ui-sans-serif, system-ui, sans-serif;
 
   --color-background: var(--background);
@@ -106,7 +110,11 @@
 }
 
 @layer base {
-  *, ::after, ::before, ::backdrop, ::file-selector-button {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
     @apply border-border outline-ring/50 tracking-tight;
   }
 
@@ -125,13 +133,20 @@
   }
 
   /* Ensure stable font rendering to prevent layout shifts */
-  h1, h2, h3, h4, h5, h6 {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
     font-variant-ligatures: none;
     text-rendering: optimizeLegibility;
   }
 
   /* Display font for headings - Space Grotesk for personality */
-  h1, h2, h3 {
+  h1,
+  h2,
+  h3 {
     font-family: var(--font-display);
     letter-spacing: -0.02em;
   }
@@ -147,9 +162,9 @@
   /* Enhanced focus indicators for accessibility */
   /* Only apply to links that don't have custom focus styles */
   a:focus-visible:not([class*='focus-visible']):not([class*='ring']) {
-    @apply outline-none ring-2 ring-ring ring-offset-2 ring-offset-background;
+    @apply ring-ring ring-offset-background ring-2 ring-offset-2 outline-none;
   }
-  
+
   /* Remove default browser outline - components handle their own focus styles */
   button:focus,
   input:focus,
@@ -157,17 +172,17 @@
   select:focus {
     outline: none;
   }
-  
+
   /* Remove all default input styling that might cause visible rectangles */
-  input[type="text"],
-  input[type="search"] {
+  input[type='text'],
+  input[type='search'] {
     border: none !important;
     outline: none !important;
     box-shadow: none !important;
   }
-  
-  input[type="text"]:not(:focus-visible),
-  input[type="search"]:not(:focus-visible) {
+
+  input[type='text']:not(:focus-visible),
+  input[type='search']:not(:focus-visible) {
     border: none !important;
     outline: none !important;
     box-shadow: none !important;
@@ -247,11 +262,14 @@
   view-transition-name: none;
 }
 
-
 /* Modern 2025 background effects */
 @supports (backdrop-filter: blur(1px)) {
   .bg-radial-gradient {
-    background: radial-gradient(ellipse at center, transparent 0%, var(--background) 100%);
+    background: radial-gradient(
+      ellipse at center,
+      transparent 0%,
+      var(--background) 100%
+    );
   }
 }
 
@@ -299,9 +317,16 @@
 }
 
 @keyframes wiggle {
-  0%, 100% { transform: rotate(0deg); }
-  25% { transform: rotate(-1deg); }
-  75% { transform: rotate(1deg); }
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+  25% {
+    transform: rotate(-1deg);
+  }
+  75% {
+    transform: rotate(1deg);
+  }
 }
 
 /* Animation utilities */
@@ -322,11 +347,21 @@
 }
 
 /* Staggered animation delays */
-.delay-100 { animation-delay: 100ms; }
-.delay-200 { animation-delay: 200ms; }
-.delay-300 { animation-delay: 300ms; }
-.delay-400 { animation-delay: 400ms; }
-.delay-500 { animation-delay: 500ms; }
+.delay-100 {
+  animation-delay: 100ms;
+}
+.delay-200 {
+  animation-delay: 200ms;
+}
+.delay-300 {
+  animation-delay: 300ms;
+}
+.delay-400 {
+  animation-delay: 400ms;
+}
+.delay-500 {
+  animation-delay: 500ms;
+}
 
 /* Initially hidden for animation */
 .animate-on-load {
@@ -335,7 +370,9 @@
 
 /* Hover effects */
 .hover-lift {
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .hover-lift:hover {
@@ -345,8 +382,13 @@
 
 /* Subtle float animation for decorative elements */
 @keyframes float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-10px); }
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
 }
 
 .animate-float {
@@ -357,10 +399,14 @@
   animation: float 8s ease-in-out infinite;
 }
 
-/* Gradient text effect */
-.gradient-text {
-  background: linear-gradient(135deg, var(--primary) 0%, var(--decorative) 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+/* Theme Toggle Circular Reveal */
+html.theme-transition::view-transition-group(root) {
+  z-index: 10000;
+}
+
+html.theme-transition::view-transition-new(root),
+html.theme-transition::view-transition-old(root) {
+  animation: none;
+  mix-blend-mode: normal;
+  display: block;
 }

@@ -31,20 +31,66 @@ import { Icon } from 'astro-icon/components'
 </script>
 
 <script>
-  function handleToggleClick() {
+  function handleToggleClick(e) {
     const element = document.documentElement
     const currentTheme = element.getAttribute('data-theme')
     const newTheme = currentTheme === 'dark' ? 'light' : 'dark'
 
-    element.classList.add('[&_*]:transition-none')
-    element.setAttribute('data-theme', newTheme)
-    window.getComputedStyle(element).getPropertyValue('opacity')
+    // Check if View Transitions are supported and enabled
+    if (
+      !document.startViewTransition ||
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    ) {
+      element.classList.add('[&_*]:transition-none')
+      element.setAttribute('data-theme', newTheme)
+      window.getComputedStyle(element).getPropertyValue('opacity')
 
-    requestAnimationFrame(() => {
-      element.classList.remove('[&_*]:transition-none')
+      requestAnimationFrame(() => {
+        element.classList.remove('[&_*]:transition-none')
+      })
+
+      localStorage.setItem('theme', newTheme)
+      return
+    }
+
+    // Circular Reveal Logic
+    const x = e.clientX
+    const y = e.clientY
+    const endRadius = Math.hypot(
+      Math.max(x, innerWidth - x),
+      Math.max(y, innerHeight - y),
+    )
+
+    // Add class to disable default fade
+    document.documentElement.classList.add('theme-transition')
+
+    const transition = document.startViewTransition(() => {
+      element.setAttribute('data-theme', newTheme)
+      localStorage.setItem('theme', newTheme)
     })
 
-    localStorage.setItem('theme', newTheme)
+    transition.ready.then(() => {
+      const clipPath = [
+        `circle(0px at ${x}px ${y}px)`,
+        `circle(${endRadius}px at ${x}px ${y}px)`,
+      ]
+
+      // Animate the new view (which is on top)
+      document.documentElement.animate(
+        {
+          clipPath: clipPath,
+        },
+        {
+          duration: 500,
+          easing: 'ease-in-out',
+          pseudoElement: '::view-transition-new(root)',
+        },
+      )
+    })
+
+    transition.finished.finally(() => {
+      document.documentElement.classList.remove('theme-transition')
+    })
   }
 
   function initThemeToggle() {
@@ -59,6 +105,11 @@ import { Icon } from 'astro-icon/components'
     const storedTheme = localStorage.getItem('theme') || 'light'
     const element = document.documentElement
 
+    // Note: We don't want to disable transitions during view transitions navigation
+    // but we do need to ensure the theme is correct.
+    // However, Astro's ViewTransitions might handle this via persist,
+    // but this script ensures consistency.
+    // The previous code had transition-none logic here, which we keep.
     element.classList.add('[&_*]:transition-none')
     window.getComputedStyle(element).getPropertyValue('opacity')
     element.setAttribute('data-theme', storedTheme)
