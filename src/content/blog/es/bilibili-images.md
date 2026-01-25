@@ -6,6 +6,7 @@ tags:
   - diario
   - alojamiento-de-imagenes
   - cdn
+commentId: /blog/bilibili-image-hosting-is-dead
 ---
 
 **⚠️ Aviso: Este articulo es solo para aprendizaje e investigacion tecnica. No lo uses para fines ilegales ni para abuso. Debes cumplir las leyes/regulaciones aplicables y los terminos de servicio de la plataforma. Cualquier consecuencia por uso indebido es exclusivamente tu responsabilidad.**
