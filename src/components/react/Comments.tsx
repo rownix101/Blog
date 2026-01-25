@@ -228,11 +228,6 @@ export default function Comments({
               <span className="text-muted-foreground text-sm">
                 {new Date(comment.created_at * 1000).toLocaleDateString()}
               </span>
-              {comment.status === 'pending' && (
-                <span className="rounded bg-yellow-100 px-2 py-0.5 text-xs text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-500">
-                  {t('comments.status_pending')}
-                </span>
-              )}
             </div>
 
             {isEditing ? (
