@@ -24,7 +24,7 @@ const lang = getLangFromUrl(Astro.url)
     </button>
 
     <div
-      class="bg-popover invisible absolute top-full right-0 z-50 mt-1 w-32 rounded-md border p-1 opacity-0 shadow-md transition-all duration-200 group-hover:visible group-hover:opacity-100"
+      class="bg-popover invisible absolute top-full right-0 z-50 mt-1 w-32 rounded-md border p-1 opacity-0 shadow-md transition-all duration-200 group-hover:visible group-hover:opacity-100 group-focus-within:visible group-focus-within:opacity-100"
     >
       {
         Object.entries(languages).map(([code, label]) => (
@@ -48,49 +48,6 @@ const lang = getLangFromUrl(Astro.url)
 </div>
 
 <script>
-  // 添加客户端语言检测和重定向（仅在首次访问时）
-  if (!document.cookie.includes('language=')) {
-    const browserLang = navigator.language || navigator.languages?.[0]
-
-    // 将浏览器语言映射到支持的语言
-    let targetLang = 'zh-cn' // 默认
-
-    if (browserLang) {
-      const normalizedLang = browserLang.toLowerCase()
-
-      // 直接匹配
-      if (normalizedLang in { 'zh-cn': true, en: true }) {
-        targetLang = normalizedLang
-      }
-      // 前缀匹配
-      else if (normalizedLang.startsWith('zh')) {
-        targetLang = 'zh-cn'
-      } else if (normalizedLang.startsWith('en')) {
-        targetLang = 'en'
-      }
-    }
-
-    // 获取当前路径，移除语言前缀
-    const currentPath = window.location.pathname
-    const pathSegments = currentPath.split('/').filter(Boolean)
-
-    // 检查当前是否有语言前缀
-    const langPrefix = pathSegments[0]
-    const supportedLangs = ['zh-cn', 'en']
-
-    if (!supportedLangs.includes(langPrefix)) {
-      // 没有语言前缀，重定向到检测到的语言
-      const newPath = `/${targetLang}${currentPath.startsWith('/') ? currentPath : '/' + currentPath}`
-      window.location.href = newPath
-    } else if (langPrefix !== targetLang) {
-      // 有语言前缀但与检测到的不同，可以选择是否重定向
-      // 这里我们选择不自动重定向，让用户手动选择
-      console.log(
-        `Browser language is ${browserLang} but current page is in ${langPrefix}`,
-      )
-    }
-
-    // 设置语言 cookie
-    document.cookie = `language=${langPrefix || targetLang}; path=/; max-age=31536000; sameSite=Lax`
-  }
+  // 语言检测和重定向由服务器端的 index.astro 处理
+  // 此组件仅用于语言切换 UI
 </script>

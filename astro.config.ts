@@ -24,13 +24,8 @@ export default defineConfig({
   session: {
     driver: 'memory',
   },
-  i18n: {
-    defaultLocale: 'zh-cn',
-    locales: ['zh-cn', 'en'],
-    routing: {
-      prefixDefaultLocale: true,
-    },
-  },
+  // i18n is handled manually via custom logic in src/pages/index.astro
+  // The built-in Astro i18n is disabled to avoid conflicts
   image: {
     service: passthroughImageService(),
     // Configure for Cloudflare compatibility
