@@ -7,6 +7,57 @@ export interface EmailOptions {
   text?: string
 }
 
+// Common email template with site branding
+function getEmailHtml(title: string, bodyContent: string, footerText: string) {
+  return `
+    <!DOCTYPE html>
+    <html>
+      <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <style>
+          body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; line-height: 1.6; color: hsl(20 10% 8%); background-color: hsl(30 15% 99%); margin: 0; padding: 0; }
+          .container { max-width: 600px; margin: 0 auto; padding: 40px 20px; background-color: hsl(30 15% 99%); }
+          .card { background-color: #ffffff; padding: 32px; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); border: 1px solid hsl(30 10% 88%); }
+          .header { text-align: center; margin-bottom: 32px; }
+          .site-title { font-size: 20px; font-weight: 700; color: hsl(20 10% 8%); text-decoration: none; letter-spacing: -0.02em; }
+          .title { font-size: 24px; font-weight: 700; color: hsl(20 10% 8%); margin-bottom: 24px; letter-spacing: -0.02em; }
+          .text { color: hsl(20 10% 12%); margin-bottom: 24px; }
+          .code-container { margin: 32px 0; text-align: center; }
+          .code { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size: 32px; font-weight: 700; letter-spacing: 8px; color: hsl(12 76% 61%); background: hsl(16 60% 95%); padding: 24px 32px; border-radius: 8px; display: inline-block; border: 1px solid hsl(12 76% 61%); }
+          .button-container { margin: 32px 0; text-align: center; }
+          .button { display: inline-block; padding: 14px 32px; background-color: hsl(12 76% 61%); color: #ffffff !important; text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 16px; transition: background-color 0.2s; }
+          .button:hover { background-color: hsl(12 76% 56%); }
+          .footer { margin-top: 32px; font-size: 14px; color: hsl(20 5% 40%); text-align: center; }
+          .comment { background: hsl(30 15% 97%); padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid hsl(12 76% 61%); font-style: italic; }
+          .highlight { font-weight: 600; color: hsl(12 76% 61%); }
+          
+          @media (max-width: 600px) {
+            .container { padding: 20px 10px; }
+            .card { padding: 24px; }
+            .code { font-size: 24px; padding: 16px 24px; letter-spacing: 6px; }
+          }
+        </style>
+      </head>
+      <body>
+        <div class="container">
+          <div class="header">
+            <span class="site-title">Rownix's Blog</span>
+          </div>
+          <div class="card">
+            <h1 class="title">${title}</h1>
+            ${bodyContent}
+            <div class="footer">
+              <p>${footerText}</p>
+              <p style="margin-top: 16px; font-size: 12px; opacity: 0.7;">&copy; ${new Date().getFullYear()} Rownix's Blog</p>
+            </div>
+          </div>
+        </div>
+      </body>
+    </html>
+  `
+}
+
 // Send email using Resend
 export async function sendEmail(options: EmailOptions): Promise<void> {
   if (!COMMENTS.resendApiKey) {
@@ -95,39 +146,15 @@ export async function sendVerificationEmail(
 
   const content = t[lang as keyof typeof t] || t['zh-cn']
 
-  const html = `
-    <!DOCTYPE html>
-    <html>
-      <head>
-        <meta charset="utf-8">
-        <style>
-          body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; line-height: 1.6; color: hsl(20 10% 8%); background-color: hsl(30 15% 99%); margin: 0; padding: 0; }
-          .container { max-width: 600px; margin: 0 auto; padding: 40px 20px; background-color: hsl(30 15% 99%); }
-          .card { background-color: #ffffff; padding: 32px; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); border: 1px solid hsl(30 10% 88%); }
-          .title { font-size: 24px; font-weight: 700; color: hsl(20 10% 8%); margin-bottom: 24px; letter-spacing: -0.02em; }
-          .text { color: hsl(20 10% 12%); margin-bottom: 24px; }
-          .code-container { margin: 32px 0; text-align: center; }
-          .code { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size: 32px; font-weight: 700; letter-spacing: 8px; color: hsl(12 76% 61%); background: hsl(16 60% 95%); padding: 24px 32px; border-radius: 8px; display: inline-block; border: 1px solid hsl(12 76% 61%); }
-          .footer { margin-top: 32px; font-size: 14px; color: hsl(20 5% 40%); text-align: center; }
-        </style>
-      </head>
-      <body>
-        <div class="container">
-          <div class="card">
-            <h1 class="title">${content.title}</h1>
-            <p class="text">${content.greeting}</p>
-            <div class="code-container">
-              <div class="code">${code}</div>
-            </div>
-            <p class="text">${content.expire}</p>
-            <div class="footer">
-              <p>${content.ignore}</p>
-            </div>
-          </div>
-        </div>
-      </body>
-    </html>
+  const bodyContent = `
+    <p class="text">${content.greeting}</p>
+    <div class="code-container">
+      <div class="code">${code}</div>
+    </div>
+    <p class="text">${content.expire}</p>
   `
+
+  const html = getEmailHtml(content.title, bodyContent, content.ignore)
 
   await sendEmail({
     to: email,
@@ -142,27 +169,19 @@ export async function sendTwoFactorEmail(
   email: string,
   code: string,
 ): Promise<void> {
-  const html = `
-    <!DOCTYPE html>
-    <html>
-      <head>
-        <style>
-          body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
-          .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-          .code { font-size: 24px; font-weight: bold; letter-spacing: 4px; background: #f3f4f6; padding: 16px 24px; border-radius: 4px; margin: 20px 0; }
-        </style>
-      </head>
-      <body>
-        <div class="container">
-          <h2>Your two-factor authentication code</h2>
-          <p>Use the code below to complete your sign-in:</p>
-          <div class="code">${code}</div>
-          <p>This code will expire in 5 minutes.</p>
-          <p>If you didn't request this code, please ignore this email and secure your account.</p>
-        </div>
-      </body>
-    </html>
+  const bodyContent = `
+    <p class="text">Use the code below to complete your sign-in:</p>
+    <div class="code-container">
+      <div class="code">${code}</div>
+    </div>
+    <p class="text">This code will expire in 5 minutes.</p>
   `
+
+  const html = getEmailHtml(
+    'Your two-factor authentication code',
+    bodyContent,
+    "If you didn't request this code, please ignore this email and secure your account.",
+  )
 
   await sendEmail({
     to: email,
@@ -177,27 +196,19 @@ export async function sendPasswordResetEmail(
   email: string,
   resetUrl: string,
 ): Promise<void> {
-  const html = `
-    <!DOCTYPE html>
-    <html>
-      <head>
-        <style>
-          body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
-          .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-          .button { display: inline-block; padding: 12px 24px; background: #6366f1; color: white; text-decoration: none; border-radius: 4px; }
-        </style>
-      </head>
-      <body>
-        <div class="container">
-          <h2>Reset your password</h2>
-          <p>We received a request to reset your password. Click the button below to create a new password:</p>
-          <p><a href="${resetUrl}" class="button">Reset Password</a></p>
-          <p>This link will expire in 1 hour.</p>
-          <p>If you didn't request this password reset, please ignore this email.</p>
-        </div>
-      </body>
-    </html>
+  const bodyContent = `
+    <p class="text">We received a request to reset your password. Click the button below to create a new password:</p>
+    <div class="button-container">
+      <a href="${resetUrl}" class="button">Reset Password</a>
+    </div>
+    <p class="text">This link will expire in 1 hour.</p>
   `
+
+  const html = getEmailHtml(
+    'Reset your password',
+    bodyContent,
+    "If you didn't request this password reset, please ignore this email.",
+  )
 
   await sendEmail({
     to: email,
@@ -215,28 +226,19 @@ export async function sendCommentNotificationEmail(
   commentContent: string,
   postUrl: string,
 ): Promise<void> {
-  const html = `
-    <!DOCTYPE html>
-    <html>
-      <head>
-        <style>
-          body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
-          .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-          .comment { background: #f9fafb; padding: 16px; border-radius: 4px; margin: 16px 0; border-left: 4px solid #6366f1; }
-          .button { display: inline-block; padding: 12px 24px; background: #6366f1; color: white; text-decoration: none; border-radius: 4px; }
-        </style>
-      </head>
-      <body>
-        <div class="container">
-          <h2>New comment on "${postTitle}"</h2>
-          <p><strong>${authorName}</strong> left a new comment:</p>
-          <div class="comment">${commentContent}</div>
-          <p><a href="${postUrl}" class="button">View Comment</a></p>
-          <p>If you don't want to receive these notifications, you can unsubscribe from email settings.</p>
-        </div>
-      </body>
-    </html>
+  const bodyContent = `
+    <p class="text"><strong class="highlight">${authorName}</strong> left a new comment:</p>
+    <div class="comment">${commentContent}</div>
+    <div class="button-container">
+      <a href="${postUrl}" class="button">View Comment</a>
+    </div>
   `
+
+  const html = getEmailHtml(
+    `New comment on "${postTitle}"`,
+    bodyContent,
+    "If you don't want to receive these notifications, you can unsubscribe from email settings.",
+  )
 
   await sendEmail({
     to: email,
