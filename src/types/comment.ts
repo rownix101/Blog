@@ -2,6 +2,7 @@ export interface User {
   id: string
   email: string
   username: string
+  password_hash?: string | null
   avatar_url: string | null
   created_at: number
   updated_at: number
@@ -62,5 +63,5 @@ export interface CommentWithUser extends Comment {
 }
 
 export type CommentStatus = 'pending' | 'approved' | 'rejected' | 'spam'
-export type OAuthProvider = 'google' | 'apple'
+export type OAuthProvider = 'google'
 export type TwoFactorType = 'email' | 'recovery'
