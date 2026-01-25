@@ -201,8 +201,8 @@ function validate({
     errors.push('Website URL must be a valid http(s) URL')
   }
 
-  if (!description || description.length < 10 || description.length > 200) {
-    errors.push('Description must be 10-200 characters')
+  if (!description || description.length < 2 || description.length > 500) {
+    errors.push('Description must be 2-500 characters')
   }
 
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/

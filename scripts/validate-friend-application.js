@@ -5,8 +5,9 @@ const path = require('path')
 const prFiles = process.env.PR_FILES ? JSON.parse(process.env.PR_FILES) : []
 
 // Find application files
-const applicationFiles = prFiles.filter(file =>
-  file.includes('src/data/friend-applications/') && file.endsWith('.json')
+const applicationFiles = prFiles.filter(
+  (file) =>
+    file.includes('src/data/friend-applications/') && file.endsWith('.json'),
 )
 
 if (applicationFiles.length === 0) {
@@ -23,7 +24,15 @@ for (const file of applicationFiles) {
     const application = JSON.parse(content)
 
     // Required fields
-    const requiredFields = ['id', 'name', 'url', 'description', 'contact', 'submittedAt', 'status']
+    const requiredFields = [
+      'id',
+      'name',
+      'url',
+      'description',
+      'contact',
+      'submittedAt',
+      'status',
+    ]
     for (const field of requiredFields) {
       if (!application[field]) {
         console.error(`❌ Missing required field: ${field} in ${file}`)
@@ -53,15 +62,17 @@ for (const file of applicationFiles) {
     }
 
     // Description length
-    if (application.description.length < 10 || application.description.length > 200) {
-      console.error(`❌ Description length must be 10-200 characters in ${file}`)
+    if (
+      application.description.length < 2 ||
+      application.description.length > 500
+    ) {
+      console.error(`❌ Description length must be 2-500 characters in ${file}`)
       hasErrors = true
     }
 
     if (!hasErrors) {
       console.log(`✅ Application validation passed: ${file}`)
     }
-
   } catch (error) {
     console.error(`❌ Error parsing ${file}:`, error.message)
     hasErrors = true
