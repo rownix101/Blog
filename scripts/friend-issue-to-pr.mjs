@@ -244,10 +244,22 @@ function listExistingUrls(yamlText) {
 }
 
 function main() {
+  try {
+    run()
+  } catch (error) {
+    const msg = `An internal error occurred:\n${error.message}\n${error.stack}`
+    console.error(msg)
+    writeOutput('result', 'invalid')
+    writeOutput('error_message', msg)
+    // Exit with 0 so the workflow continues to the comment step
+    process.exit(0)
+  }
+}
+
+function run() {
   const eventPath = process.env.GITHUB_EVENT_PATH
   if (!eventPath) {
-    console.error('Missing GITHUB_EVENT_PATH')
-    process.exit(1)
+    throw new Error('Missing GITHUB_EVENT_PATH')
   }
 
   const event = readJson(eventPath)
