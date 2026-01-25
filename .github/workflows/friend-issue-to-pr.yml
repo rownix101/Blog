@@ -30,7 +30,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '22'
+          node-version: '22.16.0'
 
       - name: Prepare friends.yaml change
         id: prepare
@@ -50,6 +50,7 @@ jobs:
           body: ${{ steps.prepare.outputs.pr_body }}
           labels: |
             friend-application
+            auto-merge
 
       - name: Comment on issue (PR created)
         if: steps.prepare.outputs.result == 'ok'

@@ -142,6 +142,46 @@ function pickField(maps, keys) {
   return ''
 }
 
+function normalizeOptionalValue(value) {
+  const raw = (value || '').trim()
+  if (!raw) return ''
+
+  // GitHub issue forms often emit placeholder text for optional fields.
+  // Examples: "None", "_No response_", "*No response*".
+  const stripped = raw
+    .replace(/^[_*`]+/, '')
+    .replace(/[_*`]+$/, '')
+    .trim()
+  const lowered = stripped.toLowerCase()
+
+  if (
+    lowered === 'none' ||
+    lowered === 'no response' ||
+    lowered === 'n/a' ||
+    lowered === 'na' ||
+    lowered === 'null'
+  ) {
+    return ''
+  }
+
+  return raw
+}
+
+function looksLikeFriendApplicationIssue(issue) {
+  const title = (issue?.title || '').trim()
+  // Be tolerant to extra whitespace/formatting and possible leading characters.
+  // We only need a strong signal that this issue is a friend application.
+  if (/\bfriend\s+link\s+application\s*:/i.test(title)) return true
+
+  const body = issue?.body || ''
+  // Issue form output format.
+  if (body.includes('### Website Name') && body.includes('### Website URL')) {
+    return true
+  }
+
+  return false
+}
+
 function validate({
   name,
   url,
@@ -225,7 +265,9 @@ function main() {
   const labelName = event.label?.name
 
   const shouldRun =
-    (action === 'opened' && labels.includes('friend-application')) ||
+    (action === 'opened' &&
+      (labels.includes('friend-application') ||
+        looksLikeFriendApplicationIssue(issue))) ||
     (action === 'labeled' && labelName === 'friend-application')
 
   if (!shouldRun) {
@@ -249,26 +291,32 @@ function main() {
     [headings, boldFields],
     ['Description', '网站描述', '站点描述'],
   )
-  const avatar = pickField(
-    [headings, boldFields],
-    ['Avatar URL (optional)', 'Avatar URL', '头像链接', '头像地址'],
+  const avatar = normalizeOptionalValue(
+    pickField(
+      [headings, boldFields],
+      ['Avatar URL (optional)', 'Avatar URL', '头像链接', '头像地址'],
+    ),
   )
-  const category = pickField(
-    [headings, boldFields],
-    ['Category (optional)', 'Category', '分类'],
+  const category = normalizeOptionalValue(
+    pickField(
+      [headings, boldFields],
+      ['Category (optional)', 'Category', '分类'],
+    ),
   )
   const contact = pickField(
     [headings, boldFields],
     ['Contact Email', '联系邮箱', '邮箱'],
   )
-  const githubUsername = pickField(
-    [headings, boldFields],
-    [
-      'GitHub Username (optional)',
-      'GitHub Username',
-      'GitHub 用户名',
-      'GitHub用户名',
-    ],
+  const githubUsername = normalizeOptionalValue(
+    pickField(
+      [headings, boldFields],
+      [
+        'GitHub Username (optional)',
+        'GitHub Username',
+        'GitHub 用户名',
+        'GitHub用户名',
+      ],
+    ),
   )
   const reciprocalUrl = pickField(
     [headings, boldFields],

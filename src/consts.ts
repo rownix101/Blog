@@ -2,7 +2,7 @@ import type { IconMap, SocialLink, Site } from '@/types'
 
 export const SITE: Site = {
   title: "Rownix's Blog",
-  description: '我们将努力为您呈现最好的内容',
+  description: '活着就是为了改变世界，难道还有其他原因吗？',
   href: 'https://www.rownix.dev',
   author: 'rownix101',
   locale: 'en-US',
@@ -105,4 +105,34 @@ export const ICON_MAP: IconMap = {
   Twitter: 'simple-icons:x',
   Email: 'lucide:mail',
   RSS: 'lucide:rss',
+}
+
+// Custom Comments System
+export const COMMENTS = {
+  resendApiKey: import.meta.env.RESEND_API_KEY || '',
+  googleClientId: import.meta.env.GOOGLE_CLIENT_ID || '',
+  googleClientSecret: import.meta.env.GOOGLE_CLIENT_SECRET || '',
+  appleClientId: import.meta.env.APPLE_CLIENT_ID || '',
+  appleTeamId: import.meta.env.APPLE_TEAM_ID || '',
+  appleKeyId: import.meta.env.APPLE_KEY_ID || '',
+  applePrivateKey: import.meta.env.APPLE_PRIVATE_KEY || '',
+  turnstileSecretKey: import.meta.env.TURNSTILE_SECRET_KEY || '',
+  turnstileSiteKey: import.meta.env.PUBLIC_TURNSTILE_SITE_KEY || '',
+  sessionSecret: import.meta.env.SESSION_SECRET || '',
+  sessionMaxAge: parseInt(import.meta.env.SESSION_MAX_AGE || '2592000'),
+  twoFactorIssuer: import.meta.env.TWO_FACTOR_ISSUER || 'MyBlog',
+}
+
+export const OAUTH_PROVIDERS = {
+  google: {
+    authUrl: 'https://accounts.google.com/o/oauth2/v2/auth',
+    tokenUrl: 'https://oauth2.googleapis.com/token',
+    userInfoUrl: 'https://www.googleapis.com/oauth2/v2/userinfo',
+    scopes: ['openid', 'email', 'profile'],
+  },
+  apple: {
+    authUrl: 'https://appleid.apple.com/auth/authorize',
+    tokenUrl: 'https://appleid.apple.com/auth/token',
+    scopes: ['name', 'email'],
+  },
 }

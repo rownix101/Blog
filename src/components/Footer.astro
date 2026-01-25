@@ -1,21 +1,22 @@
 ---
+import { ui } from '@/i18n/ui'
+
 interface Props {
-  lang?: string
+  lang?: keyof typeof ui
 }
 
 const { lang = 'zh-cn' } = Astro.props as Props
 
 import Link from '@/components/Link.astro'
 import { NAV_LINKS, SITE, SOCIAL_LINKS } from '@/consts'
-import { ui } from '@/i18n/ui'
 import { useLocalizedPath, useTranslations } from '@/i18n/utils'
 import { Icon } from 'astro-icon/components'
 import { ErrorBoundary } from './react/ErrorBoundary'
 import Newsletter from './react/Newsletter'
 import SocialIcons from './SocialIcons.astro'
 
-const t = useTranslations(lang as keyof typeof ui)
-const l = useLocalizedPath(lang as keyof typeof ui)
+const t = useTranslations(lang)
+const l = useLocalizedPath(lang)
 const statusPageHref =
   lang === 'zh-cn'
     ? 'https://uptimeflare.rownix.dev/zh-cn'

@@ -1,11 +1,5 @@
-/// <reference path="../.astro/types.d.ts" />
-/// <reference types="astro/client" />
-
+// Cloudflare Pages / Workers types
 declare global {
-  interface Window {
-    adsbygoogle?: any[] & { loaded?: boolean }
-  }
-
   interface D1Database {
     prepare(sql: string): D1PreparedStatement
     batch(statements: D1PreparedStatement[]): Promise<D1Result[]>
@@ -35,6 +29,16 @@ declare global {
       duration: number
       rows_read: number
       rows_written: number
+    }
+  }
+
+  namespace Astro {
+    interface Locals {
+      runtime?: {
+        env: {
+          DB: D1Database
+        }
+      }
     }
   }
 }
