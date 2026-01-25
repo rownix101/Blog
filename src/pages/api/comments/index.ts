@@ -53,27 +53,7 @@ export const GET: APIRoute = async ({ request, url, locals }) => {
       })
     }
 
-    let currentUserId: string | undefined
-    try {
-      const sessionToken = request.headers
-        .get('cookie')
-        ?.match(/session_token=([^;]+)/)?.[1]
-
-      if (sessionToken) {
-        const { user } = await validateSession(db, sessionToken)
-        if (user) {
-          currentUserId = user.id
-        }
-      }
-    } catch (e) {
-      console.warn('Session check failed during comment fetch:', e)
-    }
-
-    const comments = await getCommentsByPostIdWithUser(
-      db,
-      postId,
-      currentUserId,
-    )
+    const comments = await getCommentsByPostIdWithUser(db, postId)
 
     return new Response(JSON.stringify({ comments }), {
       status: 200,
