@@ -29,10 +29,12 @@ if (cookieHeader) {
   }
 }
 
-// 2. 检查 Accept-Language（如果 Cookie 中没有有效的语言）
+// 2. 检查 Accept-Language（仅当 Cookie 中没有设置语言时）
 const acceptLanguage = Astro.request.headers.get('Accept-Language')
+const hasCookieLanguage = cookieHeader && cookieHeader.includes('language=')
 
-if (acceptLanguage) {
+// 只在 Cookie 中没有语言设置时才检查 Accept-Language
+if (acceptLanguage && !hasCookieLanguage) {
   const languages = acceptLanguage
     .split(',')
     .map((lang) => {
