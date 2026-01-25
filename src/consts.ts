@@ -112,10 +112,6 @@ export const COMMENTS = {
   resendApiKey: import.meta.env.RESEND_API_KEY || '',
   googleClientId: import.meta.env.GOOGLE_CLIENT_ID || '',
   googleClientSecret: import.meta.env.GOOGLE_CLIENT_SECRET || '',
-  appleClientId: import.meta.env.APPLE_CLIENT_ID || '',
-  appleTeamId: import.meta.env.APPLE_TEAM_ID || '',
-  appleKeyId: import.meta.env.APPLE_KEY_ID || '',
-  applePrivateKey: import.meta.env.APPLE_PRIVATE_KEY || '',
   turnstileSecretKey: import.meta.env.TURNSTILE_SECRET_KEY || '',
   turnstileSiteKey: import.meta.env.PUBLIC_TURNSTILE_SITE_KEY || '',
   sessionSecret: import.meta.env.SESSION_SECRET || '',
@@ -129,10 +125,5 @@ export const OAUTH_PROVIDERS = {
     tokenUrl: 'https://oauth2.googleapis.com/token',
     userInfoUrl: 'https://www.googleapis.com/oauth2/v2/userinfo',
     scopes: ['openid', 'email', 'profile'],
-  },
-  apple: {
-    authUrl: 'https://appleid.apple.com/auth/authorize',
-    tokenUrl: 'https://appleid.apple.com/auth/token',
-    scopes: ['name', 'email'],
   },
 }

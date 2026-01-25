@@ -4,7 +4,7 @@ This guide explains how to set up and use the custom comments system for your bl
 
 ## Features
 
-- **User Authentication**: Email/password registration, Google OAuth, Apple Sign In
+- **User Authentication**: Email/password registration, Google OAuth
 - **Two-Factor Authentication (2FA)**: TOTP and email-based 2FA support
 - **Bot Protection**: Cloudflare Turnstile integration
 - **Email Notifications**: Resend integration for verification and notifications
@@ -62,12 +62,6 @@ RESEND_API_KEY=re_xxxxxxxxxxxxxx
 GOOGLE_CLIENT_ID=your-google-client-id
 GOOGLE_CLIENT_SECRET=your-google-client-secret
 
-# Apple Sign In
-APPLE_CLIENT_ID=com.yourapp.id
-APPLE_TEAM_ID=your-team-id
-APPLE_KEY_ID=your-key-id
-APPLE_PRIVATE_KEY="-----BEGIN PRIVATE KEY-----\n..."
-
 # Cloudflare Turnstile
 TURNSTILE_SECRET_KEY=0x4xxxxxxxxxxxxx
 PUBLIC_TURNSTILE_SITE_KEY=0x4xxxxxxxxxxxxx
@@ -92,12 +86,7 @@ TWO_FACTOR_ISSUER=YourBlogName
 
 #### Apple Sign In
 
-1. Go to [Apple Developer](https://developer.apple.com/sign-in-with-apple/)
-2. Create a Sign in with Apple service ID
-3. Generate a private key (save the `.p8` file)
-4. Add authorized redirect URIs:
-   - `https://your-domain.com/api/comments/auth/oauth/apple/callback`
-5. Copy Client ID, Team ID, Key ID, and Private Key content
+Apple Sign In is not supported.
 
 #### Cloudflare Turnstile
 
@@ -122,7 +111,6 @@ import CustomComments from '@/components/CustomComments.astro'
 ---
 
 <!-- Your blog content -->
-
 <CustomComments lang={lang} />
 ```
 
@@ -141,8 +129,6 @@ Or update the existing GiscusComments.astro to use the new component.
 
 - `GET /api/comments/auth/oauth/google` - Get Google OAuth URL
 - `POST /api/comments/auth/oauth/google` - Handle Google OAuth callback
-- `GET /api/comments/auth/oauth/apple` - Get Apple OAuth URL
-- `POST /api/comments/auth/oauth/apple` - Handle Apple OAuth callback
 
 ### 2FA
 
@@ -172,7 +158,7 @@ Or update the existing GiscusComments.astro to use the new component.
 
 ## Security Features
 
-- **Password Hashing**: SHA-256 for password storage
+- **Password Hashing**: PBKDF2 (Web Crypto) for password storage
 - **Session Management**: Secure HTTP-only cookies
 - **CSRF Protection**: State parameter for OAuth
 - **Bot Protection**: Turnstile verification
