@@ -330,15 +330,27 @@ export async function getCommentsByPostId(
 export async function getCommentsByPostIdWithUser(
   db: D1Database,
   postId: string,
+  currentUserId?: string,
 ): Promise<CommentWithUser[]> {
-  const result = await db
-    .prepare(
-      `SELECT comments.*, users.* FROM comments
-       JOIN users ON comments.user_id = users.id
-       WHERE comments.post_id = ? AND comments.status = ?
-       ORDER BY comments.created_at ASC`,
+  const query = `
+    SELECT comments.*, users.* FROM comments
+    JOIN users ON comments.user_id = users.id
+    WHERE comments.post_id = ? 
+    AND (
+      comments.status = 'approved' 
+      ${currentUserId ? "OR (comments.status = 'pending' AND comments.user_id = ?)" : ''}
     )
-    .bind(postId, 'approved')
+    ORDER BY comments.created_at ASC
+  `
+
+  const args = [postId]
+  if (currentUserId) {
+    args.push(currentUserId)
+  }
+
+  const result = await db
+    .prepare(query)
+    .bind(...args)
     .all()
 
   const comments = (result.results || []) as any[]

@@ -164,6 +164,7 @@ export const PUT: APIRoute = async ({ params, request, locals }) => {
     // Update comment
     const updatedComment = await updateComment(db, id, {
       content: sanitizedContent,
+      status: 'approved',
     })
 
     return new Response(

@@ -69,7 +69,8 @@ export const POST: APIRoute = async ({ request, locals }) => {
     await setVerificationCode(kv, email.toLowerCase(), verificationCode)
 
     try {
-      await sendVerificationEmail(email, verificationCode)
+      const lang = body.lang || 'zh-cn'
+      await sendVerificationEmail(email, verificationCode, lang)
     } catch (error) {
       console.error('Failed to send verification email:', error)
       return new Response(

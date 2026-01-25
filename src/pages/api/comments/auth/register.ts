@@ -1,7 +1,18 @@
 import type { APIRoute } from 'astro'
 import { COMMENTS } from '@/consts'
-import { createUser, getUserByEmail, getUserByUsername } from '@/lib/db'
-import { generateId, hashPassword, sanitizeHTML } from '@/lib/auth'
+import {
+  createUser,
+  getUserByEmail,
+  getUserByUsername,
+  createSession,
+} from '@/lib/db'
+import {
+  generateId,
+  hashPassword,
+  sanitizeHTML,
+  createSessionToken,
+  getSessionExpiration,
+} from '@/lib/auth'
 import { getVerificationCode, deleteVerificationCode } from '@/lib/kv'
 import {
   validateEmail,
@@ -18,7 +29,7 @@ const registerRateLimiter = new RateLimiter({
 
 export const prerender = false
 
-export const POST: APIRoute = async ({ request, locals }) => {
+export const POST: APIRoute = async ({ request, locals, cookies }) => {
   // Rate limiting
   const clientIp =
     request.headers.get('cf-connecting-ip') ||
@@ -167,6 +178,35 @@ export const POST: APIRoute = async ({ request, locals }) => {
 
     // Delete used code
     await deleteVerificationCode(kv, email.toLowerCase())
+
+    // Create session
+    const sessionId = `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`
+    const sessionToken = createSessionToken(user.id)
+    const expiresAt = getSessionExpiration()
+
+    const userAgent = request.headers.get('user-agent') || undefined
+    const ipAddress =
+      request.headers.get('cf-connecting-ip') ||
+      request.headers.get('x-forwarded-for') ||
+      undefined
+
+    await createSession(db, {
+      id: sessionId,
+      user_id: user.id,
+      token: sessionToken,
+      user_agent: userAgent,
+      ip_address: ipAddress,
+      expires_at: expiresAt,
+    })
+
+    // Set session cookie
+    cookies.set('session_token', sessionToken, {
+      httpOnly: true,
+      secure: import.meta.env.PROD,
+      sameSite: 'lax',
+      path: '/',
+      maxAge: COMMENTS.sessionMaxAge,
+    })
 
     // Return user data (without sensitive info)
     return new Response(
