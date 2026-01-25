@@ -1,5 +1,6 @@
 /// <reference path="../.astro/types.d.ts" />
 /// <reference types="astro/client" />
+/// <reference types="@astrojs/cloudflare" />
 
 declare global {
   interface Window {
@@ -36,6 +37,13 @@ declare global {
       rows_read: number
       rows_written: number
     }
+  }
+
+  namespace App {
+    type CloudflareRuntime = import('@astrojs/cloudflare').Runtime<{
+      DB: D1Database
+    }>
+    interface Locals extends CloudflareRuntime {}
   }
 }
 
