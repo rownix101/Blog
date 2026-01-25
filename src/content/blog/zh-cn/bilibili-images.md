@@ -6,12 +6,14 @@ tags:
   - 日更
   - 图床
   - 分发
+commentId: /blog/bilibili-image-hosting-is-dead
 ---
+
 **⚠️ 免责声明：本文内容仅供技术学习和研究使用,请勿用于任何非法用途或滥用行为。使用者应当遵守相关法律法规和平台服务条款,由使用不当引发的任何后果由使用者自行承担。**
 
 ---
 
-##  技术原理
+## 技术原理
 
 本质上,这就是一个利用B站图片上传接口特性的技术方案。通过调用B站的公开上传API,将图片资源存储到B站服务器,并借助其强大的CDN网络实现全球内容分发,从而获得高速、稳定的图片外链服务。
 
@@ -44,11 +46,11 @@ curl -X POST "https://api.bilibili.com/x/upload/web/image" \
 
 ### 参数说明
 
-| 参数       | 类型       | 说明                |
-| -------- | -------- | ----------------- |
-| SESSDATA | Cookie   | B站用户会话标识          |
-| bili_jct | Cookie   | B站CSRF令牌          |
-| bucket   | FormData | 存储桶,通常填写`live`    |
+| 参数     | 类型     | 说明                  |
+| -------- | -------- | --------------------- |
+| SESSDATA | Cookie   | B站用户会话标识       |
+| bili_jct | Cookie   | B站CSRF令牌           |
+| bucket   | FormData | 存储桶,通常填写`live` |
 | csrf     | FormData | CSRF验证,值同bili_jct |
 | file     | FormData | 图片文件              |
 
@@ -56,25 +58,25 @@ curl -X POST "https://api.bilibili.com/x/upload/web/image" \
 
 ```json
 {
-    "code": 0,
-    "message": "success",
-    "data": {
-        "image_url": "http://i0.hdslb.com/bfs/album/104c4f1ae6b66d78a5952a191281ec7883dc5c5c.jpg",
-        "image_width": 818,
-        "image_height": 1000
-    }
+  "code": 0,
+  "message": "success",
+  "data": {
+    "image_url": "http://i0.hdslb.com/bfs/album/104c4f1ae6b66d78a5952a191281ec7883dc5c5c.jpg",
+    "image_width": 818,
+    "image_height": 1000
+  }
 }
 ```
 
 ### 响应字段说明
 
-|字段|类型|说明|
-|---|---|---|
-|code|Integer|状态码,0表示成功|
-|message|String|响应消息|
-|image_url|String|图片访问URL|
-|image_width|Integer|图片宽度(像素)|
-|image_height|Integer|图片高度(像素)|
+| 字段         | 类型    | 说明             |
+| ------------ | ------- | ---------------- |
+| code         | Integer | 状态码,0表示成功 |
+| message      | String  | 响应消息         |
+| image_url    | String  | 图片访问URL      |
+| image_width  | Integer | 图片宽度(像素)   |
+| image_height | Integer | 图片高度(像素)   |
 
 ---
 
@@ -84,15 +86,15 @@ B站的图床支持通过URL参数对图片进行实时处理,包括缩放、裁
 
 ### 常用样式示例
 
-|样式类型|URL格式|说明|
-|---|---|---|
-|原图|`baseURL/example.jpg`|保持原始尺寸和质量|
-|原分辨率质量压缩|`baseURL/example.jpg@1e_1c.jpg`|保持分辨率,降低质量|
-|指定宽度自适应|`baseURL/example.jpg@104w_1e_1c.jpg`|固定宽度,高度等比缩放|
-|指定高度自适应|`baseURL/example.jpg@104h_1e_1c.jpg`|固定高度,宽度等比缩放|
-|指定宽高压缩|`baseURL/example.jpg@104w_104h_1e_1c.jpg`|固定宽高,质量压缩|
-|WebP格式(最小体积)|`baseURL/example.jpg@1e_1c.webp`|原分辨率WebP格式|
-|指定尺寸WebP|`baseURL/example.jpg@104w_104h_1e_1c.webp`|固定尺寸WebP格式|
+| 样式类型           | URL格式                                    | 说明                  |
+| ------------------ | ------------------------------------------ | --------------------- |
+| 原图               | `baseURL/example.jpg`                      | 保持原始尺寸和质量    |
+| 原分辨率质量压缩   | `baseURL/example.jpg@1e_1c.jpg`            | 保持分辨率,降低质量   |
+| 指定宽度自适应     | `baseURL/example.jpg@104w_1e_1c.jpg`       | 固定宽度,高度等比缩放 |
+| 指定高度自适应     | `baseURL/example.jpg@104h_1e_1c.jpg`       | 固定高度,宽度等比缩放 |
+| 指定宽高压缩       | `baseURL/example.jpg@104w_104h_1e_1c.jpg`  | 固定宽高,质量压缩     |
+| WebP格式(最小体积) | `baseURL/example.jpg@1e_1c.webp`           | 原分辨率WebP格式      |
+| 指定尺寸WebP       | `baseURL/example.jpg@104w_104h_1e_1c.webp` | 固定尺寸WebP格式      |
 
 ### 参数语法规则
 
@@ -104,16 +106,16 @@ B站的图床支持通过URL参数对图片进行实时处理,包括缩放、裁
 
 ### 参数详细说明
 
-| 参数    | 取值范围                     | 说明                                                                    |
-| ----- | ------------------------ | --------------------------------------------------------------------- |
-| **w** | [1, 9223372036854775807] | 宽度(width),单位:像素                                                       |
-| **h** | [1, 9223372036854775807] | 高度(height),单位:像素                                                      |
-| **s** | [1, 9223372036854775807] | 未知参数(待研究)                                                             |
+| 参数  | 取值范围                 | 说明                                                                                                 |
+| ----- | ------------------------ | ---------------------------------------------------------------------------------------------------- |
+| **w** | [1, 9223372036854775807] | 宽度(width),单位:像素                                                                                |
+| **h** | [1, 9223372036854775807] | 高度(height),单位:像素                                                                               |
+| **s** | [1, 9223372036854775807] | 未知参数(待研究)                                                                                     |
 | **e** | [0, 2]                   | 缩放模式(resize)<br>• 0: 保留比例取较小值<br>• 1: 保留比例取较大值<br>• 2: 不保留原比例(不可与c混用) |
-| **p** | [1, 1000]                | 放大倍数,默认100(不可与c混用)                                                    |
-| **q** | [1, 100]                 | 图像质量(quality),默认75                                                    |
-| **o** | [0, 1]                   | 未知参数(待研究)                                                             |
-| **c** | [0, 1]                   | 裁剪模式(clip)<br>• 0: 默认模式<br>• 1: 裁剪模式                                  |
+| **p** | [1, 1000]                | 放大倍数,默认100(不可与c混用)                                                                        |
+| **q** | [1, 100]                 | 图像质量(quality),默认75                                                                             |
+| **o** | [0, 1]                   | 未知参数(待研究)                                                                                     |
+| **c** | [0, 1]                   | 裁剪模式(clip)<br>• 0: 默认模式<br>• 1: 裁剪模式                                                     |
 
 ### 格式后缀
 
@@ -144,16 +146,16 @@ B站的图床支持通过URL参数对图片进行实时处理,包括缩放、裁
 
 - **项目地址**: [https://github.com/xlzy520/bilibili-img-uploader](https://github.com/xlzy520/bilibili-img-uploader)
 - **开源协议**: MIT License
-- 截至文章发布前的**项目状态**: ⭐ 406+ Stars |  39+ Forks
+- 截至文章发布前的**项目状态**: ⭐ 406+ Stars | 39+ Forks
 - **技术栈**: Vue 3 + TypeScript + Vite
 
 #### 插件支持平台
 
-|浏览器|安装方式|
-|---|---|
-|Chrome|[Chrome Web Store](https://chrome.google.com/webstore/detail/b%E7%AB%99%E5%9B%BE%E5%BA%8A/domljbndjbjgpkhdbmfgmiclggdfojnd?hl=zh-CN)|
-|Edge|[Chrome Web Store](https://chrome.google.com/webstore/detail/b%E7%AB%99%E5%9B%BE%E5%BA%8A/domljbndjbjgpkhdbmfgmiclggdfojnd?hl=zh-CN)|
-|Firefox|[Firefox Add-ons](https://addons.mozilla.org/addon/%E5%93%94%E5%93%A9%E5%93%94%E5%93%A9%E5%9B%BE%E5%BA%8A/)|
+| 浏览器  | 安装方式                                                                                                                             |
+| ------- | ------------------------------------------------------------------------------------------------------------------------------------ |
+| Chrome  | [Chrome Web Store](https://chrome.google.com/webstore/detail/b%E7%AB%99%E5%9B%BE%E5%BA%8A/domljbndjbjgpkhdbmfgmiclggdfojnd?hl=zh-CN) |
+| Edge    | [Chrome Web Store](https://chrome.google.com/webstore/detail/b%E7%AB%99%E5%9B%BE%E5%BA%8A/domljbndjbjgpkhdbmfgmiclggdfojnd?hl=zh-CN) |
+| Firefox | [Firefox Add-ons](https://addons.mozilla.org/addon/%E5%93%94%E5%93%A9%E5%93%94%E5%93%A9%E5%9B%BE%E5%BA%8A/)                          |
 
 #### 核心功能特性
 
@@ -206,7 +208,7 @@ pnpm run build
 
 ---
 
-##  防盗链解决方案
+## 防盗链解决方案
 
 B站图床有防盗链机制,直接在其他网站引用可能无法显示。以下是两种解决方案:
 
@@ -215,7 +217,7 @@ B站图床有防盗链机制,直接在其他网站引用可能无法显示。以
 在HTML的`<head>`标签中添加:
 
 ```html
-<meta name="referrer" content="no-referrer">
+<meta name="referrer" content="no-referrer" />
 ```
 
 这样全站所有资源请求都不会携带referrer信息。
@@ -226,7 +228,7 @@ B站图床有防盗链机制,直接在其他网站引用可能无法显示。以
 
 ```html
 <a href="图片地址" rel="noreferrer" target="_blank">
-  <img src="图片地址" alt="描述">
+  <img src="图片地址" alt="描述" />
 </a>
 ```
 

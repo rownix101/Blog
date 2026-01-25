@@ -6,9 +6,10 @@ import { useTranslations } from '@/i18n/utils'
 interface Props {
   lang: keyof typeof import('@/i18n/ui').ui
   className?: string
+  postId?: string
 }
 
-const { lang, className = '' } = Astro.props
+const { lang, className = '', postId: propPostId } = Astro.props
 const t = useTranslations(lang)
 
 // Create a unified identifier by removing language prefix from the pathname
@@ -22,7 +23,7 @@ function getUnifiedIdentifier(pathname: string): string {
   return pathname
 }
 
-const postId = getUnifiedIdentifier(Astro.url.pathname)
+const postId = propPostId || getUnifiedIdentifier(Astro.url.pathname)
 ---
 
 <section
