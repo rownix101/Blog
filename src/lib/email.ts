@@ -20,7 +20,7 @@ export async function sendEmail(options: EmailOptions): Promise<void> {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
-      from: 'noreply@yourdomain.com', // Update with your domain
+      from: 'server@rownix.dev',
       to: options.to,
       subject: options.subject,
       html: options.html,
@@ -35,7 +35,10 @@ export async function sendEmail(options: EmailOptions): Promise<void> {
 }
 
 // Send verification email
-export async function sendVerificationEmail(email: string, code: string): Promise<void> {
+export async function sendVerificationEmail(
+  email: string,
+  code: string,
+): Promise<void> {
   const html = `
     <!DOCTYPE html>
     <html>
@@ -68,7 +71,10 @@ export async function sendVerificationEmail(email: string, code: string): Promis
 }
 
 // Send 2FA code email
-export async function sendTwoFactorEmail(email: string, code: string): Promise<void> {
+export async function sendTwoFactorEmail(
+  email: string,
+  code: string,
+): Promise<void> {
   const html = `
     <!DOCTYPE html>
     <html>
@@ -100,7 +106,10 @@ export async function sendTwoFactorEmail(email: string, code: string): Promise<v
 }
 
 // Send password reset email
-export async function sendPasswordResetEmail(email: string, resetUrl: string): Promise<void> {
+export async function sendPasswordResetEmail(
+  email: string,
+  resetUrl: string,
+): Promise<void> {
   const html = `
     <!DOCTYPE html>
     <html>
