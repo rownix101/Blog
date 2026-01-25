@@ -1,4 +1,11 @@
-import type { Comment, CommentWithUser, Session, TwoFactorToken, User, OAuthAccount } from '@/types/comment'
+import type {
+  Comment,
+  CommentWithUser,
+  Session,
+  TwoFactorToken,
+  User,
+  OAuthAccount,
+} from '@/types/comment'
 
 export interface Env {
   DB: D1Database
@@ -11,6 +18,7 @@ export async function createUser(
     id: string
     email: string
     username: string
+    password_hash?: string | null
     avatar_url?: string
     email_verified?: number
   },
@@ -18,13 +26,14 @@ export async function createUser(
   const now = Math.floor(Date.now() / 1000)
   const result = await db
     .prepare(
-      `INSERT INTO users (id, email, username, avatar_url, email_verified, created_at, updated_at)
-       VALUES (?, ?, ?, ?, ?, ?, ?)`,
+      `INSERT INTO users (id, email, username, password_hash, avatar_url, email_verified, created_at, updated_at)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
     )
     .bind(
       data.id,
       data.email,
       data.username,
+      data.password_hash ?? null,
       data.avatar_url || null,
       data.email_verified || 0,
       now,
@@ -39,18 +48,36 @@ export async function createUser(
   return getUserById(db, data.id) as Promise<User>
 }
 
-export async function getUserById(db: D1Database, id: string): Promise<User | null> {
-  const result = await db.prepare('SELECT * FROM users WHERE id = ?').bind(id).first<User>()
+export async function getUserById(
+  db: D1Database,
+  id: string,
+): Promise<User | null> {
+  const result = await db
+    .prepare('SELECT * FROM users WHERE id = ?')
+    .bind(id)
+    .first<User>()
   return result || null
 }
 
-export async function getUserByEmail(db: D1Database, email: string): Promise<User | null> {
-  const result = await db.prepare('SELECT * FROM users WHERE email = ?').bind(email).first<User>()
+export async function getUserByEmail(
+  db: D1Database,
+  email: string,
+): Promise<User | null> {
+  const result = await db
+    .prepare('SELECT * FROM users WHERE email = ?')
+    .bind(email)
+    .first<User>()
   return result || null
 }
 
-export async function getUserByUsername(db: D1Database, username: string): Promise<User | null> {
-  const result = await db.prepare('SELECT * FROM users WHERE username = ?').bind(username).first<User>()
+export async function getUserByUsername(
+  db: D1Database,
+  username: string,
+): Promise<User | null> {
+  const result = await db
+    .prepare('SELECT * FROM users WHERE username = ?')
+    .bind(username)
+    .first<User>()
   return result || null
 }
 
@@ -61,12 +88,17 @@ export async function updateUserTwoFactor(
 ): Promise<void> {
   const now = Math.floor(Date.now() / 1000)
   await db
-    .prepare('UPDATE users SET two_factor_enabled = ?, two_factor_secret = ?, updated_at = ? WHERE id = ?')
+    .prepare(
+      'UPDATE users SET two_factor_enabled = ?, two_factor_secret = ?, updated_at = ? WHERE id = ?',
+    )
     .bind(enabled ? 1 : 0, secret || null, now, userId)
     .run()
 }
 
-export async function verifyUserEmail(db: D1Database, userId: string): Promise<void> {
+export async function verifyUserEmail(
+  db: D1Database,
+  userId: string,
+): Promise<void> {
   const now = Math.floor(Date.now() / 1000)
   await db
     .prepare('UPDATE users SET email_verified = 1, updated_at = ? WHERE id = ?')
@@ -116,8 +148,14 @@ export async function createOAuthAccount(
   return getOAuthAccountById(db, data.id) as Promise<OAuthAccount>
 }
 
-export async function getOAuthAccountById(db: D1Database, id: string): Promise<OAuthAccount | null> {
-  const result = await db.prepare('SELECT * FROM oauth_accounts WHERE id = ?').bind(id).first<OAuthAccount>()
+export async function getOAuthAccountById(
+  db: D1Database,
+  id: string,
+): Promise<OAuthAccount | null> {
+  const result = await db
+    .prepare('SELECT * FROM oauth_accounts WHERE id = ?')
+    .bind(id)
+    .first<OAuthAccount>()
   return result || null
 }
 
@@ -127,7 +165,9 @@ export async function getOAuthAccountByProvider(
   providerUserId: string,
 ): Promise<OAuthAccount | null> {
   const result = await db
-    .prepare('SELECT * FROM oauth_accounts WHERE provider = ? AND provider_user_id = ?')
+    .prepare(
+      'SELECT * FROM oauth_accounts WHERE provider = ? AND provider_user_id = ?',
+    )
     .bind(provider, providerUserId)
     .first<OAuthAccount>()
   return result || null
@@ -137,7 +177,10 @@ export async function getOAuthAccountsByUserId(
   db: D1Database,
   userId: string,
 ): Promise<OAuthAccount[]> {
-  const result = await db.prepare('SELECT * FROM oauth_accounts WHERE user_id = ?').bind(userId).all<OAuthAccount>()
+  const result = await db
+    .prepare('SELECT * FROM oauth_accounts WHERE user_id = ?')
+    .bind(userId)
+    .all<OAuthAccount>()
   return result.results || []
 }
 
@@ -159,22 +202,42 @@ export async function createSession(
       `INSERT INTO sessions (id, user_id, token, user_agent, ip_address, expires_at, created_at)
        VALUES (?, ?, ?, ?, ?, ?, ?)`,
     )
-    .bind(data.id, data.user_id, data.token, data.user_agent || null, data.ip_address || null, data.expires_at, now)
+    .bind(
+      data.id,
+      data.user_id,
+      data.token,
+      data.user_agent || null,
+      data.ip_address || null,
+      data.expires_at,
+      now,
+    )
     .run()
 
   return getSessionByToken(db, data.token) as Promise<Session>
 }
 
-export async function getSessionByToken(db: D1Database, token: string): Promise<Session | null> {
-  const result = await db.prepare('SELECT * FROM sessions WHERE token = ?').bind(token).first<Session>()
+export async function getSessionByToken(
+  db: D1Database,
+  token: string,
+): Promise<Session | null> {
+  const result = await db
+    .prepare('SELECT * FROM sessions WHERE token = ?')
+    .bind(token)
+    .first<Session>()
   return result || null
 }
 
-export async function deleteSession(db: D1Database, token: string): Promise<void> {
+export async function deleteSession(
+  db: D1Database,
+  token: string,
+): Promise<void> {
   await db.prepare('DELETE FROM sessions WHERE token = ?').bind(token).run()
 }
 
-export async function deleteAllUserSessions(db: D1Database, userId: string): Promise<void> {
+export async function deleteAllUserSessions(
+  db: D1Database,
+  userId: string,
+): Promise<void> {
   await db.prepare('DELETE FROM sessions WHERE user_id = ?').bind(userId).run()
 }
 
@@ -206,18 +269,35 @@ export async function createTwoFactorToken(
   return getTwoFactorToken(db, data.token) as Promise<TwoFactorToken>
 }
 
-export async function getTwoFactorToken(db: D1Database, token: string): Promise<TwoFactorToken | null> {
-  const result = await db.prepare('SELECT * FROM two_factor_tokens WHERE token = ?').bind(token).first<TwoFactorToken>()
+export async function getTwoFactorToken(
+  db: D1Database,
+  token: string,
+): Promise<TwoFactorToken | null> {
+  const result = await db
+    .prepare('SELECT * FROM two_factor_tokens WHERE token = ?')
+    .bind(token)
+    .first<TwoFactorToken>()
   return result || null
 }
 
-export async function markTwoFactorTokenUsed(db: D1Database, token: string): Promise<void> {
-  await db.prepare('UPDATE two_factor_tokens SET used = 1 WHERE token = ?').bind(token).run()
+export async function markTwoFactorTokenUsed(
+  db: D1Database,
+  token: string,
+): Promise<void> {
+  await db
+    .prepare('UPDATE two_factor_tokens SET used = 1 WHERE token = ?')
+    .bind(token)
+    .run()
 }
 
-export async function deleteExpiredTwoFactorTokens(db: D1Database): Promise<void> {
+export async function deleteExpiredTwoFactorTokens(
+  db: D1Database,
+): Promise<void> {
   const now = Math.floor(Date.now() / 1000)
-  await db.prepare('DELETE FROM two_factor_tokens WHERE expires_at < ?').bind(now).run()
+  await db
+    .prepare('DELETE FROM two_factor_tokens WHERE expires_at < ?')
+    .bind(now)
+    .run()
 }
 
 // Comment operations
@@ -253,20 +333,34 @@ export async function createComment(
   return getCommentById(db, data.id) as Promise<Comment>
 }
 
-export async function getCommentById(db: D1Database, id: string): Promise<Comment | null> {
-  const result = await db.prepare('SELECT * FROM comments WHERE id = ?').bind(id).first<Comment>()
+export async function getCommentById(
+  db: D1Database,
+  id: string,
+): Promise<Comment | null> {
+  const result = await db
+    .prepare('SELECT * FROM comments WHERE id = ?')
+    .bind(id)
+    .first<Comment>()
   return result || null
 }
 
-export async function getCommentsByPostId(db: D1Database, postId: string): Promise<Comment[]> {
+export async function getCommentsByPostId(
+  db: D1Database,
+  postId: string,
+): Promise<Comment[]> {
   const result = await db
-    .prepare('SELECT * FROM comments WHERE post_id = ? AND status = ? ORDER BY created_at ASC')
+    .prepare(
+      'SELECT * FROM comments WHERE post_id = ? AND status = ? ORDER BY created_at ASC',
+    )
     .bind(postId, 'approved')
     .all<Comment>()
   return result.results || []
 }
 
-export async function getCommentsByPostIdWithUser(db: D1Database, postId: string): Promise<CommentWithUser[]> {
+export async function getCommentsByPostIdWithUser(
+  db: D1Database,
+  postId: string,
+): Promise<CommentWithUser[]> {
   const result = await db
     .prepare(
       `SELECT comments.*, users.* FROM comments
@@ -348,7 +442,10 @@ export async function updateComment(
   values.push(now)
   values.push(id)
 
-  await db.prepare(`UPDATE comments SET ${updates.join(', ')} WHERE id = ?`).bind(...values).run()
+  await db
+    .prepare(`UPDATE comments SET ${updates.join(', ')} WHERE id = ?`)
+    .bind(...values)
+    .run()
 
   return getCommentById(db, id) as Promise<Comment>
 }

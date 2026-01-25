@@ -21,17 +21,120 @@ export function generateId(): string {
 // Hash a password using Web Crypto API
 export async function hashPassword(password: string): Promise<string> {
   const encoder = new TextEncoder()
-  const data = encoder.encode(password)
-  const hash = await crypto.subtle.digest('SHA-256', data)
-  return Array.from(new Uint8Array(hash))
-    .map(b => b.toString(16).padStart(2, '0'))
-    .join('')
+  const salt = crypto.getRandomValues(new Uint8Array(16))
+
+  const keyMaterial = await crypto.subtle.importKey(
+    'raw',
+    toArrayBuffer(encoder.encode(password)),
+    { name: 'PBKDF2' },
+    false,
+    ['deriveBits'],
+  )
+
+  // NOTE: Cloudflare Workers has a PBKDF2 iteration limit (100k).
+  const iterations = 100_000
+
+  const bits = await crypto.subtle.deriveBits(
+    {
+      name: 'PBKDF2',
+      salt: toArrayBuffer(salt),
+      iterations,
+      hash: 'SHA-256',
+    },
+    keyMaterial,
+    256,
+  )
+
+  const hash = new Uint8Array(bits)
+
+  return `pbkdf2_sha256$${iterations}$${bytesToBase64(salt)}$${bytesToBase64(hash)}`
 }
 
 // Verify a password
-export async function verifyPassword(password: string, hash: string): Promise<boolean> {
-  const passwordHash = await hashPassword(password)
-  return passwordHash === hash
+export async function verifyPassword(
+  password: string,
+  hash: string,
+): Promise<boolean> {
+  try {
+    const parts = hash.split('$')
+    if (parts.length !== 4) {
+      return false
+    }
+
+    const [algo, iterationsRaw, saltB64, expectedB64] = parts
+    if (algo !== 'pbkdf2_sha256') {
+      return false
+    }
+
+    const iterations = Number(iterationsRaw)
+    if (!Number.isFinite(iterations) || iterations <= 0) {
+      return false
+    }
+
+    const salt = base64ToBytes(saltB64)
+    const expected = base64ToBytes(expectedB64)
+
+    const encoder = new TextEncoder()
+    const keyMaterial = await crypto.subtle.importKey(
+      'raw',
+      toArrayBuffer(encoder.encode(password)),
+      { name: 'PBKDF2' },
+      false,
+      ['deriveBits'],
+    )
+
+    const bits = await crypto.subtle.deriveBits(
+      {
+        name: 'PBKDF2',
+        salt: toArrayBuffer(salt),
+        iterations,
+        hash: 'SHA-256',
+      },
+      keyMaterial,
+      expected.byteLength * 8,
+    )
+
+    const actual = new Uint8Array(bits)
+    return timingSafeEqual(actual, expected)
+  } catch {
+    return false
+  }
+}
+
+function bytesToBase64(bytes: Uint8Array): string {
+  let binary = ''
+  for (let i = 0; i < bytes.length; i++) {
+    binary += String.fromCharCode(bytes[i])
+  }
+  return btoa(binary)
+}
+
+function base64ToBytes(b64: string): Uint8Array {
+  const binary = atob(b64)
+  const bytes = new Uint8Array(binary.length)
+  for (let i = 0; i < binary.length; i++) {
+    bytes[i] = binary.charCodeAt(i)
+  }
+  return bytes
+}
+
+function toArrayBuffer(bytes: Uint8Array): ArrayBuffer {
+  return bytes.buffer.slice(
+    bytes.byteOffset,
+    bytes.byteOffset + bytes.byteLength,
+  ) as ArrayBuffer
+}
+
+function timingSafeEqual(a: Uint8Array, b: Uint8Array): boolean {
+  if (a.length !== b.length) {
+    return false
+  }
+
+  let diff = 0
+  for (let i = 0; i < a.length; i++) {
+    diff |= a[i] ^ b[i]
+  }
+  return diff === 0
 }
 
 // Generate a 6-digit 2FA code
@@ -53,7 +156,10 @@ export function generateBase32Secret(): string {
 }
 
 // Calculate TOTP code (simplified version)
-export function calculateTOTP(secret: string, time: number = Date.now()): string {
+export function calculateTOTP(
+  secret: string,
+  time: number = Date.now(),
+): string {
   // This is a simplified TOTP implementation
   // In production, use a proper TOTP library like otpauth
   const timeStep = 30
@@ -69,7 +175,11 @@ export function calculateTOTP(secret: string, time: number = Date.now()): string
 }
 
 // Verify TOTP code
-export function verifyTOTP(secret: string, code: string, window: number = 1): boolean {
+export function verifyTOTP(
+  secret: string,
+  code: string,
+  window: number = 1,
+): boolean {
   const time = Date.now()
   const timeStep = 30
 
@@ -95,7 +205,9 @@ export function createSessionToken(userId: string): string {
 }
 
 // Verify a session token
-export function verifySessionToken(token: string): { userId: string; createdAt: number } | null {
+export function verifySessionToken(
+  token: string,
+): { userId: string; createdAt: number } | null {
   try {
     const [encoded, signature] = token.split('.')
     const payload = JSON.parse(atob(encoded))
@@ -123,7 +235,10 @@ export function generateOAuthState(): string {
 }
 
 // Verify OAuth state
-export function verifyOAuthState(state: string, expectedState: string): boolean {
+export function verifyOAuthState(
+  state: string,
+  expectedState: string,
+): boolean {
   return state === expectedState
 }
 
@@ -137,7 +252,8 @@ export async function generatePKCEChallenge(verifier: string): Promise<string> {
   const encoder = new TextEncoder()
   const data = encoder.encode(verifier)
   const hash = await crypto.subtle.digest('SHA-256', data)
-  return btoa(String.fromCharCode(...new Uint8Array(hash)))
+  const hashBytes = new Uint8Array(hash)
+  return bytesToBase64(hashBytes)
     .replace(/\+/g, '-')
     .replace(/\//g, '_')
     .replace(/=+$/, '')
@@ -156,7 +272,7 @@ export function getUserAvatarUrl(user: User): string {
   // Generate a default avatar using initials
   const initials = user.username
     .split(' ')
-    .map(n => n[0])
+    .map((n) => n[0])
     .join('')
     .toUpperCase()
     .slice(0, 2)
@@ -172,13 +288,29 @@ export function getUserAvatarUrl(user: User): string {
 export function sanitizeHTML(html: string): string {
   // Basic HTML sanitization
   // In production, use a proper library like DOMPurify
-  const allowedTags = ['p', 'br', 'strong', 'em', 'u', 'a', 'code', 'pre', 'blockquote', 'ul', 'ol', 'li']
+  const allowedTags = [
+    'p',
+    'br',
+    'strong',
+    'em',
+    'u',
+    'a',
+    'code',
+    'pre',
+    'blockquote',
+    'ul',
+    'ol',
+    'li',
+  ]
   const allowedAttributes = ['href', 'title', 'target']
 
   let sanitized = html
 
   // Remove script tags and on* attributes
-  sanitized = sanitized.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
+  sanitized = sanitized.replace(
+    /<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi,
+    '',
+  )
   sanitized = sanitized.replace(/\s*on\w+\s*=\s*"[^"]*"/gi, '')
   sanitized = sanitized.replace(/\s*on\w+\s*=\s*'[^']*'/gi, '')
 
@@ -208,7 +340,16 @@ export function isValidCommentContent(content: string): boolean {
 
 // Detect spam in comment content
 export function detectSpam(content: string): boolean {
-  const spamKeywords = ['viagra', 'casino', 'poker', 'xxx', 'porn', 'free money', 'click here', 'buy now']
+  const spamKeywords = [
+    'viagra',
+    'casino',
+    'poker',
+    'xxx',
+    'porn',
+    'free money',
+    'click here',
+    'buy now',
+  ]
   const lowerContent = content.toLowerCase()
 
   for (const keyword of spamKeywords) {
