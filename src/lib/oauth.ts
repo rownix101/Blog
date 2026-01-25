@@ -1,6 +1,11 @@
 import { OAUTH_PROVIDERS } from '@/consts'
 import type { OAuthProvider } from '@/types/comment'
-import { generateId, generateOAuthState, generatePKCEVerifier, generatePKCEChallenge } from './auth'
+import {
+  generateId,
+  generateOAuthState,
+  generatePKCEVerifier,
+  generatePKCEChallenge,
+} from './auth'
 
 export interface OAuthConfig {
   provider: OAuthProvider
@@ -34,12 +39,12 @@ export function generateOAuthUrl(
   const params = new URLSearchParams({
     client_id: config.clientId,
     redirect_uri: config.redirectUri,
-    response_type: provider === 'apple' ? 'code' : 'code',
+    response_type: 'code',
     state,
     scope: providerConfig.scopes.join(' '),
   })
 
-  if (provider === 'google' && codeChallenge) {
+  if (codeChallenge) {
     params.append('code_challenge', codeChallenge)
     params.append('code_challenge_method', 'S256')
   }
@@ -63,7 +68,7 @@ export async function exchangeCodeForToken(
     redirect_uri: config.redirectUri,
   })
 
-  if (provider === 'google' && codeVerifier) {
+  if (codeVerifier) {
     params.append('code_verifier', codeVerifier)
   }
 
@@ -89,22 +94,19 @@ export async function getOAuthUserInfo(
   accessToken: string,
   idToken?: string,
 ): Promise<OAuthUserInfo> {
-  if (provider === 'google') {
-    return await getGoogleUserInfo(accessToken)
-  } else if (provider === 'apple') {
-    return await getAppleUserInfo(idToken!)
-  }
-
-  throw new Error(`Unsupported OAuth provider: ${provider}`)
+  return await getGoogleUserInfo(accessToken)
 }
 
 // Get Google user info
 async function getGoogleUserInfo(accessToken: string): Promise<OAuthUserInfo> {
-  const response = await fetch('https://www.googleapis.com/oauth2/v2/userinfo', {
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
+  const response = await fetch(
+    'https://www.googleapis.com/oauth2/v2/userinfo',
+    {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
     },
-  })
+  )
 
   if (!response.ok) {
     throw new Error('Failed to get Google user info')
@@ -119,48 +121,6 @@ async function getGoogleUserInfo(accessToken: string): Promise<OAuthUserInfo> {
   }
 }
 
-// Get Apple user info
-async function getAppleUserInfo(idToken: string): Promise<OAuthUserInfo> {
-  // Apple's ID token contains the user info
-  const parts = idToken.split('.')
-  if (parts.length !== 3) {
-    throw new Error('Invalid Apple ID token format')
-  }
-
-  const payload = JSON.parse(atob(parts[1]))
-  return {
-    id: payload.sub,
-    email: payload.email,
-    name: undefined, // Apple only provides name on first sign-in
-  }
-}
-
-// Verify Apple ID token signature (simplified)
-// In production, use proper JWT verification with Apple's public keys
-export async function verifyAppleIdToken(idToken: string): Promise<boolean> {
-  try {
-    const parts = idToken.split('.')
-    if (parts.length !== 3) {
-      return false
-    }
-
-    const payload = JSON.parse(atob(parts[1]))
-
-    // Check issuer and audience
-    if (payload.iss !== 'https://appleid.apple.com') {
-      return false
-    }
-
-    if (payload.exp < Date.now() / 1000) {
-      return false
-    }
-
-    return true
-  } catch {
-    return false
-  }
-}
-
 // Generate OAuth state and PKCE verifier (for Google)
 export function generateOAuthParams() {
   const state = generateOAuthState()
@@ -169,14 +129,20 @@ export function generateOAuthParams() {
 }
 
 // Store OAuth state in session
-export function storeOAuthState(state: string, verifier: string, provider: OAuthProvider): void {
+export function storeOAuthState(
+  state: string,
+  verifier: string,
+  provider: OAuthProvider,
+): void {
   const storageKey = `oauth_${state}`
   const data = JSON.stringify({ verifier, provider, timestamp: Date.now() })
   sessionStorage.setItem(storageKey, data)
 }
 
 // Retrieve and verify OAuth state
-export function retrieveOAuthState(state: string): { verifier: string; provider: OAuthProvider } | null {
+export function retrieveOAuthState(
+  state: string,
+): { verifier: string; provider: OAuthProvider } | null {
   const storageKey = `oauth_${state}`
   const data = sessionStorage.getItem(storageKey)
   if (!data) {
