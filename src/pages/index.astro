@@ -27,36 +27,36 @@ if (cookieHeader) {
   if (cookieLang && supportedLanguages.includes(cookieLang)) {
     targetLang = cookieLang
   }
-} else {
-  // 2. 检查 Accept-Language
-  const acceptLanguage = Astro.request.headers.get('Accept-Language')
+}
 
-  if (acceptLanguage) {
-    const languages = acceptLanguage
-      .split(',')
-      .map((lang) => {
-        const [tag, weight] = lang.split(';q=')
-        return {
-          tag: tag.trim().toLowerCase(),
-          weight: weight ? parseFloat(weight) : 1.0,
-        }
-      })
-      .sort((a, b) => b.weight - a.weight)
+// 2. 检查 Accept-Language（如果 Cookie 中没有有效的语言）
+const acceptLanguage = Astro.request.headers.get('Accept-Language')
 
-    for (const { tag } of languages) {
-      if (supportedLanguages.includes(tag)) {
-        targetLang = tag
-        break
+if (acceptLanguage) {
+  const languages = acceptLanguage
+    .split(',')
+    .map((lang) => {
+      const [tag, weight] = lang.split(';q=')
+      return {
+        tag: tag.trim().toLowerCase(),
+        weight: weight ? parseFloat(weight) : 1.0,
       }
-      const prefix = tag.split('-')[0]
-      if (supportedLanguages.includes(prefix)) {
-        targetLang = prefix
-        break
-      }
-      if (prefix === 'zh') {
-        targetLang = 'zh-cn'
-        break
-      }
+    })
+    .sort((a, b) => b.weight - a.weight)
+
+  for (const { tag } of languages) {
+    if (supportedLanguages.includes(tag)) {
+      targetLang = tag
+      break
+    }
+    const prefix = tag.split('-')[0]
+    if (supportedLanguages.includes(prefix)) {
+      targetLang = prefix
+      break
+    }
+    if (prefix === 'zh') {
+      targetLang = 'zh-cn'
+      break
     }
   }
 }
