@@ -24,7 +24,7 @@ const commentRateLimiter = new RateLimiter({
 export const prerender = false
 
 // GET - Get comments for a post
-export const GET: APIRoute = async ({ url, locals }) => {
+export const GET: APIRoute = async ({ request, url, locals }) => {
   try {
     const postId = url.searchParams.get('post_id')
 
@@ -53,7 +53,27 @@ export const GET: APIRoute = async ({ url, locals }) => {
       })
     }
 
-    const comments = await getCommentsByPostIdWithUser(db, postId)
+    let currentUserId: string | undefined
+    try {
+      const sessionToken = request.headers
+        .get('cookie')
+        ?.match(/session_token=([^;]+)/)?.[1]
+
+      if (sessionToken) {
+        const { user } = await validateSession(db, sessionToken)
+        if (user) {
+          currentUserId = user.id
+        }
+      }
+    } catch (e) {
+      console.warn('Session check failed during comment fetch:', e)
+    }
+
+    const comments = await getCommentsByPostIdWithUser(
+      db,
+      postId,
+      currentUserId,
+    )
 
     return new Response(JSON.stringify({ comments }), {
       status: 200,
@@ -200,11 +220,8 @@ export const POST: APIRoute = async ({ request, url, locals }) => {
     }
 
     // Determine comment status
-    let status: 'pending' | 'approved' = 'pending'
-    // Auto-approve if user is verified and has no history of spam
-    if (user.email_verified && user.two_factor_enabled) {
-      status = 'approved'
-    }
+    // Respect freedom of speech: auto-approve all comments
+    let status: 'pending' | 'approved' = 'approved'
 
     // Create comment
     const commentId = generateId()

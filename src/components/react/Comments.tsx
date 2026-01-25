@@ -228,6 +228,11 @@ export default function Comments({
               <span className="text-muted-foreground text-sm">
                 {new Date(comment.created_at * 1000).toLocaleDateString()}
               </span>
+              {comment.status === 'pending' && (
+                <span className="rounded bg-yellow-100 px-2 py-0.5 text-xs text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-500">
+                  {t('comments.status_pending')}
+                </span>
+              )}
             </div>
 
             {isEditing ? (
@@ -400,11 +405,16 @@ export default function Comments({
       {showRegister && (
         <RegisterForm
           onClose={() => setShowRegister(false)}
-          onRegister={() => {
+          onRegister={(user) => {
             setShowRegister(false)
-            setShowLogin(true)
+            if (user) {
+              setUser(user)
+            } else {
+              setShowLogin(true)
+            }
           }}
           t={t}
+          lang={lang}
         />
       )}
     </div>
@@ -605,11 +615,12 @@ function LoginForm({ onClose, onLogin, onGoogleLogin, t }: LoginFormProps) {
 
 interface RegisterFormProps {
   onClose: () => void
-  onRegister: () => void
+  onRegister: (user?: User) => void
   t: TranslationFunction
+  lang: string
 }
 
-function RegisterForm({ onClose, onRegister, t }: RegisterFormProps) {
+function RegisterForm({ onClose, onRegister, t, lang }: RegisterFormProps) {
   const [step, setStep] = useState<'email' | 'verify'>('email')
   const [email, setEmail] = useState('')
   const [username, setUsername] = useState('')
@@ -625,18 +636,18 @@ function RegisterForm({ onClose, onRegister, t }: RegisterFormProps) {
       const response = await fetch('/api/comments/auth/verification/send', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email }),
+        body: JSON.stringify({ email, lang }),
       })
       if (response.ok) {
         setStep('verify')
-        alert('Verification code sent to your email')
+        alert(t('comments.verification_code_sent'))
       } else {
         const error = await response.json()
-        alert(error.error || 'Failed to send verification code')
+        alert(error.error || t('comments.send_code_failed'))
       }
     } catch (error) {
       console.error('Send code error:', error)
-      alert('Failed to send verification code')
+      alert(t('comments.send_code_failed'))
     } finally {
       setLoading(false)
     }
@@ -657,8 +668,12 @@ function RegisterForm({ onClose, onRegister, t }: RegisterFormProps) {
         body: JSON.stringify({ email, username, password, code }),
       })
       if (response.ok) {
-        alert(t('comments.register_success'))
-        onRegister()
+        const data = await response.json()
+        if (data.user) {
+          onRegister(data.user)
+        } else {
+          onRegister()
+        }
       } else {
         const error = await response.json()
         alert(error.error || t('comments.register_failed'))
@@ -700,7 +715,9 @@ function RegisterForm({ onClose, onRegister, t }: RegisterFormProps) {
               disabled={loading}
               className="bg-primary text-primary-foreground hover:bg-primary/90 w-full rounded py-2 disabled:opacity-50"
             >
-              {loading ? t('comments.loading') : 'Send Verification Code'}
+              {loading
+                ? t('comments.loading')
+                : t('comments.send_verification_code')}
             </button>
           </form>
         ) : (
@@ -718,7 +735,7 @@ function RegisterForm({ onClose, onRegister, t }: RegisterFormProps) {
             </div>
             <div>
               <label className="mb-1 block text-sm font-medium">
-                Verification Code
+                {t('comments.verification_code_label')}
               </label>
               <input
                 type="text"
@@ -726,7 +743,7 @@ function RegisterForm({ onClose, onRegister, t }: RegisterFormProps) {
                 onChange={(e) => setCode(e.target.value)}
                 className="border-border focus:ring-primary w-full rounded border p-2 focus:ring-2 focus:outline-none"
                 required
-                placeholder="6-digit code"
+                placeholder={t('comments.verification_code_placeholder')}
               />
             </div>
             <div>
@@ -771,7 +788,7 @@ function RegisterForm({ onClose, onRegister, t }: RegisterFormProps) {
                 onClick={() => setStep('email')}
                 className="border-border hover:bg-accent rounded border px-4 py-2"
               >
-                Back
+                {t('comments.back')}
               </button>
               <button
                 type="submit"
