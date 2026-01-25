@@ -86,6 +86,7 @@ export const ui = {
     'comments.login_apple_failed': '无法发起 Apple 登录',
     'comments.verification_required': '请完成验证',
     'comments.post_failed': '发表评论失败',
+    'comments.fetch_failed': '获取评论失败，请稍后重试',
     'comments.edit_failed': '编辑评论失败',
     'comments.delete_failed': '删除评论失败',
     'comments.provider_google': 'Google',
@@ -293,6 +294,8 @@ export const ui = {
     'comments.verification_code_sent': '验证码已发送至您的邮箱',
     'comments.send_code_failed': '发送验证码失败',
     'comments.status_pending': '待审核',
+    'toc.title': '目录',
+    'toc.overview': '概览',
   },
   ja: {
     'nav.blog': 'ブログ',
@@ -579,6 +582,8 @@ export const ui = {
     'comments.verification_code_placeholder': '6桁のコード',
     'comments.back': '戻る',
     'comments.status_pending': '承認待ち',
+    'toc.title': '目次',
+    'toc.overview': '概要',
   },
   en: {
     'nav.blog': 'Blog',
@@ -660,6 +665,8 @@ export const ui = {
     'comments.login_apple_failed': 'Failed to initiate Apple login',
     'comments.verification_required': 'Please complete the verification',
     'comments.post_failed': 'Failed to post comment',
+    'comments.fetch_failed':
+      'Failed to fetch comments. Please try again later.',
     'comments.edit_failed': 'Failed to edit comment',
     'comments.delete_failed': 'Failed to delete comment',
     'comments.provider_google': 'Google',
@@ -1169,6 +1176,8 @@ export const ui = {
     'comments.back': '返回',
     'comments.verification_code_sent': '驗證碼已發送至您的郵箱',
     'comments.send_code_failed': '發送驗證碼失敗',
+    'toc.title': '目錄',
+    'toc.overview': '概覽',
   },
   es: {
     'nav.blog': 'Blog',
@@ -1822,5 +1831,7 @@ export const ui = {
     'comments.verification_code_placeholder': '6-stelliger Code',
     'comments.back': 'Zurück',
     'comments.status_pending': 'Wartet auf Genehmigung',
+    'toc.title': 'Inhaltsverzeichnis',
+    'toc.overview': 'Übersicht',
   },
 } as const

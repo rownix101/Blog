@@ -3,13 +3,16 @@ import { ScrollArea } from '@/components/ui/scroll-area'
 import type { TOCSection } from '@/lib/data-utils'
 import { getParentId, isSubpost } from '@/lib/data-utils'
 import { cn, getHeadingMargin } from '@/lib/utils'
+import { getTranslations } from '@/i18n/utils'
 
 type Props = {
   sections: TOCSection[]
   currentPostId: string
+  lang: string
 }
 
-const { sections, currentPostId } = Astro.props
+const { sections, currentPostId, lang } = Astro.props
+const t = getTranslations(lang)
 const isCurrentSubpost = isSubpost(currentPostId)
 const parentId = isCurrentSubpost ? getParentId(currentPostId) : currentPostId
 ---
@@ -27,7 +30,7 @@ const parentId = isCurrentSubpost ? getParentId(currentPostId) : currentPostId
         data-toc-scroll-area
       >
         <div class="flex flex-col gap-2 px-4">
-          <span class="text-lg font-medium">Table of Contents</span>
+          <span class="text-lg font-medium">{t('toc.title')}</span>
           {sections.map((section, index) => {
             const isFirstSubpost =
               section.type === 'subpost' &&
@@ -398,6 +401,15 @@ const parentId = isCurrentSubpost ? getParentId(currentPostId) : currentPostId
     }
   }
 
+  // Initialize on page load (works for both static and dynamic sites)
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => TOCController.init())
+  } else {
+    // DOM is already ready
+    TOCController.init()
+  }
+
+  // Also support Astro View Transitions for dev/local testing
   document.addEventListener('astro:page-load', () => TOCController.init())
   document.addEventListener('astro:after-swap', () => {
     TOCController.cleanup()

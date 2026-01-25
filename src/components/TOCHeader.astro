@@ -3,12 +3,15 @@ import { ScrollArea } from '@/components/ui/scroll-area'
 import { cn, getHeadingMargin } from '@/lib/utils'
 import type { MarkdownHeading } from 'astro'
 import { Icon } from 'astro-icon/components'
+import { getTranslations } from '@/i18n/utils'
 
 type Props = {
   headings: MarkdownHeading[]
+  lang: string
 }
 
-const { headings } = Astro.props
+const { headings, lang } = Astro.props
+const t = getTranslations(lang)
 ---
 
 {
@@ -47,7 +50,7 @@ const { headings } = Astro.props
               id="mobile-toc-current-section"
               class="text-muted-foreground flex-grow truncate text-sm"
             >
-              Overview
+              {t('toc.overview')}
             </span>
             <span class="text-muted-foreground ml-2">
               <Icon
@@ -93,8 +96,8 @@ const { headings } = Astro.props
   )
 }
 
-<script>
-  const INITIAL_OVERVIEW_TEXT = 'Overview'
+<script define:vars={{ initialOverviewText: t('toc.overview') }}>
+  const INITIAL_OVERVIEW_TEXT = initialOverviewText
   const HEADER_OFFSET = 102 + 36
   const PROGRESS_CIRCLE_RADIUS = 10
   const PROGRESS_CIRCLE_CIRCUMFERENCE = 2 * Math.PI * PROGRESS_CIRCLE_RADIUS
@@ -424,6 +427,15 @@ const { headings } = Astro.props
     }
   }
 
+  // Initialize on page load (works for both static and dynamic sites)
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => MobileTOCController.init())
+  } else {
+    // DOM is already ready
+    MobileTOCController.init()
+  }
+
+  // Also support Astro View Transitions for dev/local testing
   document.addEventListener('astro:page-load', () => MobileTOCController.init())
   document.addEventListener('astro:after-swap', () => {
     MobileTOCController.cleanup()

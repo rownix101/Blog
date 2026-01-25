@@ -12,6 +12,12 @@ export function useTranslations(lang: keyof typeof ui) {
     }
 }
 
+export function getTranslations(lang: keyof typeof ui) {
+    return function t(key: keyof (typeof ui)[typeof defaultLang]) {
+        return ui[lang][key] || ui[defaultLang][key]
+    }
+}
+
 export function useLocalizedPath(lang: keyof typeof ui) {
     return function l(path: string) {
         return `/${lang}${path.startsWith('/') ? path : '/' + path}`

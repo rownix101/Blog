@@ -34,6 +34,7 @@ export default function Comments({
   const [comments, setComments] = useState<CommentWithUser[]>([])
   const [user, setUser] = useState<User | null>(null)
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
   const [showLogin, setShowLogin] = useState(false)
   const [showRegister, setShowRegister] = useState(false)
   const [replyTo, setReplyTo] = useState<string | null>(null)
@@ -59,15 +60,19 @@ export default function Comments({
 
   const fetchComments = async () => {
     try {
+      setError(null)
       const response = await fetch(
         `/api/comments?post_id=${encodeURIComponent(postId)}`,
       )
       if (response.ok) {
         const data = await response.json()
         setComments(data.comments || [])
+      } else {
+        throw new Error('Failed to fetch comments')
       }
     } catch (error) {
       console.error('Failed to fetch comments:', error)
+      setError(t('comments.fetch_failed'))
     } finally {
       setLoading(false)
     }
@@ -134,7 +139,7 @@ export default function Comments({
       return
     }
 
-    if (!turnstileToken && COMMENTS.turnstileSiteKey) {
+    if (!user && !turnstileToken && COMMENTS.turnstileSiteKey) {
       alert(t('comments.verification_required'))
       return
     }
@@ -281,7 +286,7 @@ export default function Comments({
                     setReplyTo(null)
                   }}
                   onCancel={() => setReplyTo(null)}
-                  showTurnstile={true}
+                  showTurnstile={!user}
                   t={t}
                 />
               </div>
@@ -327,7 +332,7 @@ export default function Comments({
           </div>
           <CommentForm
             onSubmit={(content) => handleSubmitComment(content)}
-            showTurnstile={true}
+            showTurnstile={!user}
             onTurnstileChange={setTurnstileToken}
             t={t}
           />
@@ -380,6 +385,8 @@ export default function Comments({
 
       {loading ? (
         <div className="py-8 text-center">{t('comments.loading')}</div>
+      ) : error ? (
+        <div className="text-destructive py-8 text-center">{error}</div>
       ) : comments.length > 0 ? (
         <div className="space-y-4">
           {comments.map((comment) => renderComment(comment))}
