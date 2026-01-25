@@ -277,7 +277,7 @@ function run() {
   const labelName = event.label?.name
 
   const shouldRun =
-    (action === 'opened' &&
+    ((action === 'opened' || action === 'edited') &&
       (labels.includes('friend-application') ||
         looksLikeFriendApplicationIssue(issue))) ||
     (action === 'labeled' && labelName === 'friend-application')
