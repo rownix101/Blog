@@ -142,14 +142,6 @@ export const POST: APIRoute = async ({ request, url, locals }) => {
 
     const user = validUser
 
-    const user = await getUserById(db, sessionData.userId)
-    if (!user) {
-      return new Response(JSON.stringify({ error: 'User not found' }), {
-        status: 404,
-        headers: { 'Content-Type': 'application/json' },
-      })
-    }
-
     // Validate post ID
     const postIdValidation = validatePostId(post_id)
     if (!postIdValidation.valid) {
