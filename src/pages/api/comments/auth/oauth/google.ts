@@ -1,5 +1,5 @@
 import type { APIRoute } from 'astro'
-import { COMMENTS, OAUTH_PROVIDERS } from '@/consts'
+import { COMMENTS } from '@/consts'
 import {
   getUserByEmail,
   getUserById,
@@ -7,9 +7,21 @@ import {
   createUser,
   getOAuthAccountByProvider,
   createSession,
+  getUserByUsername,
 } from '@/lib/db'
-import { generateId, createSessionToken, getSessionExpiration, sanitizeHTML } from '@/lib/auth'
-import { generateOAuthUrl, exchangeCodeForToken, getOAuthUserInfo, generateOAuthParams } from '@/lib/oauth'
+import {
+  generateId,
+  createSessionToken,
+  getSessionExpiration,
+  sanitizeHTML,
+  generatePKCEChallenge,
+} from '@/lib/auth'
+import {
+  generateOAuthUrl,
+  exchangeCodeForToken,
+  getOAuthUserInfo,
+  generateOAuthParams,
+} from '@/lib/oauth'
 
 export const prerender = false
 
@@ -17,9 +29,12 @@ export const prerender = false
 export const GET: APIRoute = async ({ url, cookies }) => {
   try {
     if (!COMMENTS.googleClientId) {
-      return new Response(JSON.stringify({ error: 'Google OAuth not configured' }), {
-        status: 500,
-        headers: { 'Content-Type': 'application/json' } },
+      return new Response(
+        JSON.stringify({ error: 'Google OAuth not configured' }),
+        {
+          status: 500,
+          headers: { 'Content-Type': 'application/json' },
+        },
       )
     }
 
@@ -27,16 +42,19 @@ export const GET: APIRoute = async ({ url, cookies }) => {
     const redirectUri = `${url.origin}/api/comments/auth/oauth/google/callback`
 
     // Store state in cookie
-    cookies.set('oauth_state', JSON.stringify({ state, verifier, provider: 'google' }), {
-      httpOnly: true,
-      secure: import.meta.env.PROD,
-      sameSite: 'lax',
-      path: '/',
-      maxAge: 600, // 10 minutes
-    })
+    cookies.set(
+      'oauth_state',
+      JSON.stringify({ state, verifier, provider: 'google' }),
+      {
+        httpOnly: true,
+        secure: import.meta.env.PROD,
+        sameSite: 'lax',
+        path: '/',
+        maxAge: 600, // 10 minutes
+      },
+    )
 
     // Generate PKCE challenge
-    const { generatePKCEChallenge } = await import('@/lib/oauth')
     const codeChallenge = await generatePKCEChallenge(verifier)
 
     // Generate authorization URL
@@ -54,14 +72,14 @@ export const GET: APIRoute = async ({ url, cookies }) => {
 
     return new Response(JSON.stringify({ authUrl }), {
       status: 200,
-      headers: { 'Content-Type': 'application/json' } },
-    )
+      headers: { 'Content-Type': 'application/json' },
+    })
   } catch (error) {
     console.error('Google OAuth URL generation error:', error)
     return new Response(JSON.stringify({ error: 'Internal server error' }), {
       status: 500,
-      headers: { 'Content-Type': 'application/json' } },
-    )
+      headers: { 'Content-Type': 'application/json' },
+    })
   }
 }
 
@@ -72,9 +90,12 @@ export const POST: APIRoute = async ({ request, url, locals, cookies }) => {
     const { code, state } = body
 
     if (!code || !state) {
-      return new Response(JSON.stringify({ error: 'Authorization code and state are required' }), {
-        status: 400,
-        headers: { 'Content-Type': 'application/json' } },
+      return new Response(
+        JSON.stringify({ error: 'Authorization code and state are required' }),
+        {
+          status: 400,
+          headers: { 'Content-Type': 'application/json' },
+        },
       )
     }
 
@@ -83,16 +104,19 @@ export const POST: APIRoute = async ({ request, url, locals, cookies }) => {
     if (!stateData) {
       return new Response(JSON.stringify({ error: 'Invalid state' }), {
         status: 400,
-        headers: { 'Content-Type': 'application/json' } },
-      )
+        headers: { 'Content-Type': 'application/json' },
+      })
     }
 
     const { state: expectedState, verifier, provider } = JSON.parse(stateData)
 
     if (state !== expectedState || provider !== 'google') {
-      return new Response(JSON.stringify({ error: 'Invalid state or provider' }), {
-        status: 400,
-        headers: { 'Content-Type': 'application/json' } },
+      return new Response(
+        JSON.stringify({ error: 'Invalid state or provider' }),
+        {
+          status: 400,
+          headers: { 'Content-Type': 'application/json' },
+        },
       )
     }
 
@@ -100,12 +124,12 @@ export const POST: APIRoute = async ({ request, url, locals, cookies }) => {
     cookies.delete('oauth_state', { path: '/' })
 
     // Get D1 database
-    const db = (locals.runtime as any).env.DB
+    const db = locals.runtime?.env.DB
     if (!db) {
       return new Response(JSON.stringify({ error: 'Database not available' }), {
         status: 500,
-        headers: { 'Content-Type': 'application/json' } },
-      )
+        headers: { 'Content-Type': 'application/json' },
+      })
     }
 
     // Exchange code for token
@@ -123,10 +147,17 @@ export const POST: APIRoute = async ({ request, url, locals, cookies }) => {
     )
 
     // Get user info
-    const userInfo = await getOAuthUserInfo('google', tokenResponse.access_token)
+    const userInfo = await getOAuthUserInfo(
+      'google',
+      tokenResponse.access_token,
+    )
 
     // Check if OAuth account exists
-    const existingOAuthAccount = await getOAuthAccountByProvider(db, 'google', userInfo.id)
+    const existingOAuthAccount = await getOAuthAccountByProvider(
+      db,
+      'google',
+      userInfo.id,
+    )
 
     let user: any
 
@@ -154,12 +185,16 @@ export const POST: APIRoute = async ({ request, url, locals, cookies }) => {
           provider_avatar_url: userInfo.avatar_url,
           access_token: tokenResponse.access_token,
           refresh_token: tokenResponse.refresh_token,
-          expires_at: tokenResponse.expires_in ? Math.floor(Date.now() / 1000) + tokenResponse.expires_in : null,
+          expires_at: tokenResponse.expires_in
+            ? Math.floor(Date.now() / 1000) + tokenResponse.expires_in
+            : undefined,
         })
       } else {
         // Create new user
         const userId = generateId()
-        const username = userInfo.name?.replace(/\s+/g, '').toLowerCase() || userInfo.email.split('@')[0]
+        const username =
+          userInfo.name?.replace(/\s+/g, '').toLowerCase() ||
+          userInfo.email.split('@')[0]
 
         // Ensure username is unique
         let finalUsername = username
@@ -188,7 +223,9 @@ export const POST: APIRoute = async ({ request, url, locals, cookies }) => {
           provider_avatar_url: userInfo.avatar_url,
           access_token: tokenResponse.access_token,
           refresh_token: tokenResponse.refresh_token,
-          expires_at: tokenResponse.expires_in ? Math.floor(Date.now() / 1000) + tokenResponse.expires_in : null,
+          expires_at: tokenResponse.expires_in
+            ? Math.floor(Date.now() / 1000) + tokenResponse.expires_in
+            : undefined,
         })
       }
     }
@@ -198,8 +235,11 @@ export const POST: APIRoute = async ({ request, url, locals, cookies }) => {
     const sessionToken = createSessionToken(user.id)
     const expiresAt = getSessionExpiration()
 
-    const userAgent = request.headers.get('user-agent')
-    const ipAddress = request.headers.get('cf-connecting-ip') || request.headers.get('x-forwarded-for') || 'unknown'
+    const userAgent = request.headers.get('user-agent') || undefined
+    const ipAddress =
+      request.headers.get('cf-connecting-ip') ||
+      request.headers.get('x-forwarded-for') ||
+      undefined
 
     await createSession(db, {
       id: sessionId,
@@ -238,7 +278,7 @@ export const POST: APIRoute = async ({ request, url, locals, cookies }) => {
     console.error('Google OAuth callback error:', error)
     return new Response(JSON.stringify({ error: 'Internal server error' }), {
       status: 500,
-      headers: { 'Content-Type': 'application/json' } },
-    )
+      headers: { 'Content-Type': 'application/json' },
+    })
   }
 }
