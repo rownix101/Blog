@@ -113,7 +113,7 @@ export const POST: APIRoute = async ({ request, locals }) => {
       return new Response(
         JSON.stringify({
           error:
-            'Database schema outdated: missing users.password_hash. Re-apply schema.sql or run an ALTER TABLE migration.',
+            'Database schema outdated: missing users.password_hash. Run: ALTER TABLE users ADD COLUMN password_hash TEXT;',
         }),
         { status: 500, headers: { 'Content-Type': 'application/json' } },
       )

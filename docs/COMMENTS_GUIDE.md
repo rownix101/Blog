@@ -50,6 +50,12 @@ wrangler d1 execute blog-comments --file=./schema.sql
 wrangler d1 execute blog-comments --remote --file=./schema.sql
 ```
 
+If you already have an existing database, you must apply schema updates manually. For example, to add password support:
+
+```bash
+wrangler d1 execute blog-comments --remote --command "ALTER TABLE users ADD COLUMN password_hash TEXT;"
+```
+
 ### 2. Environment Variables
 
 Create a `.env` file in your project root with the following variables:
