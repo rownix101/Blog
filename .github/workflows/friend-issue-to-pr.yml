@@ -5,6 +5,7 @@ on:
     types:
       - opened
       - labeled
+      - edited
 
 permissions:
   contents: write
@@ -19,6 +20,7 @@ jobs:
   create-pr:
     if: github.event_name == 'issues' && (
       github.event.action == 'opened' ||
+      github.event.action == 'edited' ||
       (github.event.action == 'labeled' && github.event.label.name == 'friend-application')
       )
     runs-on: ubuntu-latest
