@@ -1,5 +1,11 @@
 import type { APIRoute } from 'astro'
-import { getCommentById, getUserById, deleteComment, updateComment } from '@/lib/db'
+import {
+  deleteComment,
+  getCommentById,
+  getUserById,
+  updateComment,
+  validateSession,
+} from '@/lib/db'
 import { sanitizeHTML } from '@/lib/auth'
 import { validateCommentContent, checkSpam } from '@/lib/validation'
 
@@ -13,8 +19,8 @@ export const GET: APIRoute = async ({ params, locals }) => {
     if (!id) {
       return new Response(JSON.stringify({ error: 'Comment ID is required' }), {
         status: 400,
-        headers: { 'Content-Type': 'application/json' } },
-      )
+        headers: { 'Content-Type': 'application/json' },
+      })
     }
 
     // Get D1 database
@@ -22,8 +28,8 @@ export const GET: APIRoute = async ({ params, locals }) => {
     if (!db) {
       return new Response(JSON.stringify({ error: 'Database not available' }), {
         status: 500,
-        headers: { 'Content-Type': 'application/json' } },
-      )
+        headers: { 'Content-Type': 'application/json' },
+      })
     }
 
     const comment = await getCommentById(db, id)
@@ -31,20 +37,20 @@ export const GET: APIRoute = async ({ params, locals }) => {
     if (!comment) {
       return new Response(JSON.stringify({ error: 'Comment not found' }), {
         status: 404,
-        headers: { 'Content-Type': 'application/json' } },
-      )
+        headers: { 'Content-Type': 'application/json' },
+      })
     }
 
     return new Response(JSON.stringify({ comment }), {
       status: 200,
-      headers: { 'Content-Type': 'application/json' } },
-    )
+      headers: { 'Content-Type': 'application/json' },
+    })
   } catch (error) {
     console.error('Get comment error:', error)
     return new Response(JSON.stringify({ error: 'Internal server error' }), {
       status: 500,
-      headers: { 'Content-Type': 'application/json' } },
-    )
+      headers: { 'Content-Type': 'application/json' },
+    })
   }
 }
 
@@ -58,25 +64,27 @@ export const PUT: APIRoute = async ({ params, request, locals }) => {
     if (!id) {
       return new Response(JSON.stringify({ error: 'Comment ID is required' }), {
         status: 400,
-        headers: { 'Content-Type': 'application/json' } },
-      )
+        headers: { 'Content-Type': 'application/json' },
+      })
     }
 
     if (!content) {
       return new Response(JSON.stringify({ error: 'Content is required' }), {
         status: 400,
-        headers: { 'Content-Type': 'application/json' } },
-      )
+        headers: { 'Content-Type': 'application/json' },
+      })
     }
 
     // Get session token from cookie
-    const sessionToken = request.headers.get('cookie')?.match(/session_token=([^;]+)/)?.[1]
+    const sessionToken = request.headers
+      .get('cookie')
+      ?.match(/session_token=([^;]+)/)?.[1]
 
     if (!sessionToken) {
       return new Response(JSON.stringify({ error: 'Not authenticated' }), {
         status: 401,
-        headers: { 'Content-Type': 'application/json' } },
-      )
+        headers: { 'Content-Type': 'application/json' },
+      })
     }
 
     // Get D1 database
@@ -84,8 +92,8 @@ export const PUT: APIRoute = async ({ params, request, locals }) => {
     if (!db) {
       return new Response(JSON.stringify({ error: 'Database not available' }), {
         status: 500,
-        headers: { 'Content-Type': 'application/json' } },
-      )
+        headers: { 'Content-Type': 'application/json' },
+      })
     }
 
     // Verify session and get user
@@ -95,16 +103,16 @@ export const PUT: APIRoute = async ({ params, request, locals }) => {
     if (!sessionData) {
       return new Response(JSON.stringify({ error: 'Invalid session' }), {
         status: 401,
-        headers: { 'Content-Type': 'application/json' } },
-      )
+        headers: { 'Content-Type': 'application/json' },
+      })
     }
 
     const user = await getUserById(db, sessionData.userId)
     if (!user) {
       return new Response(JSON.stringify({ error: 'User not found' }), {
         status: 404,
-        headers: { 'Content-Type': 'application/json' } },
-      )
+        headers: { 'Content-Type': 'application/json' },
+      })
     }
 
     // Get comment
@@ -112,15 +120,18 @@ export const PUT: APIRoute = async ({ params, request, locals }) => {
     if (!comment) {
       return new Response(JSON.stringify({ error: 'Comment not found' }), {
         status: 404,
-        headers: { 'Content-Type': 'application/json' } },
-      )
+        headers: { 'Content-Type': 'application/json' },
+      })
     }
 
     // Check if user is the comment author
     if (comment.user_id !== user.id) {
-      return new Response(JSON.stringify({ error: 'You can only edit your own comments' }), {
-        status: 403,
-        headers: { 'Content-Type': 'application/json' } },
+      return new Response(
+        JSON.stringify({ error: 'You can only edit your own comments' }),
+        {
+          status: 403,
+          headers: { 'Content-Type': 'application/json' },
+        },
       )
     }
 
@@ -129,8 +140,8 @@ export const PUT: APIRoute = async ({ params, request, locals }) => {
     if (!contentValidation.valid) {
       return new Response(JSON.stringify({ error: contentValidation.error }), {
         status: 400,
-        headers: { 'Content-Type': 'application/json' } },
-      )
+        headers: { 'Content-Type': 'application/json' },
+      })
     }
 
     // Sanitize content
@@ -139,25 +150,38 @@ export const PUT: APIRoute = async ({ params, request, locals }) => {
     // Check for spam
     const spamCheck = checkSpam(sanitizedContent)
     if (spamCheck.isSpam) {
-      return new Response(JSON.stringify({ error: spamCheck.reason || 'Comment contains spam content' }), {
-        status: 400,
-        headers: { 'Content-Type': 'application/json' } },
+      return new Response(
+        JSON.stringify({
+          error: spamCheck.reason || 'Comment contains spam content',
+        }),
+        {
+          status: 400,
+          headers: { 'Content-Type': 'application/json' },
+        },
       )
     }
 
     // Update comment
-    const updatedComment = await updateComment(db, id, { content: sanitizedContent })
+    const updatedComment = await updateComment(db, id, {
+      content: sanitizedContent,
+    })
 
-    return new Response(JSON.stringify({ message: 'Comment updated successfully', comment: updatedComment }), {
-      status: 200,
-      headers: { 'Content-Type': 'application/json' } },
+    return new Response(
+      JSON.stringify({
+        message: 'Comment updated successfully',
+        comment: updatedComment,
+      }),
+      {
+        status: 200,
+        headers: { 'Content-Type': 'application/json' },
+      },
     )
   } catch (error) {
     console.error('Update comment error:', error)
     return new Response(JSON.stringify({ error: 'Internal server error' }), {
       status: 500,
-      headers: { 'Content-Type': 'application/json' } },
-    )
+      headers: { 'Content-Type': 'application/json' },
+    })
   }
 }
 
@@ -169,18 +193,20 @@ export const DELETE: APIRoute = async ({ params, request, locals }) => {
     if (!id) {
       return new Response(JSON.stringify({ error: 'Comment ID is required' }), {
         status: 400,
-        headers: { 'Content-Type': 'application/json' } },
-      )
+        headers: { 'Content-Type': 'application/json' },
+      })
     }
 
     // Get session token from cookie
-    const sessionToken = request.headers.get('cookie')?.match(/session_token=([^;]+)/)?.[1]
+    const sessionToken = request.headers
+      .get('cookie')
+      ?.match(/session_token=([^;]+)/)?.[1]
 
     if (!sessionToken) {
       return new Response(JSON.stringify({ error: 'Not authenticated' }), {
         status: 401,
-        headers: { 'Content-Type': 'application/json' } },
-      )
+        headers: { 'Content-Type': 'application/json' },
+      })
     }
 
     // Get D1 database
@@ -188,8 +214,8 @@ export const DELETE: APIRoute = async ({ params, request, locals }) => {
     if (!db) {
       return new Response(JSON.stringify({ error: 'Database not available' }), {
         status: 500,
-        headers: { 'Content-Type': 'application/json' } },
-      )
+        headers: { 'Content-Type': 'application/json' },
+      })
     }
 
     // Verify session and get user
@@ -199,16 +225,16 @@ export const DELETE: APIRoute = async ({ params, request, locals }) => {
     if (!sessionData) {
       return new Response(JSON.stringify({ error: 'Invalid session' }), {
         status: 401,
-        headers: { 'Content-Type': 'application/json' } },
-      )
+        headers: { 'Content-Type': 'application/json' },
+      })
     }
 
     const user = await getUserById(db, sessionData.userId)
     if (!user) {
       return new Response(JSON.stringify({ error: 'User not found' }), {
         status: 404,
-        headers: { 'Content-Type': 'application/json' } },
-      )
+        headers: { 'Content-Type': 'application/json' },
+      })
     }
 
     // Get comment
@@ -216,30 +242,36 @@ export const DELETE: APIRoute = async ({ params, request, locals }) => {
     if (!comment) {
       return new Response(JSON.stringify({ error: 'Comment not found' }), {
         status: 404,
-        headers: { 'Content-Type': 'application/json' } },
-      )
+        headers: { 'Content-Type': 'application/json' },
+      })
     }
 
     // Check if user is the comment author
     if (comment.user_id !== user.id) {
-      return new Response(JSON.stringify({ error: 'You can only delete your own comments' }), {
-        status: 403,
-        headers: { 'Content-Type': 'application/json' } },
+      return new Response(
+        JSON.stringify({ error: 'You can only delete your own comments' }),
+        {
+          status: 403,
+          headers: { 'Content-Type': 'application/json' },
+        },
       )
     }
 
     // Delete comment
     await deleteComment(db, id)
 
-    return new Response(JSON.stringify({ message: 'Comment deleted successfully' }), {
-      status: 200,
-      headers: { 'Content-Type': 'application/json' } },
+    return new Response(
+      JSON.stringify({ message: 'Comment deleted successfully' }),
+      {
+        status: 200,
+        headers: { 'Content-Type': 'application/json' },
+      },
     )
   } catch (error) {
     console.error('Delete comment error:', error)
     return new Response(JSON.stringify({ error: 'Internal server error' }), {
       status: 500,
-      headers: { 'Content-Type': 'application/json' } },
-    )
+      headers: { 'Content-Type': 'application/json' },
+    })
   }
 }

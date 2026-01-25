@@ -36,16 +36,6 @@ export interface Session {
   created_at: number
 }
 
-export interface TwoFactorToken {
-  id: string
-  user_id: string
-  token: string
-  type: 'email' | 'recovery'
-  expires_at: number
-  used: number
-  created_at: number
-}
-
 export interface Comment {
   id: string
   post_id: string
@@ -64,4 +54,3 @@ export interface CommentWithUser extends Comment {
 
 export type CommentStatus = 'pending' | 'approved' | 'rejected' | 'spam'
 export type OAuthProvider = 'google'
-export type TwoFactorType = 'email' | 'recovery'

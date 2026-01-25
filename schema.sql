@@ -43,18 +43,6 @@ CREATE TABLE IF NOT EXISTS sessions (
   UNIQUE(token)
 );
 
--- Two factor tokens table
-CREATE TABLE IF NOT EXISTS two_factor_tokens (
-  id TEXT PRIMARY KEY,
-  user_id TEXT NOT NULL,
-  token TEXT NOT NULL,
-  type TEXT NOT NULL, -- 'email' or 'recovery'
-  expires_at INTEGER NOT NULL,
-  used INTEGER NOT NULL DEFAULT 0,
-  created_at INTEGER NOT NULL DEFAULT (strftime('%s', 'now')),
-  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
-);
-
 -- Comments table
 CREATE TABLE IF NOT EXISTS comments (
   id TEXT PRIMARY KEY,
@@ -77,4 +65,3 @@ CREATE INDEX IF NOT EXISTS idx_comments_created_at ON comments(created_at);
 CREATE INDEX IF NOT EXISTS idx_sessions_user_id ON sessions(user_id);
 CREATE INDEX IF NOT EXISTS idx_sessions_token ON sessions(token);
 CREATE INDEX IF NOT EXISTS idx_oauth_accounts_user_id ON oauth_accounts(user_id);
-CREATE INDEX IF NOT EXISTS idx_two_factor_tokens_user_id ON two_factor_tokens(user_id);

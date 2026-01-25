@@ -32,11 +32,31 @@ declare global {
     }
   }
 
+  interface KVNamespace {
+    get(key: string, options?: { type: 'text' }): Promise<string | null>
+    get(key: string, options?: { type: 'json' }): Promise<any | null>
+    get(
+      key: string,
+      options?: { type: 'arrayBuffer' },
+    ): Promise<ArrayBuffer | null>
+    get(
+      key: string,
+      options?: { type: 'stream' },
+    ): Promise<ReadableStream | null>
+    put(
+      key: string,
+      value: string | ReadableStream | ArrayBuffer,
+      options?: { expiration?: number; expirationTtl?: number },
+    ): Promise<void>
+    delete(key: string): Promise<void>
+  }
+
   namespace Astro {
     interface Locals {
       runtime?: {
         env: {
           DB: D1Database
+          COMMENT_KV: KVNamespace
         }
       }
     }

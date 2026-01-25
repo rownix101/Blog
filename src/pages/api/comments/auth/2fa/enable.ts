@@ -1,6 +1,6 @@
 import type { APIRoute } from 'astro'
 import { COMMENTS } from '@/consts'
-import { getUserById, updateUserTwoFactor } from '@/lib/db'
+import { getUserById, updateUserTwoFactor, validateSession } from '@/lib/db'
 import { generateBase32Secret, verifyTOTP } from '@/lib/auth'
 import { sendTwoFactorEmail } from '@/lib/email'
 
@@ -10,13 +10,15 @@ export const prerender = false
 export const GET: APIRoute = async ({ request, locals }) => {
   try {
     // Get session token from cookie
-    const sessionToken = request.headers.get('cookie')?.match(/session_token=([^;]+)/)?.[1]
+    const sessionToken = request.headers
+      .get('cookie')
+      ?.match(/session_token=([^;]+)/)?.[1]
 
     if (!sessionToken) {
       return new Response(JSON.stringify({ error: 'Not authenticated' }), {
         status: 401,
-        headers: { 'Content-Type': 'application/json' } },
-      )
+        headers: { 'Content-Type': 'application/json' },
+      })
     }
 
     // Get D1 database
@@ -24,27 +26,18 @@ export const GET: APIRoute = async ({ request, locals }) => {
     if (!db) {
       return new Response(JSON.stringify({ error: 'Database not available' }), {
         status: 500,
-        headers: { 'Content-Type': 'application/json' } },
-      )
+        headers: { 'Content-Type': 'application/json' },
+      })
     }
 
     // Verify session and get user
-    const { verifySessionToken } = await import('@/lib/auth')
-    const sessionData = verifySessionToken(sessionToken)
+    const { user } = await validateSession(db, sessionToken)
 
-    if (!sessionData) {
+    if (!user) {
       return new Response(JSON.stringify({ error: 'Invalid session' }), {
         status: 401,
-        headers: { 'Content-Type': 'application/json' } },
-      )
-    }
-
-    const user = await getUserById(db, sessionData.userId)
-    if (!user) {
-      return new Response(JSON.stringify({ error: 'User not found' }), {
-        status: 404,
-        headers: { 'Content-Type': 'application/json' } },
-      )
+        headers: { 'Content-Type': 'application/json' },
+      })
     }
 
     // Generate secret
@@ -66,8 +59,8 @@ export const GET: APIRoute = async ({ request, locals }) => {
     console.error('2FA enable error:', error)
     return new Response(JSON.stringify({ error: 'Internal server error' }), {
       status: 500,
-      headers: { 'Content-Type': 'application/json' } },
-    )
+      headers: { 'Content-Type': 'application/json' },
+    })
   }
 }
 
@@ -78,20 +71,25 @@ export const POST: APIRoute = async ({ request, locals }) => {
     const { secret, code } = body
 
     if (!secret || !code) {
-      return new Response(JSON.stringify({ error: 'Secret and code are required' }), {
-        status: 400,
-        headers: { 'Content-Type': 'application/json' } },
+      return new Response(
+        JSON.stringify({ error: 'Secret and code are required' }),
+        {
+          status: 400,
+          headers: { 'Content-Type': 'application/json' },
+        },
       )
     }
 
     // Get session token from cookie
-    const sessionToken = request.headers.get('cookie')?.match(/session_token=([^;]+)/)?.[1]
+    const sessionToken = request.headers
+      .get('cookie')
+      ?.match(/session_token=([^;]+)/)?.[1]
 
     if (!sessionToken) {
       return new Response(JSON.stringify({ error: 'Not authenticated' }), {
         status: 401,
-        headers: { 'Content-Type': 'application/json' } },
-      )
+        headers: { 'Content-Type': 'application/json' },
+      })
     }
 
     // Get D1 database
@@ -99,51 +97,50 @@ export const POST: APIRoute = async ({ request, locals }) => {
     if (!db) {
       return new Response(JSON.stringify({ error: 'Database not available' }), {
         status: 500,
-        headers: { 'Content-Type': 'application/json' } },
-      )
+        headers: { 'Content-Type': 'application/json' },
+      })
     }
 
     // Verify session and get user
-    const { verifySessionToken } = await import('@/lib/auth')
-    const sessionData = verifySessionToken(sessionToken)
+    const { user } = await validateSession(db, sessionToken)
 
-    if (!sessionData) {
+    if (!user) {
       return new Response(JSON.stringify({ error: 'Invalid session' }), {
         status: 401,
-        headers: { 'Content-Type': 'application/json' } },
-      )
-    }
-
-    const user = await getUserById(db, sessionData.userId)
-    if (!user) {
-      return new Response(JSON.stringify({ error: 'User not found' }), {
-        status: 404,
-        headers: { 'Content-Type': 'application/json' } },
-      )
+        headers: { 'Content-Type': 'application/json' },
+      })
     }
 
     // Verify code
     const codeValid = verifyTOTP(secret, code)
     if (!codeValid) {
-      return new Response(JSON.stringify({ error: 'Invalid verification code' }), {
-        status: 400,
-        headers: { 'Content-Type': 'application/json' } },
+      return new Response(
+        JSON.stringify({ error: 'Invalid verification code' }),
+        {
+          status: 400,
+          headers: { 'Content-Type': 'application/json' },
+        },
       )
     }
 
     // Enable 2FA
     await updateUserTwoFactor(db, user.id, { enabled: true, secret })
 
-    return new Response(JSON.stringify({ message: 'Two-factor authentication enabled successfully' }), {
-      status: 200,
-      headers: { 'Content-Type': 'application/json' } },
+    return new Response(
+      JSON.stringify({
+        message: 'Two-factor authentication enabled successfully',
+      }),
+      {
+        status: 200,
+        headers: { 'Content-Type': 'application/json' },
+      },
     )
   } catch (error) {
     console.error('2FA enable error:', error)
     return new Response(JSON.stringify({ error: 'Internal server error' }), {
       status: 500,
-      headers: { 'Content-Type': 'application/json' } },
-    )
+      headers: { 'Content-Type': 'application/json' },
+    })
   }
 }
 

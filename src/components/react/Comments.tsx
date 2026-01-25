@@ -610,10 +610,37 @@ interface RegisterFormProps {
 }
 
 function RegisterForm({ onClose, onRegister, t }: RegisterFormProps) {
+  const [step, setStep] = useState<'email' | 'verify'>('email')
   const [email, setEmail] = useState('')
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
+  const [code, setCode] = useState('')
+  const [loading, setLoading] = useState(false)
+
+  const handleSendCode = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setLoading(true)
+    try {
+      const response = await fetch('/api/comments/auth/verification/send', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email }),
+      })
+      if (response.ok) {
+        setStep('verify')
+        alert('Verification code sent to your email')
+      } else {
+        const error = await response.json()
+        alert(error.error || 'Failed to send verification code')
+      }
+    } catch (error) {
+      console.error('Send code error:', error)
+      alert('Failed to send verification code')
+    } finally {
+      setLoading(false)
+    }
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -627,7 +654,7 @@ function RegisterForm({ onClose, onRegister, t }: RegisterFormProps) {
       const response = await fetch('/api/comments/auth/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, username, password }),
+        body: JSON.stringify({ email, username, password, code }),
       })
       if (response.ok) {
         alert(t('comments.register_success'))
@@ -654,62 +681,107 @@ function RegisterForm({ onClose, onRegister, t }: RegisterFormProps) {
             ✕
           </button>
         </div>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label className="mb-1 block text-sm font-medium">
-              {t('comments.email')}
-            </label>
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="border-border focus:ring-primary w-full rounded border p-2 focus:ring-2 focus:outline-none"
-              required
-            />
-          </div>
-          <div>
-            <label className="mb-1 block text-sm font-medium">
-              {t('comments.username')}
-            </label>
-            <input
-              type="text"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              className="border-border focus:ring-primary w-full rounded border p-2 focus:ring-2 focus:outline-none"
-              required
-            />
-          </div>
-          <div>
-            <label className="mb-1 block text-sm font-medium">
-              {t('comments.password')}
-            </label>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="border-border focus:ring-primary w-full rounded border p-2 focus:ring-2 focus:outline-none"
-              required
-            />
-          </div>
-          <div>
-            <label className="mb-1 block text-sm font-medium">
-              {t('comments.confirm_password')}
-            </label>
-            <input
-              type="password"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              className="border-border focus:ring-primary w-full rounded border p-2 focus:ring-2 focus:outline-none"
-              required
-            />
-          </div>
-          <button
-            type="submit"
-            className="bg-primary text-primary-foreground hover:bg-primary/90 w-full rounded py-2"
-          >
-            {t('comments.register')}
-          </button>
-        </form>
+        {step === 'email' ? (
+          <form onSubmit={handleSendCode} className="space-y-4">
+            <div>
+              <label className="mb-1 block text-sm font-medium">
+                {t('comments.email')}
+              </label>
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="border-border focus:ring-primary w-full rounded border p-2 focus:ring-2 focus:outline-none"
+                required
+              />
+            </div>
+            <button
+              type="submit"
+              disabled={loading}
+              className="bg-primary text-primary-foreground hover:bg-primary/90 w-full rounded py-2 disabled:opacity-50"
+            >
+              {loading ? t('comments.loading') : 'Send Verification Code'}
+            </button>
+          </form>
+        ) : (
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div>
+              <label className="mb-1 block text-sm font-medium">
+                {t('comments.email')}
+              </label>
+              <input
+                type="email"
+                value={email}
+                disabled
+                className="border-border bg-muted text-muted-foreground w-full rounded border p-2"
+              />
+            </div>
+            <div>
+              <label className="mb-1 block text-sm font-medium">
+                Verification Code
+              </label>
+              <input
+                type="text"
+                value={code}
+                onChange={(e) => setCode(e.target.value)}
+                className="border-border focus:ring-primary w-full rounded border p-2 focus:ring-2 focus:outline-none"
+                required
+                placeholder="6-digit code"
+              />
+            </div>
+            <div>
+              <label className="mb-1 block text-sm font-medium">
+                {t('comments.username')}
+              </label>
+              <input
+                type="text"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                className="border-border focus:ring-primary w-full rounded border p-2 focus:ring-2 focus:outline-none"
+                required
+              />
+            </div>
+            <div>
+              <label className="mb-1 block text-sm font-medium">
+                {t('comments.password')}
+              </label>
+              <input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="border-border focus:ring-primary w-full rounded border p-2 focus:ring-2 focus:outline-none"
+                required
+              />
+            </div>
+            <div>
+              <label className="mb-1 block text-sm font-medium">
+                {t('comments.confirm_password')}
+              </label>
+              <input
+                type="password"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                className="border-border focus:ring-primary w-full rounded border p-2 focus:ring-2 focus:outline-none"
+                required
+              />
+            </div>
+            <div className="flex gap-2">
+              <button
+                type="button"
+                onClick={() => setStep('email')}
+                className="border-border hover:bg-accent rounded border px-4 py-2"
+              >
+                Back
+              </button>
+              <button
+                type="submit"
+                className="bg-primary text-primary-foreground hover:bg-primary/90 flex-1 rounded py-2"
+              >
+                {t('comments.register')}
+              </button>
+            </div>
+          </form>
+        )}
       </div>
     </div>
   )

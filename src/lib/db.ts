@@ -2,13 +2,37 @@ import type {
   Comment,
   CommentWithUser,
   Session,
-  TwoFactorToken,
   User,
   OAuthAccount,
 } from '@/types/comment'
 
 export interface Env {
   DB: D1Database
+}
+
+import { decodeSessionToken, isSessionValid } from '@/lib/auth'
+
+export async function validateSession(
+  db: D1Database,
+  token: string,
+): Promise<{ user: User | null; session: Session | null }> {
+  const decoded = decodeSessionToken(token)
+  if (!decoded) {
+    return { user: null, session: null }
+  }
+
+  const session = await getSessionByToken(db, token)
+  if (!session) {
+    return { user: null, session: null }
+  }
+
+  if (!isSessionValid(session)) {
+    await deleteSession(db, token)
+    return { user: null, session: null }
+  }
+
+  const user = await getUserById(db, session.user_id)
+  return { user, session }
 }
 
 // User operations
@@ -244,60 +268,6 @@ export async function deleteAllUserSessions(
 export async function deleteExpiredSessions(db: D1Database): Promise<void> {
   const now = Math.floor(Date.now() / 1000)
   await db.prepare('DELETE FROM sessions WHERE expires_at < ?').bind(now).run()
-}
-
-// Two factor token operations
-export async function createTwoFactorToken(
-  db: D1Database,
-  data: {
-    id: string
-    user_id: string
-    token: string
-    type: 'email' | 'recovery'
-    expires_at: number
-  },
-): Promise<TwoFactorToken> {
-  const now = Math.floor(Date.now() / 1000)
-  await db
-    .prepare(
-      `INSERT INTO two_factor_tokens (id, user_id, token, type, expires_at, created_at)
-       VALUES (?, ?, ?, ?, ?, ?)`,
-    )
-    .bind(data.id, data.user_id, data.token, data.type, data.expires_at, now)
-    .run()
-
-  return getTwoFactorToken(db, data.token) as Promise<TwoFactorToken>
-}
-
-export async function getTwoFactorToken(
-  db: D1Database,
-  token: string,
-): Promise<TwoFactorToken | null> {
-  const result = await db
-    .prepare('SELECT * FROM two_factor_tokens WHERE token = ?')
-    .bind(token)
-    .first<TwoFactorToken>()
-  return result || null
-}
-
-export async function markTwoFactorTokenUsed(
-  db: D1Database,
-  token: string,
-): Promise<void> {
-  await db
-    .prepare('UPDATE two_factor_tokens SET used = 1 WHERE token = ?')
-    .bind(token)
-    .run()
-}
-
-export async function deleteExpiredTwoFactorTokens(
-  db: D1Database,
-): Promise<void> {
-  const now = Math.floor(Date.now() / 1000)
-  await db
-    .prepare('DELETE FROM two_factor_tokens WHERE expires_at < ?')
-    .bind(now)
-    .run()
 }
 
 // Comment operations
