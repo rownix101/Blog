@@ -216,6 +216,13 @@ export function decodeSessionToken(
   }
 }
 
+// Verify a session token (alias for decodeSessionToken to match import usage)
+export function verifySessionToken(
+  token: string,
+): { userId: string; createdAt: number } | null {
+  return decodeSessionToken(token)
+}
+
 // Check if a session is valid
 export function isSessionValid(session: Session): boolean {
   const now = Math.floor(Date.now() / 1000)

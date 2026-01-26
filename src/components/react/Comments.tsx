@@ -159,9 +159,14 @@ export default function Comments({
         await fetchComments()
         setReplyTo(null)
         setTurnstileToken(null)
-        // Reset Turnstile widget
-        if (window.turnstile) {
-          window.turnstile.reset()
+        // Reset Turnstile widget if it exists and was used
+        if (window.turnstile && document.getElementById('turnstile-widget')) {
+          try {
+            window.turnstile.reset()
+          } catch (error) {
+            // Ignore reset errors if widget is not ready or not found
+            console.debug('Turnstile reset info:', error)
+          }
         }
       } else {
         const error = await response.json()
