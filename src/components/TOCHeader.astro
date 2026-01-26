@@ -1,9 +1,9 @@
 ---
 import { ScrollArea } from '@/components/ui/scroll-area'
+import { getTranslations } from '@/i18n/utils'
 import { cn, getHeadingMargin } from '@/lib/utils'
 import type { MarkdownHeading } from 'astro'
 import { Icon } from 'astro-icon/components'
-import { getTranslations } from '@/i18n/utils'
 
 type Props = {
   headings: MarkdownHeading[]
@@ -429,7 +429,9 @@ const t = getTranslations(lang)
 
   // Initialize on page load (works for both static and dynamic sites)
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', () => MobileTOCController.init())
+    document.addEventListener('DOMContentLoaded', () =>
+      MobileTOCController.init(),
+    )
   } else {
     // DOM is already ready
     MobileTOCController.init()
