@@ -121,7 +121,9 @@ try {
         isCurrentSubpost &&
         headings.length === 1 &&
         headings[0].text === post.data.title
-      ) && <TOCHeader slot="table-of-contents" headings={headings} lang={lang} />
+      ) && (
+        <TOCHeader slot="table-of-contents" headings={headings} lang={lang} />
+      )
   }
 
   <section
@@ -283,7 +285,11 @@ try {
 
     {
       tocSections.length > 0 && (
-        <TOCSidebar sections={tocSections} currentPostId={fullPostId} lang={lang} />
+        <TOCSidebar
+          sections={tocSections}
+          currentPostId={fullPostId}
+          lang={lang}
+        />
       )
     }
 
@@ -292,11 +298,7 @@ try {
     </article>
 
     <div class="md:col-start-2">
-      <ShareBar
-        title={post.data.title}
-        url={shareUrl}
-        lang={langKey}
-      />
+      <ShareBar title={post.data.title} url={shareUrl} lang={langKey} />
     </div>
 
     {
