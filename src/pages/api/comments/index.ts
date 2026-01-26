@@ -97,7 +97,10 @@ export const GET: APIRoute = async ({ request, url, locals }) => {
 
     return new Response(JSON.stringify({ comments }), {
       status: 200,
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        'Cache-Control': 'public, max-age=0, must-revalidate',
+      },
     })
   } catch (error) {
     console.error('Get comments error:', error)

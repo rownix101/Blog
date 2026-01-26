@@ -63,6 +63,7 @@ export default function Comments({
       setError(null)
       const response = await fetch(
         `/api/comments?post_id=${encodeURIComponent(postId)}`,
+        { cache: 'no-store' },
       )
       if (response.ok) {
         const data = await response.json()
