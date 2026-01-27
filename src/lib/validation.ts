@@ -66,21 +66,21 @@ export function validateUsername(username: string): ValidationResult {
 // Password strength validation
 export interface PasswordStrength {
   valid: boolean
-  strength: 'weak' | 'medium' | 'strong'
+  strength: 'very-weak' | 'weak' | 'medium' | 'strong' | 'very-strong'
   error?: string
 }
 
 export function validatePassword(password: string): PasswordStrength {
   if (!password || typeof password !== 'string') {
-    return { valid: false, strength: 'weak', error: 'Password is required' }
+    return { valid: false, strength: 'very-weak', error: 'Password is required' }
   }
 
   if (password.length < 8) {
-    return { valid: false, strength: 'weak', error: 'Password must be at least 8 characters' }
+    return { valid: false, strength: 'very-weak', error: 'Password must be at least 8 characters' }
   }
 
   if (password.length > 128) {
-    return { valid: false, strength: 'weak', error: 'Password is too long (max 128 characters)' }
+    return { valid: false, strength: 'very-weak', error: 'Password is too long (max 128 characters)' }
   }
 
   // Check for common weak passwords
@@ -97,7 +97,152 @@ export function validatePassword(password: string): PasswordStrength {
     'dragon',
   ]
   if (commonPasswords.includes(password.toLowerCase())) {
-    return { valid: false, strength: 'weak', error: 'Password is too common' }
+    return { valid: false, strength: 'very-weak', error: 'Password is too common' }
+  }
+
+  // Check for sequential characters
+  const checkSequential = (str: string, minSequence: number = 4): boolean => {
+    const lowerStr = str.toLowerCase()
+    for (let i = 0; i <= lowerStr.length - minSequence; i++) {
+      let isSequential = true
+      const direction = lowerStr.charCodeAt(i + 1) - lowerStr.charCodeAt(i)
+
+      if (direction === 0) continue
+
+      for (let j = 1; j < minSequence; j++) {
+        if (lowerStr.charCodeAt(i + j + 1) - lowerStr.charCodeAt(i + j) !== direction) {
+          isSequential = false
+          break
+        }
+      }
+
+      if (isSequential && Math.abs(direction) === 1) {
+        return true
+      }
+    }
+    return false
+  }
+
+  if (checkSequential(password, 4)) {
+    return {
+      valid: false,
+      strength: 'very-weak',
+      error: 'Password must not contain sequential characters (e.g., "abcd", "1234")',
+    }
+  }
+
+  // Check for repeated characters
+  const checkRepeated = (str: string, minRepeat: number = 3): boolean => {
+    const lowerStr = str.toLowerCase()
+    for (let i = 0; i <= lowerStr.length - minRepeat; i++) {
+      const char = lowerStr[i]
+      let isRepeated = true
+      for (let j = 1; j < minRepeat; j++) {
+        if (lowerStr[i + j] !== char) {
+          isRepeated = false
+          break
+        }
+      }
+      if (isRepeated) return true
+    }
+    return false
+  }
+
+  if (checkRepeated(password, 3)) {
+    return {
+      valid: false,
+      strength: 'very-weak',
+      error: 'Password must not contain repeated characters (e.g., "aaa", "111")',
+    }
+  }
+
+  // Check for keyboard patterns
+  const checkKeyboardPatterns = (str: string, minSequence: number = 4): boolean => {
+    const lowerStr = str.toLowerCase()
+
+    // QWERTY keyboard rows
+    const keyboardRows = [
+      'qwertyuiop',
+      'asdfghjkl',
+      'zxcvbnm',
+      // Reverse rows
+      'poiuytrewq',
+      'lkjhgfdsa',
+      'mnbvcxz',
+    ]
+
+    // QWERTY keyboard columns
+    const keyboardColumns = [
+      'qaz',
+      'wsx',
+      'edc',
+      'rfv',
+      'tgb',
+      'yhn',
+      'ujm',
+      'ik',
+      'ol',
+      'p',
+      // Reverse columns
+      'zaq',
+      'xsw',
+      'cde',
+      'vfr',
+      'bgt',
+      'nhy',
+      'mju',
+      'ki',
+      'lo',
+    ]
+
+    // Numeric keypad diagonals
+    const keypadDiagonals = [
+      '147',
+      '258',
+      '369',
+      '753',
+      '963',
+      '159',
+      '357',
+      // Reverse diagonals
+      '741',
+      '852',
+      '963',
+      '357',
+      '369',
+      '951',
+      '753',
+    ]
+
+    // Check all patterns
+    const allPatterns = [...keyboardRows, ...keyboardColumns, ...keypadDiagonals]
+
+    for (const pattern of allPatterns) {
+      if (pattern.length < minSequence) continue
+
+      // Check forward pattern
+      if (lowerStr.includes(pattern.substring(0, minSequence))) {
+        return true
+      }
+
+      // Check if password contains any substring from the pattern
+      for (let i = 0; i <= pattern.length - minSequence; i++) {
+        const subPattern = pattern.substring(i, i + minSequence)
+        if (lowerStr.includes(subPattern)) {
+          return true
+        }
+      }
+    }
+
+    return false
+  }
+
+  if (checkKeyboardPatterns(password, 4)) {
+    return {
+      valid: false,
+      strength: 'very-weak',
+      error: 'Password must not contain keyboard patterns (e.g., "qwer", "asdf", "753")',
+    }
   }
 
   // Calculate strength
@@ -113,19 +258,24 @@ export function validatePassword(password: string): PasswordStrength {
   if (/[0-9]/.test(password)) score += 1
   if (/[^a-zA-Z0-9]/.test(password)) score += 1
 
-  let strength: 'weak' | 'medium' | 'strong' = 'weak'
-  if (score >= 5) {
+  // Map score to 5-level strength
+  let strength: 'very-weak' | 'weak' | 'medium' | 'strong' | 'very-strong' = 'very-weak'
+  if (score >= 6) {
+    strength = 'very-strong'
+  } else if (score >= 5) {
     strength = 'strong'
-  } else if (score >= 3) {
+  } else if (score >= 4) {
     strength = 'medium'
+  } else if (score >= 3) {
+    strength = 'weak'
   }
 
   // Require at least medium strength for registration
-  if (score < 3) {
+  if (score < 4) {
     return {
       valid: false,
       strength,
-      error: 'Password must contain at least 8 characters with a mix of letters, numbers, and special characters',
+      error: 'Password must contain at least 8 characters with a mix of uppercase, lowercase, numbers, and special characters',
     }
   }
 

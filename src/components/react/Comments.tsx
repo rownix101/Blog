@@ -635,19 +635,20 @@ function PasswordStrengthMeter({ password, t }: PasswordStrengthMeterProps) {
   const result = validatePassword(password)
 
   const strengthConfig = {
-    weak: { color: 'bg-red-500', text: t('comments.password_weak'), width: '33%' },
-    medium: { color: 'bg-yellow-500', text: t('comments.password_medium'), width: '66%' },
-    strong: { color: 'bg-green-500', text: t('comments.password_strong'), width: '100%' },
+    'very-weak': { color: 'bg-red-600', text: t('comments.password_very_weak'), width: '20%', textColor: 'text-red-600' },
+    weak: { color: 'bg-red-500', text: t('comments.password_weak'), width: '40%', textColor: 'text-red-500' },
+    medium: { color: 'bg-yellow-500', text: t('comments.password_medium'), width: '60%', textColor: 'text-yellow-500' },
+    strong: { color: 'bg-green-500', text: t('comments.password_strong'), width: '80%', textColor: 'text-green-500' },
+    'very-strong': { color: 'bg-green-600', text: t('comments.password_very_strong'), width: '100%', textColor: 'text-green-600' },
   }
 
   const config = strengthConfig[result.strength]
-  const isWeakOrEmpty = !password || result.strength === 'weak'
 
   return (
     <div className="mt-1">
       <div className="flex items-center justify-between text-xs">
         <span className="text-muted-foreground">{t('comments.password_strength')}</span>
-        <span className={isWeakOrEmpty ? 'text-red-500' : result.strength === 'medium' ? 'text-yellow-500' : 'text-green-500'}>
+        <span className={password ? config.textColor : 'text-muted-foreground'}>
           {password ? config.text : '-'}
         </span>
       </div>

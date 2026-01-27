@@ -3,6 +3,19 @@
 This file is for agentic coding tools operating in this repo.
 Keep changes small, follow existing patterns, and verify with the commands here.
 
+## Git Commit Requirements
+
+**IMPORTANT:** All commits must use the following author information:
+- Name: `rownix101`
+- Email: `rownix101@gmail.com`
+
+This ensures consistent commit history across the repository. Before committing, ensure your Git configuration is set correctly:
+
+```bash
+git config user.name "rownix101"
+git config user.email "rownix101@gmail.com"
+```
+
 ## Repo Snapshot
 
 - Stack: Astro + TypeScript + React islands + Tailwind CSS v4, shadcn/ui (Radix primitives).
