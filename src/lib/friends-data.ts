@@ -49,6 +49,17 @@ export const friendsData: FriendsData = {
       "addedAt": "2026-01-25T05:16:28.391Z",
       "status": "active",
       "rel": "friend"
+    },
+    {
+      "id": "github-github-com-1769348937721",
+      "name": "Github",
+      "url": "https://github.com/",
+      "description": "GitHub is a proprietary developer platform that allows developers to create, store, manage, and share their code.",
+      "avatar": "https://github.com/user-attachments/assets/4c2535b9-17b2-45c4-a1cd-75ca12834946",
+      "contact": "sever@github.com",
+      "addedAt": "2026-01-25T13:48:57.721Z",
+      "status": "active",
+      "rel": "friend"
     }
   ],
   "pending": [],
