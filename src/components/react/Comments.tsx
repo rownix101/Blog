@@ -3,6 +3,7 @@ import { COMMENTS } from '@/consts'
 import { ui } from '@/i18n/ui'
 import { useTranslations } from '@/i18n/utils'
 import { getUserAvatarUrl } from '@/lib/auth'
+import { validatePassword } from '@/lib/validation'
 import type { CommentWithUser } from '@/types/comment'
 
 interface CommentsProps {
@@ -625,6 +626,47 @@ function LoginForm({ onClose, onLogin, onGoogleLogin, t }: LoginFormProps) {
   )
 }
 
+interface PasswordStrengthMeterProps {
+  password: string
+  t: TranslationFunction
+}
+
+function PasswordStrengthMeter({ password, t }: PasswordStrengthMeterProps) {
+  const result = validatePassword(password)
+
+  const strengthConfig = {
+    weak: { color: 'bg-red-500', text: t('comments.password_weak'), width: '33%' },
+    medium: { color: 'bg-yellow-500', text: t('comments.password_medium'), width: '66%' },
+    strong: { color: 'bg-green-500', text: t('comments.password_strong'), width: '100%' },
+  }
+
+  const config = strengthConfig[result.strength]
+  const isWeakOrEmpty = !password || result.strength === 'weak'
+
+  return (
+    <div className="mt-1">
+      <div className="flex items-center justify-between text-xs">
+        <span className="text-muted-foreground">{t('comments.password_strength')}</span>
+        <span className={isWeakOrEmpty ? 'text-red-500' : result.strength === 'medium' ? 'text-yellow-500' : 'text-green-500'}>
+          {password ? config.text : '-'}
+        </span>
+      </div>
+      <div className="mt-1 h-1.5 w-full overflow-hidden rounded-full bg-muted">
+        <div
+          className={`h-full transition-all duration-300 ${password ? config.color : 'bg-muted'}`}
+          style={{ width: password ? config.width : '0%' }}
+        />
+      </div>
+      {!result.valid && password && result.error && (
+        <p className="mt-1 text-xs text-red-500">{result.error}</p>
+      )}
+      {password && result.valid && (
+        <p className="mt-1 text-xs text-green-500">{t('comments.password_strength_requirements')}</p>
+      )}
+    </div>
+  )
+}
+
 interface RegisterFormProps {
   onClose: () => void
   onRegister: (user?: User) => void
@@ -782,6 +824,7 @@ function RegisterForm({ onClose, onRegister, t, lang }: RegisterFormProps) {
                   className="border-border focus:ring-primary w-full rounded border px-3 py-2 text-[16px] focus:ring-2 focus:outline-none"
                   required
                 />
+                <PasswordStrengthMeter password={password} t={t} />
               </div>
               <div>
                 <label className="mb-1 block text-sm font-medium">
