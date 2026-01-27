@@ -11,46 +11,240 @@ export interface EmailOptions {
 function getEmailHtml(title: string, bodyContent: string, footerText: string) {
   return `
     <!DOCTYPE html>
-    <html>
+    <html lang="zh-CN">
       <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <style>
-          body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; line-height: 1.6; color: hsl(20 10% 8%); background-color: hsl(30 15% 99%); margin: 0; padding: 0; }
-          .container { max-width: 600px; margin: 0 auto; padding: 40px 20px; background-color: hsl(30 15% 99%); }
-          .card { background-color: #ffffff; padding: 32px; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06); border: 1px solid hsl(30 10% 88%); }
-          .header { text-align: center; margin-bottom: 32px; }
-          .site-title { font-size: 20px; font-weight: 700; color: hsl(20 10% 8%); text-decoration: none; letter-spacing: -0.02em; }
-          .title { font-size: 24px; font-weight: 700; color: hsl(20 10% 8%); margin-bottom: 24px; letter-spacing: -0.02em; }
-          .text { color: hsl(20 10% 12%); margin-bottom: 24px; }
-          .code-container { margin: 32px 0; text-align: center; }
-          .code { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size: 32px; font-weight: 700; letter-spacing: 8px; color: hsl(12 76% 61%); background: hsl(16 60% 95%); padding: 24px 32px; border-radius: 8px; display: inline-block; border: 1px solid hsl(12 76% 61%); }
-          .button-container { margin: 32px 0; text-align: center; }
-          .button { display: inline-block; padding: 14px 32px; background-color: hsl(12 76% 61%); color: #ffffff !important; text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 16px; transition: background-color 0.2s; }
-          .button:hover { background-color: hsl(12 76% 56%); }
-          .footer { margin-top: 32px; font-size: 14px; color: hsl(20 5% 40%); text-align: center; }
-          .comment { background: hsl(30 15% 97%); padding: 20px; border-radius: 8px; margin: 20px 0; border-left: 4px solid hsl(12 76% 61%); font-style: italic; }
-          .highlight { font-weight: 600; color: hsl(12 76% 61%); }
-          
+          body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            line-height: 1.6;
+            color: hsl(20 10% 8%);
+            background: linear-gradient(135deg, #fff7ed 0%, #ffedd5 100%);
+            margin: 0;
+            padding: 40px 20px;
+          }
+          .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: #ffffff;
+            border-radius: 24px;
+            box-shadow: 0 20px 40px -10px rgba(249, 115, 22, 0.15), 0 8px 16px -8px rgba(0, 0, 0, 0.08);
+            overflow: hidden;
+          }
+          .email-header {
+            background: linear-gradient(135deg, hsl(12 76% 61%) 0%, hsl(12 76% 70%) 100%);
+            padding: 48px 40px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+          }
+          .email-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 300px;
+            height: 300px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+          }
+          .email-header::after {
+            content: '';
+            position: absolute;
+            bottom: -30%;
+            left: -10%;
+            width: 200px;
+            height: 200px;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 50%;
+          }
+          .logo {
+            font-size: 28px;
+            font-weight: 700;
+            color: #ffffff;
+            letter-spacing: -0.02em;
+            margin-bottom: 8px;
+            position: relative;
+            z-index: 1;
+          }
+          .tagline {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 14px;
+            font-weight: 400;
+            letter-spacing: 0.02em;
+            position: relative;
+            z-index: 1;
+          }
+          .email-body {
+            padding: 48px 40px;
+          }
+          .title {
+            font-size: 24px;
+            font-weight: 700;
+            color: hsl(20 10% 8%);
+            margin-bottom: 24px;
+            letter-spacing: -0.02em;
+          }
+          .text {
+            color: hsl(20 10% 35%);
+            margin-bottom: 24px;
+            font-size: 16px;
+            line-height: 1.8;
+          }
+          .text strong {
+            color: hsl(12 76% 61%);
+            font-weight: 600;
+          }
+          .code-container {
+            margin: 32px 0;
+            text-align: center;
+          }
+          .code-card {
+            background: linear-gradient(135deg, hsl(30 15% 99%) 0%, hsl(30 10% 95%) 100%);
+            border: 2px solid hsl(12 76% 61%);
+            border-radius: 16px;
+            padding: 32px;
+            text-align: center;
+            position: relative;
+            box-shadow: 0 4px 12px rgba(249, 115, 22, 0.1);
+          }
+          .code-label {
+            font-size: 13px;
+            color: hsl(20 5% 50%);
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 16px;
+          }
+          .code {
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+            font-size: 42px;
+            font-weight: 700;
+            letter-spacing: 12px;
+            color: hsl(12 76% 61%);
+            line-height: 1;
+            text-shadow: 0 2px 4px rgba(249, 115, 22, 0.1);
+          }
+          .code-hint {
+            font-size: 13px;
+            color: hsl(20 5% 45%);
+            margin-top: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+          }
+          .info-box {
+            background: hsl(30 15% 98%);
+            border-left: 4px solid hsl(12 76% 61%);
+            border-radius: 8px;
+            padding: 20px 24px;
+            margin: 32px 0;
+          }
+          .info-box p {
+            font-size: 14px;
+            color: hsl(20 10% 40%);
+            line-height: 1.7;
+            margin: 0;
+          }
+          .button-container {
+            margin: 32px 0;
+            text-align: center;
+          }
+          .button {
+            display: inline-block;
+            padding: 14px 32px;
+            background: linear-gradient(135deg, hsl(12 76% 61%) 0%, hsl(12 76% 70%) 100%);
+            color: #ffffff !important;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 16px;
+            box-shadow: 0 4px 12px rgba(249, 115, 22, 0.3);
+            transition: all 0.2s;
+          }
+          .button:hover {
+            box-shadow: 0 6px 16px rgba(249, 115, 22, 0.4);
+            transform: translateY(-1px);
+          }
+          .comment {
+            background: hsl(30 15% 97%);
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border-left: 4px solid hsl(12 76% 61%);
+            font-style: italic;
+          }
+          .highlight {
+            font-weight: 600;
+            color: hsl(12 76% 61%);
+          }
+          .email-footer {
+            background: hsl(30 15% 98%);
+            padding: 32px 40px;
+            text-align: center;
+            border-top: 1px solid hsl(30 10% 90%);
+          }
+          .footer {
+            font-size: 13px;
+            color: hsl(20 5% 45%);
+            line-height: 1.7;
+            margin-bottom: 16px;
+          }
+          .copyright {
+            font-size: 12px;
+            color: hsl(20 5% 40%);
+            opacity: 0.7;
+          }
+
           @media (max-width: 600px) {
-            .container { padding: 20px 10px; }
-            .card { padding: 24px; }
-            .code { font-size: 24px; padding: 16px 24px; letter-spacing: 6px; }
+            body {
+              padding: 20px 12px;
+            }
+            .container {
+              border-radius: 20px;
+            }
+            .email-header {
+              padding: 36px 24px;
+            }
+            .logo {
+              font-size: 24px;
+            }
+            .email-body {
+              padding: 36px 24px;
+            }
+            .title {
+              font-size: 20px;
+            }
+            .text {
+              font-size: 15px;
+            }
+            .code-card {
+              padding: 24px;
+            }
+            .code {
+              font-size: 32px;
+              letter-spacing: 8px;
+            }
+            .email-footer {
+              padding: 24px;
+            }
           }
         </style>
       </head>
       <body>
         <div class="container">
-          <div class="header">
-            <span class="site-title">Rownix's Blog</span>
+          <div class="email-header">
+            <div class="logo">Rownix's Blog</div>
+            <div class="tagline">欢迎加入我们的社区</div>
           </div>
-          <div class="card">
+          <div class="email-body">
             <h1 class="title">${title}</h1>
             ${bodyContent}
-            <div class="footer">
-              <p>${footerText}</p>
-              <p style="margin-top: 16px; font-size: 12px; opacity: 0.7;">&copy; ${new Date().getFullYear()} Rownix's Blog</p>
-            </div>
+          </div>
+          <div class="email-footer">
+            <p class="footer">${footerText}</p>
+            <p class="copyright">&copy; ${new Date().getFullYear()} Rownix's Blog. All rights reserved.</p>
           </div>
         </div>
       </body>
@@ -149,9 +343,15 @@ export async function sendVerificationEmail(
   const bodyContent = `
     <p class="text">${content.greeting}</p>
     <div class="code-container">
-      <div class="code">${code}</div>
+      <div class="code-card">
+        <div class="code-label">验证码</div>
+        <div class="code">${code}</div>
+        <div class="code-hint">${content.expire}</div>
+      </div>
     </div>
-    <p class="text">${content.expire}</p>
+    <div class="info-box">
+      <p><strong>提示：</strong>如果您在 15 分钟内未能完成验证，可以重新请求发送验证码。</p>
+    </div>
   `
 
   const html = getEmailHtml(content.title, bodyContent, content.ignore)
@@ -172,9 +372,12 @@ export async function sendTwoFactorEmail(
   const bodyContent = `
     <p class="text">Use the code below to complete your sign-in:</p>
     <div class="code-container">
-      <div class="code">${code}</div>
+      <div class="code-card">
+        <div class="code-label">验证码</div>
+        <div class="code">${code}</div>
+        <div class="code-hint">This code will expire in 5 minutes.</div>
+      </div>
     </div>
-    <p class="text">This code will expire in 5 minutes.</p>
   `
 
   const html = getEmailHtml(
