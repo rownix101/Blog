@@ -18,43 +18,11 @@ import {
   validateEmail,
   validateUsername,
   validatePassword,
-  RateLimiter,
 } from '@/lib/validation'
-
-// Rate limiter for registration attempts
-const registerRateLimiter = new RateLimiter({
-  maxRequests: 3,
-  windowMs: 60 * 60 * 1000, // 1 hour
-})
 
 export const prerender = false
 
 export const POST: APIRoute = async ({ request, locals, cookies }) => {
-  // Rate limiting
-  const clientIp =
-    request.headers.get('cf-connecting-ip') ||
-    request.headers.get('x-forwarded-for') ||
-    'unknown'
-  const rateLimitCheck = registerRateLimiter.check(clientIp)
-
-  if (!rateLimitCheck.allowed) {
-    return new Response(
-      JSON.stringify({
-        error: 'Too many registration attempts. Please try again later.',
-        retryAfter: Math.ceil((rateLimitCheck.resetTime - Date.now()) / 1000),
-      }),
-      {
-        status: 429,
-        headers: {
-          'Content-Type': 'application/json',
-          'Retry-After': Math.ceil(
-            (rateLimitCheck.resetTime - Date.now()) / 1000,
-          ).toString(),
-        },
-      },
-    )
-  }
-
   try {
     let body: any
     try {

@@ -11,14 +11,7 @@ import {
   validatePostId,
   validateCommentContent,
   checkSpam,
-  RateLimiter,
 } from '@/lib/validation'
-
-// Rate limiter for comment creation
-const commentRateLimiter = new RateLimiter({
-  maxRequests: 10,
-  windowMs: 60 * 60 * 1000, // 1 hour
-})
 
 export const prerender = false
 
@@ -113,31 +106,6 @@ export const GET: APIRoute = async ({ request, url, locals }) => {
 
 // POST - Create a new comment
 export const POST: APIRoute = async ({ request, url, locals }) => {
-  // Rate limiting
-  const clientIp =
-    request.headers.get('cf-connecting-ip') ||
-    request.headers.get('x-forwarded-for') ||
-    'unknown'
-  const rateLimitCheck = commentRateLimiter.check(clientIp)
-
-  if (!rateLimitCheck.allowed) {
-    return new Response(
-      JSON.stringify({
-        error: 'Too many comment attempts. Please try again later.',
-        retryAfter: Math.ceil((rateLimitCheck.resetTime - Date.now()) / 1000),
-      }),
-      {
-        status: 429,
-        headers: {
-          'Content-Type': 'application/json',
-          'Retry-After': Math.ceil(
-            (rateLimitCheck.resetTime - Date.now()) / 1000,
-          ).toString(),
-        },
-      },
-    )
-  }
-
   try {
     const body = await request.json()
     const { post_id, content, parent_id, turnstile_token } = body

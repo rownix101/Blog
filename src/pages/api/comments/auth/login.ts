@@ -10,43 +10,11 @@ import {
 import {
   validateEmail,
   validateTwoFactorCode,
-  RateLimiter,
 } from '@/lib/validation'
-
-// Rate limiter for login attempts
-const loginRateLimiter = new RateLimiter({
-  maxRequests: 5,
-  windowMs: 15 * 60 * 1000, // 15 minutes
-})
 
 export const prerender = false
 
 export const POST: APIRoute = async ({ request, locals, cookies }) => {
-  // Rate limiting
-  const clientIp =
-    request.headers.get('cf-connecting-ip') ||
-    request.headers.get('x-forwarded-for') ||
-    'unknown'
-  const rateLimitCheck = loginRateLimiter.check(clientIp)
-
-  if (!rateLimitCheck.allowed) {
-    return new Response(
-      JSON.stringify({
-        error: 'Too many login attempts. Please try again later.',
-        retryAfter: Math.ceil((rateLimitCheck.resetTime - Date.now()) / 1000),
-      }),
-      {
-        status: 429,
-        headers: {
-          'Content-Type': 'application/json',
-          'Retry-After': Math.ceil(
-            (rateLimitCheck.resetTime - Date.now()) / 1000,
-          ).toString(),
-        },
-      },
-    )
-  }
-
   try {
     let body: any
     try {
