@@ -171,29 +171,46 @@ const subpostsWithReadingTime = await Promise.all(
       this.scrollArea = null
       this.sidebarScrollArea = null
     }
+
+    getScrollArea(): HTMLElement | null {
+      if (this.scrollArea) return this.scrollArea
+      const sidebarContainer = document.getElementById('subposts-sidebar-container')
+      this.scrollArea = sidebarContainer?.querySelector('[data-slot="scroll-area-viewport"]') || null
+      return this.scrollArea
+    }
+
+    getSidebarScrollArea(): HTMLElement | null {
+      if (this.sidebarScrollArea) return this.sidebarScrollArea
+      const sidebarContainer = document.getElementById('subposts-sidebar-container')
+      this.sidebarScrollArea = sidebarContainer?.querySelector('[data-subposts-sidebar-scroll]') || null
+      return this.sidebarScrollArea
+    }
   }
 
   const state = new SidebarState()
 
   class SidebarScrollMask {
     static update() {
-      if (!state.scrollArea || !state.sidebarScrollArea) return
+      const scrollArea = state.getScrollArea()
+      const sidebarScrollArea = state.getSidebarScrollArea()
+      if (!scrollArea || !sidebarScrollArea) return
 
-      const { scrollTop, scrollHeight, clientHeight } = state.scrollArea
+      const { scrollTop, scrollHeight, clientHeight } = scrollArea
       const threshold = 5
       const isAtTop = scrollTop <= threshold
       const isAtBottom = scrollTop >= scrollHeight - clientHeight - threshold
 
-      state.sidebarScrollArea.classList.toggle('mask-t-from-90%', !isAtTop)
-      state.sidebarScrollArea.classList.toggle('mask-b-from-90%', !isAtBottom)
+      sidebarScrollArea.classList.toggle('mask-t-from-90%', !isAtTop)
+      sidebarScrollArea.classList.toggle('mask-b-from-90%', !isAtBottom)
     }
   }
 
   class SidebarScroll {
     static toActive() {
-      if (!state.scrollArea) return
+      const scrollArea = state.getScrollArea()
+      if (!scrollArea) return
 
-      const activeItem = state.scrollArea.querySelector(
+      const activeItem = scrollArea.querySelector(
         '.subposts-sidebar-active-item',
       )
       if (!activeItem) {
@@ -201,20 +218,20 @@ const subpostsWithReadingTime = await Promise.all(
       }
 
       const { top: areaTop, height: areaHeight } =
-        state.scrollArea.getBoundingClientRect()
+        scrollArea.getBoundingClientRect()
       const { top: itemTop, height: itemHeight } =
         activeItem.getBoundingClientRect()
 
-      const currentItemTop = itemTop - areaTop + state.scrollArea.scrollTop
+      const currentItemTop = itemTop - areaTop + scrollArea.scrollTop
       const targetScroll = Math.max(
         0,
         Math.min(
           currentItemTop - (areaHeight - itemHeight) / 2,
-          state.scrollArea.scrollHeight - state.scrollArea.clientHeight,
+          scrollArea.scrollHeight - scrollArea.clientHeight,
         ),
       )
 
-      state.scrollArea.scrollTop = targetScroll
+      scrollArea.scrollTop = targetScroll
     }
   }
 
@@ -226,15 +243,9 @@ const subpostsWithReadingTime = await Promise.all(
         'subposts-sidebar-container',
       )
       if (sidebarContainer) {
-        state.scrollArea = sidebarContainer.querySelector(
-          '[data-radix-scroll-area-viewport]',
-        )
-        state.sidebarScrollArea = sidebarContainer.querySelector(
-          '[data-subposts-sidebar-scroll]',
-        )
-
-        if (state.scrollArea) {
-          state.scrollArea.addEventListener(
+        const scrollArea = state.getScrollArea()
+        if (scrollArea) {
+          scrollArea.addEventListener(
             'scroll',
             SidebarScrollMask.update,
             { passive: true },
@@ -249,8 +260,9 @@ const subpostsWithReadingTime = await Promise.all(
     }
 
     static cleanup() {
-      if (state.scrollArea) {
-        state.scrollArea.removeEventListener('scroll', SidebarScrollMask.update)
+      const scrollArea = state.getScrollArea()
+      if (scrollArea) {
+        scrollArea.removeEventListener('scroll', SidebarScrollMask.update)
       }
       state.reset()
     }

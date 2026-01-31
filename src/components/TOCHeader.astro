@@ -125,9 +125,7 @@ const t = getTranslations(lang)
         '#mobile-toc-container details',
       )
       this.listElement = document.getElementById('mobile-table-of-contents')
-      const tocContainer = document.getElementById('mobile-toc-container')
-      this.scrollArea =
-        tocContainer?.querySelector('[data-radix-scroll-area-viewport]') || null
+      this.scrollArea = null
       this.headings = []
       this.regions = []
       this.headingPositions = []
@@ -140,6 +138,14 @@ const t = getTranslations(lang)
         this.progressCircle.style.strokeDashoffset =
           PROGRESS_CIRCLE_CIRCUMFERENCE.toString()
       }
+    }
+
+    getScrollArea(): HTMLElement | null {
+      if (this.scrollArea) return this.scrollArea
+      const tocContainer = document.getElementById('mobile-toc-container')
+      this.scrollArea =
+        tocContainer?.querySelector('[data-slot="scroll-area-viewport"]') || null
+      return this.scrollArea
     }
   }
 
@@ -216,15 +222,16 @@ const t = getTranslations(lang)
 
   class TOCHeaderScrollMask {
     static update() {
-      if (!state.scrollArea) return
+      const scrollArea = state.getScrollArea()
+      if (!scrollArea) return
 
-      const { scrollTop, scrollHeight, clientHeight } = state.scrollArea
+      const { scrollTop, scrollHeight, clientHeight } = scrollArea
       const threshold = 5
       const isAtTop = scrollTop <= threshold
       const isAtBottom = scrollTop >= scrollHeight - clientHeight - threshold
 
-      state.scrollArea.classList.toggle('mask-t-from-80%', !isAtTop)
-      state.scrollArea.classList.toggle('mask-b-from-80%', !isAtBottom)
+      scrollArea.classList.toggle('mask-t-from-80%', !isAtTop)
+      scrollArea.classList.toggle('mask-b-from-80%', !isAtBottom)
     }
   }
 
@@ -277,7 +284,7 @@ const t = getTranslations(lang)
       )
       if (!activeItem) return
 
-      const scrollContainer = state.scrollArea
+      const scrollContainer = state.getScrollArea()
       if (!scrollContainer) return
 
       const { top: containerTop, height: containerHeight } =
@@ -308,8 +315,9 @@ const t = getTranslations(lang)
         })
       })
 
-      if (state.scrollArea) {
-        state.scrollArea.addEventListener(
+      const scrollArea = state.getScrollArea()
+      if (scrollArea) {
+        scrollArea.addEventListener(
           'scroll',
           () => TOCHeaderScrollMask.update(),
           { passive: true },

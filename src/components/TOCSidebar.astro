@@ -176,11 +176,24 @@ const parentId = isCurrentSubpost ? getParentId(currentPostId) : currentPostId
       this.regions = []
       this.headingPositions = []
       this.headingBottomById = new Map()
+      this.scrollArea = null
+      this.tocScrollArea = null
+    }
+
+    getScrollArea(): HTMLElement | null {
+      if (this.scrollArea) return this.scrollArea
       const tocContainer = document.getElementById('toc-sidebar-container')
       this.scrollArea =
-        tocContainer?.querySelector('[data-radix-scroll-area-viewport]') || null
+        tocContainer?.querySelector('[data-slot="scroll-area-viewport"]') || null
+      return this.scrollArea
+    }
+
+    getTocScrollArea(): HTMLElement | null {
+      if (this.tocScrollArea) return this.tocScrollArea
+      const tocContainer = document.getElementById('toc-sidebar-container')
       this.tocScrollArea =
         tocContainer?.querySelector('[data-toc-scroll-area]') || null
+      return this.tocScrollArea
     }
   }
 
@@ -257,15 +270,17 @@ const parentId = isCurrentSubpost ? getParentId(currentPostId) : currentPostId
 
   class TOCScrollMask {
     static update() {
-      if (!state.scrollArea || !state.tocScrollArea) return
+      const scrollArea = state.getScrollArea()
+      const tocScrollArea = state.getTocScrollArea()
+      if (!scrollArea || !tocScrollArea) return
 
-      const { scrollTop, scrollHeight, clientHeight } = state.scrollArea
+      const { scrollTop, scrollHeight, clientHeight } = scrollArea
       const threshold = 5
       const isAtTop = scrollTop <= threshold
       const isAtBottom = scrollTop >= scrollHeight - clientHeight - threshold
 
-      state.tocScrollArea.classList.toggle('mask-t-from-90%', !isAtTop)
-      state.tocScrollArea.classList.toggle('mask-b-from-90%', !isAtBottom)
+      tocScrollArea.classList.toggle('mask-t-from-90%', !isAtTop)
+      tocScrollArea.classList.toggle('mask-b-from-90%', !isAtBottom)
     }
   }
 
@@ -288,7 +303,8 @@ const parentId = isCurrentSubpost ? getParentId(currentPostId) : currentPostId
     }
 
     static scrollToActive(headingIds: string[]) {
-      if (!state.scrollArea || !headingIds.length) return
+      const scrollArea = state.getScrollArea()
+      if (!scrollArea || !headingIds.length) return
 
       const activeLink = document.querySelector(
         `#toc-sidebar-container [data-heading-link="${headingIds[0]}"]`,
@@ -296,21 +312,21 @@ const parentId = isCurrentSubpost ? getParentId(currentPostId) : currentPostId
       if (!activeLink) return
 
       const { top: areaTop, height: areaHeight } =
-        state.scrollArea.getBoundingClientRect()
+        scrollArea.getBoundingClientRect()
       const { top: linkTop, height: linkHeight } =
         activeLink.getBoundingClientRect()
 
-      const currentLinkTop = linkTop - areaTop + state.scrollArea.scrollTop
+      const currentLinkTop = linkTop - areaTop + scrollArea.scrollTop
       const targetScroll = Math.max(
         0,
         Math.min(
           currentLinkTop - (areaHeight - linkHeight) / 2,
-          state.scrollArea.scrollHeight - state.scrollArea.clientHeight,
+          scrollArea.scrollHeight - scrollArea.clientHeight,
         ),
       )
 
-      if (Math.abs(targetScroll - state.scrollArea.scrollTop) > 5) {
-        state.scrollArea.scrollTop = targetScroll
+      if (Math.abs(targetScroll - scrollArea.scrollTop) > 5) {
+        scrollArea.scrollTop = targetScroll
       }
     }
   }
@@ -373,11 +389,10 @@ const parentId = isCurrentSubpost ? getParentId(currentPostId) : currentPostId
       const options = { passive: true }
       window.addEventListener('scroll', this.scrollListener, options)
       window.addEventListener('resize', this.handleResize, options)
-      state.scrollArea?.addEventListener(
-        'scroll',
-        this.handleTOCScroll,
-        options,
-      )
+      const scrollArea = state.getScrollArea()
+      if (scrollArea) {
+        scrollArea.addEventListener('scroll', this.handleTOCScroll, options)
+      }
     }
 
     static cleanup() {
@@ -385,7 +400,10 @@ const parentId = isCurrentSubpost ? getParentId(currentPostId) : currentPostId
         window.removeEventListener('scroll', this.scrollListener)
       }
       window.removeEventListener('resize', this.handleResize)
-      state.scrollArea?.removeEventListener('scroll', this.handleTOCScroll)
+      const scrollArea = state.getScrollArea()
+      if (scrollArea) {
+        scrollArea.removeEventListener('scroll', this.handleTOCScroll)
+      }
       this.scrollListener = null
       this.ticking = false
 

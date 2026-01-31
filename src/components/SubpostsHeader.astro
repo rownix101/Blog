@@ -202,48 +202,65 @@ const currentSubpostDetails = isCurrentSubpost
       this.detailsElement = null
       this.headerScrollArea = null
     }
+
+    getScrollArea(): HTMLElement | null {
+      if (this.scrollArea) return this.scrollArea
+      const container = document.getElementById('subposts-header-container')
+      this.scrollArea = container?.querySelector('[data-slot="scroll-area-viewport"]') || null
+      return this.scrollArea
+    }
+
+    getHeaderScrollArea(): HTMLElement | null {
+      if (this.headerScrollArea) return this.headerScrollArea
+      const container = document.getElementById('subposts-header-container')
+      this.headerScrollArea = container?.querySelector('[data-subposts-header-scroll]') || null
+      return this.headerScrollArea
+    }
   }
 
   const state = new SubpostsState()
 
   class SubpostsHeaderScrollMask {
     static update() {
-      if (!state.scrollArea || !state.headerScrollArea) return
+      const scrollArea = state.getScrollArea()
+      const headerScrollArea = state.getHeaderScrollArea()
+      if (!scrollArea || !headerScrollArea) return
 
-      const { scrollTop, scrollHeight, clientHeight } = state.scrollArea
+      const { scrollTop, scrollHeight, clientHeight } = scrollArea
       const threshold = 5
       const isAtTop = scrollTop <= threshold
       const isAtBottom = scrollTop >= scrollHeight - clientHeight - threshold
 
-      state.headerScrollArea.classList.toggle('mask-t-from-80%', !isAtTop)
-      state.headerScrollArea.classList.toggle('mask-b-from-80%', !isAtBottom)
+      headerScrollArea.classList.toggle('mask-t-from-80%', !isAtTop)
+      headerScrollArea.classList.toggle('mask-b-from-80%', !isAtBottom)
     }
   }
 
   class SubpostsScroll {
     static toActive() {
-      if (!state.scrollArea) return
+      const scrollArea = state.getScrollArea()
+      if (!scrollArea) return
 
-      const activeItem = state.scrollArea.querySelector(
+      const activeItem = scrollArea.querySelector(
         '.mobile-subposts-active-item',
       )
       if (!activeItem) return
 
       const { top: areaTop, height: areaHeight } =
-        state.scrollArea.getBoundingClientRect()
+        scrollArea.getBoundingClientRect()
       const { top: itemTop, height: itemHeight } =
         activeItem.getBoundingClientRect()
 
-      const currentItemTop = itemTop - areaTop + state.scrollArea.scrollTop
+      const currentItemTop = itemTop - areaTop + scrollArea.scrollTop
       const targetScroll = Math.max(
         0,
         Math.min(
           currentItemTop - (areaHeight - itemHeight) / 2,
-          state.scrollArea.scrollHeight - state.scrollArea.clientHeight,
+          scrollArea.scrollHeight - scrollArea.clientHeight,
         ),
       )
 
-      state.scrollArea.scrollTop = targetScroll
+      scrollArea.scrollTop = targetScroll
     }
 
     static setupInteraction() {
@@ -251,7 +268,7 @@ const currentSubpostDetails = isCurrentSubpost
       if (!container) return
 
       state.scrollArea = container.querySelector(
-        '[data-radix-scroll-area-viewport]',
+        '[data-slot="scroll-area-viewport]',
       )
       state.detailsElement = container.querySelector('details')
       state.headerScrollArea = container.querySelector(
@@ -259,8 +276,9 @@ const currentSubpostDetails = isCurrentSubpost
       )
       const links = container.querySelectorAll('.mobile-subposts-link')
 
-      if (state.scrollArea) {
-        state.scrollArea.addEventListener(
+      const scrollArea = state.getScrollArea()
+      if (scrollArea) {
+        scrollArea.addEventListener(
           'scroll',
           SubpostsHeaderScrollMask.update,
           { passive: true },
@@ -293,8 +311,9 @@ const currentSubpostDetails = isCurrentSubpost
     }
 
     static cleanup() {
-      if (state.scrollArea) {
-        state.scrollArea.removeEventListener(
+      const scrollArea = state.getScrollArea()
+      if (scrollArea) {
+        scrollArea.removeEventListener(
           'scroll',
           SubpostsHeaderScrollMask.update,
         )
