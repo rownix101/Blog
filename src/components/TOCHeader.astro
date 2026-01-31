@@ -428,20 +428,28 @@ const t = getTranslations(lang)
   }
 
   // Initialize on page load (works for both static and dynamic sites)
+  const initialize = () => {
+    // Always use requestAnimationFrame to ensure DOM is fully constructed
+    // This avoids the issue where script executes in header before main content is ready
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        MobileTOCController.init()
+      })
+    })
+  }
+
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', () =>
-      MobileTOCController.init(),
-    )
+    document.addEventListener('DOMContentLoaded', initialize)
   } else {
-    // DOM is already ready
-    MobileTOCController.init()
+    // DOM is already ready, but wait for next animation frame
+    initialize()
   }
 
   // Also support Astro View Transitions for dev/local testing
-  document.addEventListener('astro:page-load', () => MobileTOCController.init())
+  document.addEventListener('astro:page-load', initialize)
   document.addEventListener('astro:after-swap', () => {
     MobileTOCController.cleanup()
-    MobileTOCController.init()
+    initialize()
   })
   document.addEventListener('astro:before-swap', () =>
     MobileTOCController.cleanup(),

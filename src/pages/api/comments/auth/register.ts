@@ -66,7 +66,7 @@ export const POST: APIRoute = async ({ request, locals, cookies }) => {
       })
     }
 
-    const { email, username, password, code } = body
+    const { email, username, password, code, acceptedTerms } = body
 
     // Validate input presence
     if (!email || !username || !password || !code) {
@@ -74,6 +74,15 @@ export const POST: APIRoute = async ({ request, locals, cookies }) => {
         JSON.stringify({
           error:
             'Email, username, password, and verification code are required',
+        }),
+        { status: 400, headers: { 'Content-Type': 'application/json' } },
+      )
+    }
+
+    if (acceptedTerms !== true) {
+      return new Response(
+        JSON.stringify({
+          error: 'You must accept the Terms of Service and Privacy Policy',
         }),
         { status: 400, headers: { 'Content-Type': 'application/json' } },
       )

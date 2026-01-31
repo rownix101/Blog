@@ -635,11 +635,36 @@ function PasswordStrengthMeter({ password, t }: PasswordStrengthMeterProps) {
   const result = validatePassword(password)
 
   const strengthConfig = {
-    'very-weak': { color: 'bg-red-600', text: t('comments.password_very_weak'), width: '20%', textColor: 'text-red-600' },
-    weak: { color: 'bg-red-500', text: t('comments.password_weak'), width: '40%', textColor: 'text-red-500' },
-    medium: { color: 'bg-yellow-500', text: t('comments.password_medium'), width: '60%', textColor: 'text-yellow-500' },
-    strong: { color: 'bg-green-500', text: t('comments.password_strong'), width: '80%', textColor: 'text-green-500' },
-    'very-strong': { color: 'bg-green-600', text: t('comments.password_very_strong'), width: '100%', textColor: 'text-green-600' },
+    'very-weak': {
+      color: 'bg-red-600',
+      text: t('comments.password_very_weak'),
+      width: '20%',
+      textColor: 'text-red-600',
+    },
+    weak: {
+      color: 'bg-red-500',
+      text: t('comments.password_weak'),
+      width: '40%',
+      textColor: 'text-red-500',
+    },
+    medium: {
+      color: 'bg-yellow-500',
+      text: t('comments.password_medium'),
+      width: '60%',
+      textColor: 'text-yellow-500',
+    },
+    strong: {
+      color: 'bg-green-500',
+      text: t('comments.password_strong'),
+      width: '80%',
+      textColor: 'text-green-500',
+    },
+    'very-strong': {
+      color: 'bg-green-600',
+      text: t('comments.password_very_strong'),
+      width: '100%',
+      textColor: 'text-green-600',
+    },
   }
 
   const config = strengthConfig[result.strength]
@@ -647,12 +672,14 @@ function PasswordStrengthMeter({ password, t }: PasswordStrengthMeterProps) {
   return (
     <div className="mt-1">
       <div className="flex items-center justify-between text-xs">
-        <span className="text-muted-foreground">{t('comments.password_strength')}</span>
+        <span className="text-muted-foreground">
+          {t('comments.password_strength')}
+        </span>
         <span className={password ? config.textColor : 'text-muted-foreground'}>
           {password ? config.text : '-'}
         </span>
       </div>
-      <div className="mt-1 h-1.5 w-full overflow-hidden rounded-full bg-muted">
+      <div className="bg-muted mt-1 h-1.5 w-full overflow-hidden rounded-full">
         <div
           className={`h-full transition-all duration-300 ${password ? config.color : 'bg-muted'}`}
           style={{ width: password ? config.width : '0%' }}
@@ -662,7 +689,9 @@ function PasswordStrengthMeter({ password, t }: PasswordStrengthMeterProps) {
         <p className="mt-1 text-xs text-red-500">{result.error}</p>
       )}
       {password && result.valid && (
-        <p className="mt-1 text-xs text-green-500">{t('comments.password_strength_requirements')}</p>
+        <p className="mt-1 text-xs text-green-500">
+          {t('comments.password_strength_requirements')}
+        </p>
       )}
     </div>
   )
@@ -683,6 +712,7 @@ function RegisterForm({ onClose, onRegister, t, lang }: RegisterFormProps) {
   const [confirmPassword, setConfirmPassword] = useState('')
   const [code, setCode] = useState('')
   const [loading, setLoading] = useState(false)
+  const [acceptedTerms, setAcceptedTerms] = useState(false)
 
   const handleSendCode = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -711,6 +741,11 @@ function RegisterForm({ onClose, onRegister, t, lang }: RegisterFormProps) {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 
+    if (!acceptedTerms) {
+      alert(t('comments.terms_consent_required'))
+      return
+    }
+
     if (password !== confirmPassword) {
       alert(t('comments.password_mismatch'))
       return
@@ -720,7 +755,13 @@ function RegisterForm({ onClose, onRegister, t, lang }: RegisterFormProps) {
       const response = await fetch('/api/comments/auth/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, username, password, code }),
+        body: JSON.stringify({
+          email,
+          username,
+          password,
+          code,
+          acceptedTerms,
+        }),
       })
       if (response.ok) {
         const data = await response.json()
@@ -838,6 +879,32 @@ function RegisterForm({ onClose, onRegister, t, lang }: RegisterFormProps) {
                   className="border-border focus:ring-primary w-full rounded border px-3 py-2 text-[16px] focus:ring-2 focus:outline-none"
                   required
                 />
+              </div>
+              <div className="flex items-start gap-2">
+                <input
+                  id="comments-terms-consent"
+                  type="checkbox"
+                  checked={acceptedTerms}
+                  onChange={(e) => setAcceptedTerms(e.target.checked)}
+                  className="accent-primary mt-1 h-4 w-4"
+                />
+                <label
+                  htmlFor="comments-terms-consent"
+                  className="text-muted-foreground text-sm leading-5"
+                >
+                  {t('comments.terms_consent_prefix')}
+                  <a href={`/${lang}/terms`} className="text-primary underline">
+                    {t('footer.terms')}
+                  </a>
+                  {t('comments.terms_consent_connector')}
+                  <a
+                    href={`/${lang}/privacy`}
+                    className="text-primary underline"
+                  >
+                    {t('footer.privacy')}
+                  </a>
+                  {t('comments.terms_consent_suffix')}
+                </label>
               </div>
               <div className="flex gap-2">
                 <button
