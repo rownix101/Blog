@@ -61,3 +61,13 @@
   addedAt: '2026-01-31T08:41:23.821Z'
   status: active
   rel: friend
+
+- id: 'friend-blog-lctn-site-1770138046694'
+  name: '凉城听暖の小窝'
+  url: 'https://blog.lctn.site/'
+  description: '良辰美景，奈何天上有，云淡风轻，日暮不归山。'
+  avatar: 'https://q2.qlogo.cn/headimg_dl?dst_uin=2628195881&spec=0'
+  contact: 'zyflypzlc@outlook.com'
+  addedAt: '2026-02-03T17:00:46.694Z'
+  status: active
+  rel: friend
