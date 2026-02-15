@@ -60,6 +60,29 @@ export const friendsData: FriendsData = {
       "addedAt": "2026-01-25T13:48:57.721Z",
       "status": "active",
       "rel": "friend"
+    },
+    {
+      "id": "official-wanblog-qzz-io-1769848883821",
+      "name": "晚official的博客",
+      "url": "https://wanblog.qzz.io/",
+      "description": "写一些关于生活与技术项目的实践的一些博客",
+      "avatar": "https://s41.ax1x.com/2025/12/20/pZ310V1.jpg",
+      "category": "技术",
+      "contact": "3089755630@qq.com",
+      "addedAt": "2026-01-31T08:41:23.821Z",
+      "status": "active",
+      "rel": "friend"
+    },
+    {
+      "id": "friend-blog-lctn-site-1770138046694",
+      "name": "凉城听暖の小窝",
+      "url": "https://blog.lctn.site/",
+      "description": "良辰美景，奈何天上有，云淡风轻，日暮不归山。",
+      "avatar": "https://q2.qlogo.cn/headimg_dl?dst_uin=2628195881&spec=0",
+      "contact": "zyflypzlc@outlook.com",
+      "addedAt": "2026-02-03T17:00:46.694Z",
+      "status": "active",
+      "rel": "friend"
     }
   ],
   "pending": [],
