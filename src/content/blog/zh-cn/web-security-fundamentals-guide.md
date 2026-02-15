@@ -1,7 +1,7 @@
 ---
 title: 'Web安全基础：XSS、CSRF、SQL注入防护实战'
 description: '全面掌握Web安全核心漏洞原理与防御方案，构建安全的Web应用'
-date: '2026-02-23'
+date: '2026-02-16'
 tags: ['Web安全', 'XSS', 'CSRF', 'SQL注入', '安全']
 authors: ['rownix']
 draft: false

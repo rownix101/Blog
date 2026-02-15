@@ -1,7 +1,7 @@
 ---
 title: 'Web Security Fundamentals: XSS, CSRF, SQL Injection Defense'
 description: 'Master core web security vulnerabilities and defense strategies to build secure web applications'
-date: '2026-02-23'
+date: '2026-02-16'
 tags: ['Web Security', 'XSS', 'CSRF', 'SQL Injection', 'Security']
 authors: ['rownix']
 draft: false
