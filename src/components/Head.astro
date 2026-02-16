@@ -72,6 +72,30 @@ const authorSchema = {
 ---
 
 <head>
+  {/* Inject preload for critical CSS before parser reaches the stylesheet */}
+  <script is:inline>
+    ;(function () {
+      // Early preload injection - runs before HTML parser finds the stylesheet
+      const styleLinks = document.getElementsByTagName('link')
+      for (let i = 0; i < styleLinks.length; i++) {
+        const link = styleLinks[i]
+        if (
+          link.rel === 'stylesheet' &&
+          link.href &&
+          link.href.includes('/_astro/')
+        ) {
+          const preload = document.createElement('link')
+          preload.rel = 'preload'
+          preload.as = 'style'
+          preload.href = link.href
+          preload.fetchPriority = 'high'
+          document.head.insertBefore(preload, link)
+          break
+        }
+      }
+    })()
+  </script>
+
   <script is:inline>
     ;(function () {
       const theme =
@@ -215,13 +239,18 @@ const authorSchema = {
 
   <Favicons />
 
-  <!-- Font Preloading to prevent layout shifts -->
+  <!--
+    Critical Resource Preloading
+    - GeistVF.woff2: Main font with high priority (LCP optimization)
+    - GeistMonoVF.woff2: Code font with lower priority
+  -->
   <link
     rel="preload"
     href="/fonts/GeistVF.woff2"
     as="font"
     type="font/woff2"
     crossorigin="anonymous"
+    fetchpriority="high"
   />
   <link
     rel="preload"
@@ -229,11 +258,10 @@ const authorSchema = {
     as="font"
     type="font/woff2"
     crossorigin="anonymous"
+    fetchpriority="low"
   />
 
-  <!-- Resource Hints for Performance -->
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <!-- Resource Hints for Third-party Domains -->
   {
     ANALYTICS.google && (
       <>
@@ -254,12 +282,13 @@ const authorSchema = {
       </>
     )
   }
-  <!-- Google Analytics -->
+  <!-- Google Analytics - Loaded via Partytown for better performance -->
   {
     ANALYTICS.google && (
       <>
         <script
           is:inline
+          type="text/partytown"
           define:vars={{ gaId: ANALYTICS.google }}
           set:html={`;(function () {
   window.dataLayer = window.dataLayer || []
@@ -273,6 +302,7 @@ const authorSchema = {
         />
         <script
           is:inline
+          type="text/partytown"
           async
           src={`https://www.googletagmanager.com/gtag/js?id=${ANALYTICS.google}`}
         />
@@ -281,11 +311,12 @@ const authorSchema = {
   }
 
   {enableViewTransitions && <ClientRouter />}
-  <!-- Umami Analytics -->
+  <!-- Umami Analytics - Loaded via Partytown for better performance -->
   {
     UMAMI.websiteId && (
       <script
         is:inline
+        type="text/partytown"
         defer
         src="https://cloud.umami.is/script.js"
         define:vars={{ websiteId: UMAMI.websiteId }}
@@ -294,10 +325,23 @@ const authorSchema = {
     )
   }
 
+  <!-- Google Fonts - Async loading to prevent render blocking -->
+  <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
+  <link rel="dns-prefetch" href="https://fonts.gstatic.com" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
     href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400..700&display=swap"
     rel="stylesheet"
+    media="print"
+    onload="this.media='all'"
   />
+  <noscript>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400..700&display=swap"
+      rel="stylesheet"
+    />
+  </noscript>
 
   <script
     type="application/ld+json"

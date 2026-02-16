@@ -22,8 +22,8 @@ const postImage = post?.data?.image?.src
   ? `${SITE.href}${post.data.image.src}`
   : image.href
 const publishedTime = post.data.date?.toISOString() || new Date().toISOString()
-// Use published time as modified time if no updatedDate field exists
-const modifiedTime = publishedTime
+// Use updatedDate if available, otherwise fall back to published time
+const modifiedTime = post.data.updatedDate?.toISOString() || publishedTime
 
 // Article Schema for better SEO and AI/GEO optimization
 const articleSchema = {

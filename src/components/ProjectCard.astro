@@ -26,7 +26,10 @@ const { project } = Astro.props
         <div class="w-full sm:max-w-3xs sm:shrink-0">
           <Image
             src={project.data.image}
-            alt={project.data.name}
+            alt={
+              project.data.imageAlt ||
+              `Screenshot of ${project.data.name} project`
+            }
             width={1200}
             height={630}
             loading="lazy"

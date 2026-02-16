@@ -113,6 +113,7 @@ const t = getTranslations(lang)
     headingPositions: { id: string; top: number; bottom: number }[] = []
     headingBottomById: Map<string, number> = new Map()
     activeIds: string[] = []
+    isInitialized = false
 
     reset() {
       this.progressCircle = document.getElementById(
@@ -131,6 +132,7 @@ const t = getTranslations(lang)
       this.headingPositions = []
       this.headingBottomById = new Map()
       this.activeIds = []
+      this.isInitialized = false
 
       if (this.progressCircle) {
         this.progressCircle.style.strokeDasharray =
@@ -144,7 +146,8 @@ const t = getTranslations(lang)
       if (this.scrollArea) return this.scrollArea
       const tocContainer = document.getElementById('mobile-toc-container')
       this.scrollArea =
-        tocContainer?.querySelector('[data-slot="scroll-area-viewport"]') || null
+        tocContainer?.querySelector('[data-slot="scroll-area-viewport"]') ||
+        null
       return this.scrollArea
     }
   }
@@ -391,7 +394,16 @@ const t = getTranslations(lang)
       state.reset()
       HeadingRegions.build()
 
-      if (!state.currentSectionText) return
+      if (!state.currentSectionText) {
+        // Elements not ready yet, retry after a short delay
+        // This can happen with View Transitions before components are hydrated
+        setTimeout(() => {
+          if (!state.isInitialized) {
+            this.init()
+          }
+        }, 100)
+        return
+      }
 
       if (state.headings.length === 0) {
         state.currentSectionText.textContent = INITIAL_OVERVIEW_TEXT
@@ -399,6 +411,7 @@ const t = getTranslations(lang)
           passive: true,
         })
         ProgressCircle.update()
+        state.isInitialized = true
         return
       }
 
@@ -417,6 +430,7 @@ const t = getTranslations(lang)
       }
       window.addEventListener('scroll', this.scrollListener, { passive: true })
       window.addEventListener('resize', this.handleResize, { passive: true })
+      state.isInitialized = true
     }
 
     static cleanup() {
@@ -432,6 +446,7 @@ const t = getTranslations(lang)
       state.regions = []
       state.headingPositions = []
       state.headingBottomById = new Map()
+      state.isInitialized = false
     }
   }
 
@@ -457,7 +472,8 @@ const t = getTranslations(lang)
   document.addEventListener('astro:page-load', initialize)
   document.addEventListener('astro:after-swap', () => {
     MobileTOCController.cleanup()
-    initialize()
+    // Delay initialization to allow React components (ScrollArea) to hydrate
+    setTimeout(initialize, 50)
   })
   document.addEventListener('astro:before-swap', () =>
     MobileTOCController.cleanup(),

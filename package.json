@@ -26,7 +26,7 @@
     "start": "bun run build-friends-data && astro dev",
     "prebuild": "bun install --frozen-lockfile",
     "build": "bun run build-friends-data && astro build",
-    "preview": "astro preview",
+    "preview": "wrangler pages dev dist --compatibility-date=2024-01-01",
     "astro": "astro",
     "prettier": "prettier --write **/*.{ts,tsx,css,astro} --ignore-path .gitignore",
     "postinstall": "patch-package && node scripts/patch-canvaskit.js",
@@ -38,6 +38,7 @@
     "@astrojs/cloudflare": "^12.6.12",
     "@astrojs/markdown-remark": "^6.3.10",
     "@astrojs/mdx": "^4.3.13",
+    "@astrojs/partytown": "^2.1.4",
     "@astrojs/react": "^4.4.2",
     "@astrojs/rss": "^4.0.15",
     "@astrojs/sitemap": "^3.7.0",
@@ -70,6 +71,7 @@
     "rehype-pretty-code": "^0.14.1",
     "remark-emoji": "^5.0.2",
     "remark-math": "^6.0.0",
+    "sharp": "^0.34.5",
     "tailwind-merge": "^3.4.0",
     "tailwindcss": "^4.1.17",
     "typescript": "^5.9.3"
@@ -81,7 +83,7 @@
     "prettier-plugin-astro": "^0.14.1",
     "prettier-plugin-astro-organize-imports": "^0.4.11",
     "prettier-plugin-tailwindcss": "^0.7.1",
-    "wrangler": "^4.0.0"
+    "wrangler": "^4.65.0"
   },
   "prettier": {
     "semi": false,

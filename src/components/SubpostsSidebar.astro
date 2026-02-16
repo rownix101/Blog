@@ -174,15 +174,23 @@ const subpostsWithReadingTime = await Promise.all(
 
     getScrollArea(): HTMLElement | null {
       if (this.scrollArea) return this.scrollArea
-      const sidebarContainer = document.getElementById('subposts-sidebar-container')
-      this.scrollArea = sidebarContainer?.querySelector('[data-slot="scroll-area-viewport"]') || null
+      const sidebarContainer = document.getElementById(
+        'subposts-sidebar-container',
+      )
+      this.scrollArea =
+        sidebarContainer?.querySelector('[data-slot="scroll-area-viewport"]') ||
+        null
       return this.scrollArea
     }
 
     getSidebarScrollArea(): HTMLElement | null {
       if (this.sidebarScrollArea) return this.sidebarScrollArea
-      const sidebarContainer = document.getElementById('subposts-sidebar-container')
-      this.sidebarScrollArea = sidebarContainer?.querySelector('[data-subposts-sidebar-scroll]') || null
+      const sidebarContainer = document.getElementById(
+        'subposts-sidebar-container',
+      )
+      this.sidebarScrollArea =
+        sidebarContainer?.querySelector('[data-subposts-sidebar-scroll]') ||
+        null
       return this.sidebarScrollArea
     }
   }
@@ -245,11 +253,9 @@ const subpostsWithReadingTime = await Promise.all(
       if (sidebarContainer) {
         const scrollArea = state.getScrollArea()
         if (scrollArea) {
-          scrollArea.addEventListener(
-            'scroll',
-            SidebarScrollMask.update,
-            { passive: true },
-          )
+          scrollArea.addEventListener('scroll', SidebarScrollMask.update, {
+            passive: true,
+          })
         }
 
         requestAnimationFrame(() => {

@@ -1,4 +1,4 @@
-import { defineConfig, passthroughImageService } from 'astro/config'
+import { defineConfig, sharpImageService } from 'astro/config'
 
 import mdx from '@astrojs/mdx'
 import react from '@astrojs/react'
@@ -18,6 +18,7 @@ import { pluginCollapsibleSections } from '@expressive-code/plugin-collapsible-s
 import { pluginLineNumbers } from '@expressive-code/plugin-line-numbers'
 
 import tailwindcss from '@tailwindcss/vite'
+import partytown from '@astrojs/partytown'
 
 export default defineConfig({
   site: 'https://www.rownix.dev', // Update with your domain
@@ -27,7 +28,9 @@ export default defineConfig({
   // i18n is handled manually via custom logic in src/pages/index.astro
   // The built-in Astro i18n is disabled to avoid conflicts
   image: {
-    service: passthroughImageService(),
+    service: sharpImageService(),
+    // Enable modern formats for better compression
+    formats: ['image/avif', 'image/webp'],
     // Configure for Cloudflare compatibility
     domains: ['www.rownix.dev'],
   },
@@ -37,6 +40,12 @@ export default defineConfig({
   }),
   // Static output with Cloudflare Pages support
   integrations: [
+    partytown({
+      config: {
+        forward: ['dataLayer.push', 'gtag', 'umami.track'],
+        debug: false,
+      },
+    }),
     expressiveCode({
       themes: ['github-light', 'github-dark'],
       plugins: [pluginCollapsibleSections(), pluginLineNumbers()],
@@ -47,17 +56,16 @@ export default defineConfig({
         collapseStyle: 'collapsible-auto',
         overridesByLang: {
           'ansi,bat,bash,batch,cmd,console,powershell,ps,ps1,psd1,psm1,sh,shell,shellscript,shellsession,text,zsh':
-          {
-            showLineNumbers: false,
-          },
+            {
+              showLineNumbers: false,
+            },
         },
       },
       styleOverrides: {
         codeFontSize: '0.75rem',
         borderColor: 'var(--border)',
         codeFontFamily: 'var(--font-mono)',
-        codeBackground:
-          'color-mix(in oklab, var(--muted) 25%, transparent)',
+        codeBackground: 'color-mix(in oklab, var(--muted) 25%, transparent)',
         frames: {
           editorActiveTabForeground: 'var(--muted-foreground)',
           editorActiveTabBackground:
@@ -108,7 +116,10 @@ export default defineConfig({
         output: {
           manualChunks: {
             'react-vendor': ['react', 'react-dom'],
-            'ui-vendor': ['@radix-ui/react-dialog', '@radix-ui/react-dropdown-menu'],
+            'ui-vendor': [
+              '@radix-ui/react-dialog',
+              '@radix-ui/react-dropdown-menu',
+            ],
           },
         },
       },
@@ -123,6 +134,9 @@ export default defineConfig({
   },
   devToolbar: {
     enabled: false,
+  },
+  build: {
+    inlineStylesheets: 'auto',
   },
   markdown: {
     syntaxHighlight: false,

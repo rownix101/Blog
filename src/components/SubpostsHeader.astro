@@ -206,14 +206,16 @@ const currentSubpostDetails = isCurrentSubpost
     getScrollArea(): HTMLElement | null {
       if (this.scrollArea) return this.scrollArea
       const container = document.getElementById('subposts-header-container')
-      this.scrollArea = container?.querySelector('[data-slot="scroll-area-viewport"]') || null
+      this.scrollArea =
+        container?.querySelector('[data-slot="scroll-area-viewport"]') || null
       return this.scrollArea
     }
 
     getHeaderScrollArea(): HTMLElement | null {
       if (this.headerScrollArea) return this.headerScrollArea
       const container = document.getElementById('subposts-header-container')
-      this.headerScrollArea = container?.querySelector('[data-subposts-header-scroll]') || null
+      this.headerScrollArea =
+        container?.querySelector('[data-subposts-header-scroll]') || null
       return this.headerScrollArea
     }
   }
@@ -278,11 +280,9 @@ const currentSubpostDetails = isCurrentSubpost
 
       const scrollArea = state.getScrollArea()
       if (scrollArea) {
-        scrollArea.addEventListener(
-          'scroll',
-          SubpostsHeaderScrollMask.update,
-          { passive: true },
-        )
+        scrollArea.addEventListener('scroll', SubpostsHeaderScrollMask.update, {
+          passive: true,
+        })
       }
 
       if (state.detailsElement) {

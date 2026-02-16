@@ -184,7 +184,8 @@ const parentId = isCurrentSubpost ? getParentId(currentPostId) : currentPostId
       if (this.scrollArea) return this.scrollArea
       const tocContainer = document.getElementById('toc-sidebar-container')
       this.scrollArea =
-        tocContainer?.querySelector('[data-slot="scroll-area-viewport"]') || null
+        tocContainer?.querySelector('[data-slot="scroll-area-viewport"]') ||
+        null
       return this.scrollArea
     }
 
