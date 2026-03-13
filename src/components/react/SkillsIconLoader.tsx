@@ -22,7 +22,6 @@ import {
   SiGit,
   SiFlux,
   SiRancher,
-  SiOracle,
   SiCloudflare,
   SiCilium,
   SiPortainer,
@@ -78,7 +77,7 @@ export const iconMap: Record<string, IconComponent> = {
   'simple-icons:flux': SiFlux,
   'simple-icons:rancher': SiRancher,
   'lucide:cloud': Cloud,
-  'simple-icons:oracle': SiOracle,
+
   'simple-icons:cloudflare': SiCloudflare,
   'lucide:server': Server,
   'lucide:cloud-cog': CloudCog,

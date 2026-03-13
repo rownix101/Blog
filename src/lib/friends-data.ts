@@ -83,6 +83,29 @@ export const friendsData: FriendsData = {
       "addedAt": "2026-02-03T17:00:46.694Z",
       "status": "active",
       "rel": "friend"
+    },
+    {
+      "id": "friend-blog-4365754-xyz-1772607894433",
+      "name": "雪诺的小博客-分享关于网络的众多有趣的小知识",
+      "url": "https://blog.4365754.xyz/",
+      "description": "技术小博客，每日分享网络相关知识，帮助理解网络技术。",
+      "avatar": "https://blog.4365754.xyz/favicon.ico",
+      "contact": "15292091908@139.com",
+      "addedAt": "2026-03-04T07:04:54.433Z",
+      "status": "active",
+      "rel": "friend"
+    },
+    {
+      "id": "horean-s-blog-blog-hxrch-top-1771473710393",
+      "name": "Horean's Blog",
+      "url": "https://blog.hxrch.top/",
+      "description": "Spread the knowledge wisely & widely.",
+      "avatar": "https://img.hxrch.top/bfav256.webp",
+      "category": "技术",
+      "contact": "hi@hxrch.top",
+      "addedAt": "2026-02-19T04:01:50.393Z",
+      "status": "active",
+      "rel": "friend"
     }
   ],
   "pending": [],
