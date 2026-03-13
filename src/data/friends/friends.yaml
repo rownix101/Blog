@@ -81,3 +81,14 @@
   addedAt: '2026-03-04T07:04:54.433Z'
   status: active
   rel: friend
+  
+- id: 'horean-s-blog-blog-hxrch-top-1771473710393'
+  name: 'Horean''s Blog'
+  url: 'https://blog.hxrch.top/'
+  description: 'Spread the knowledge wisely & widely.'
+  avatar: 'https://img.hxrch.top/bfav256.webp'
+  category: '技术'
+  contact: 'hi@hxrch.top'
+  addedAt: '2026-02-19T04:01:50.393Z'
+  status: active
+  rel: friend
