@@ -26,7 +26,8 @@ export const dictionary = {
       home: '首页',
       articles: '文章',
       topics: '主题',
-      about: '关于'
+      about: '关于',
+      sponsor: '赞助'
     },
     heroLabel: '市场结构 · 策略研究 · 风险管理',
     heroTitle: '把复杂市场问题拆成可验证的分析。',
@@ -67,6 +68,22 @@ export const dictionary = {
     aboutCopy:
       '这里记录对市场、策略和产业的长期观察：先理解结构，再讨论机会；先定义风险，再谈收益。页面保持轻量，内容保持可迁移，并为后续英文、日语和西班牙语版本预留空间。',
     socialTitle: '联系与频道',
+    sponsor: {
+      title: '赞助这个博客',
+      eyebrow: 'Sponsor',
+      intro:
+        '如果这些文章对你的研究、交易复盘或产业理解有帮助，可以用一笔小额赞助支持后续写作。支付会跳转到第三方收银台完成。',
+      amountLabel: '赞助金额',
+      amountHelp: '也可以输入自定义金额，范围 ¥1.00 到 ¥5000.00。',
+      methodLabel: '支付方式',
+      methods: {
+        alipay: '支付宝',
+        wxpay: '微信支付'
+      },
+      submit: '前往支付',
+      success: '支付完成后你已返回本站，感谢支持。',
+      privacy: '本站只生成订单和签名，不在本页面收集银行卡或钱包密码。'
+    },
     share: {
       title: '分享文章',
       native: '分享',
@@ -86,7 +103,8 @@ export const dictionary = {
       home: 'Home',
       articles: 'Articles',
       topics: 'Topics',
-      about: 'About'
+      about: 'About',
+      sponsor: 'Sponsor'
     },
     heroLabel: 'Market Structure · Strategy Research · Risk Management',
     heroTitle: 'Breaking complex markets into testable analysis.',
@@ -127,6 +145,22 @@ export const dictionary = {
     aboutCopy:
       'Long-form notes on markets, strategy, and industry: understand structure before opportunity, define risk before return. The interface stays light, the content stays portable, and the publishing system leaves room for English, Japanese, and Spanish editions.',
     socialTitle: 'Contact and channels',
+    sponsor: {
+      title: 'Sponsor This Blog',
+      eyebrow: 'Sponsor',
+      intro:
+        'If the writing helps your research, trading review, or industry thinking, you can support future posts with a small contribution. Payment is completed through a third-party checkout.',
+      amountLabel: 'Amount',
+      amountHelp: 'You can also enter a custom amount from ¥1.00 to ¥5000.00.',
+      methodLabel: 'Payment Method',
+      methods: {
+        alipay: 'Alipay',
+        wxpay: 'WeChat Pay'
+      },
+      submit: 'Continue to Payment',
+      success: 'You have returned after payment. Thank you for the support.',
+      privacy: 'This site only creates the order and signature; card or wallet secrets are handled by the payment provider.'
+    },
     share: {
       title: 'Share article',
       native: 'Share',

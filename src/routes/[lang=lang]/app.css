@@ -839,6 +839,191 @@ a:focus-visible {
   background: var(--color-surface-muted);
 }
 
+.sponsor-page {
+  padding: clamp(50px, 7vw, 78px) 0 92px;
+}
+
+.sponsor-hero {
+  max-width: 760px;
+}
+
+.sponsor-hero h1 {
+  margin: 0;
+  font-size: clamp(2.7rem, 6vw, 5rem);
+  line-height: 1;
+  letter-spacing: 0;
+}
+
+.sponsor-hero p:not(.eyebrow) {
+  max-width: 680px;
+  margin: 24px 0 0;
+  color: var(--color-text-soft);
+  font-size: clamp(1.06rem, 2vw, 1.28rem);
+  line-height: 1.75;
+}
+
+.sponsor-checkout {
+  display: grid;
+  grid-template-columns: minmax(220px, 0.8fr) minmax(0, 1.2fr);
+  gap: clamp(32px, 6vw, 64px);
+  margin-top: clamp(42px, 6vw, 66px);
+  border-top: 1px solid var(--color-border-soft);
+  padding-top: clamp(32px, 5vw, 48px);
+}
+
+.sponsor-checkout > div p:not(.eyebrow) {
+  margin: 0;
+  color: var(--color-text-soft);
+  font-size: 1.04rem;
+  line-height: 1.7;
+}
+
+.sponsor-success {
+  margin-top: 18px !important;
+  border-left: 5px solid var(--color-accent);
+  padding-left: 14px;
+  color: var(--color-text) !important;
+  font-weight: 800;
+}
+
+.sponsor-form {
+  display: grid;
+  gap: 18px;
+  min-width: 0;
+  border: 1px solid var(--color-border);
+  padding: clamp(18px, 4vw, 28px);
+  background: var(--color-surface);
+}
+
+.sponsor-form fieldset {
+  display: grid;
+  gap: 12px;
+  min-width: 0;
+  margin: 0;
+  border: 0;
+  padding: 0;
+}
+
+.sponsor-form legend {
+  margin-bottom: 2px;
+  color: var(--color-text);
+  font-weight: 850;
+}
+
+.amount-grid,
+.method-grid {
+  display: grid;
+  gap: 10px;
+}
+
+.amount-grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.method-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.amount-grid label,
+.method-grid label {
+  display: grid;
+  min-width: 0;
+  cursor: pointer;
+}
+
+.amount-grid input,
+.method-grid input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.amount-grid span,
+.method-grid span {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--color-border);
+  padding: 0 10px;
+  color: var(--color-text);
+  font-weight: 800;
+  text-align: center;
+  transition:
+    border-color 180ms ease,
+    background 180ms ease,
+    color 180ms ease;
+}
+
+.amount-grid input:checked + span,
+.method-grid input:checked + span {
+  border-color: var(--color-text);
+  background: var(--color-text);
+  color: var(--color-surface);
+}
+
+.amount-grid label:hover span,
+.method-grid label:hover span {
+  border-color: var(--color-text);
+}
+
+.custom-amount {
+  display: grid;
+  gap: 8px;
+}
+
+.custom-amount span,
+.sponsor-form p {
+  color: var(--color-subtle);
+  font-size: 0.88rem;
+  font-weight: 750;
+  line-height: 1.55;
+}
+
+.custom-amount input {
+  min-width: 0;
+  min-height: 46px;
+  border: 1px solid var(--color-border);
+  padding: 0 12px;
+  background: var(--color-page);
+  color: var(--color-text);
+  font: inherit;
+}
+
+.custom-amount input:focus {
+  border-color: var(--color-text);
+  box-shadow: 0 0 0 3px var(--color-focus-shadow);
+  outline: 0;
+}
+
+.sponsor-form p {
+  margin: 0;
+}
+
+.sponsor-form button {
+  display: inline-flex;
+  min-height: 46px;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--color-text);
+  padding: 0 18px;
+  background: var(--color-text);
+  color: var(--color-surface);
+  font: inherit;
+  font-weight: 850;
+  cursor: pointer;
+}
+
+.sponsor-form button:hover {
+  background: var(--color-accent);
+  border-color: var(--color-accent);
+}
+
+.sponsor-form button:focus-visible {
+  outline: 3px solid var(--color-accent);
+  outline-offset: 4px;
+}
+
 .reading-progress {
   position: fixed;
   z-index: 25;
@@ -1150,7 +1335,8 @@ a:focus-visible {
   .hero,
   .content-grid,
   .bottom-grid,
-  .article-page {
+  .article-page,
+  .sponsor-checkout {
     grid-template-columns: 1fr;
   }
 
@@ -1185,6 +1371,11 @@ a:focus-visible {
   .article-side {
     position: static;
     order: -1;
+  }
+
+  .amount-grid,
+  .method-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
@@ -1315,6 +1506,11 @@ a:focus-visible {
 
   .pagination {
     justify-content: start;
+  }
+
+  .amount-grid,
+  .method-grid {
+    grid-template-columns: 1fr;
   }
 
   .back-to-top {

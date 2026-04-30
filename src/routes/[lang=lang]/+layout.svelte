@@ -14,7 +14,8 @@
     { key: 'home', href: '' },
     { key: 'articles', href: '#articles' },
     { key: 'topics', href: '#topics' },
-    { key: 'about', href: '#about' }
+    { key: 'about', href: '#about' },
+    { key: 'sponsor', href: '/sponsor' }
   ] as const;
 
   const currentPath = (lang: Lang) => {
@@ -75,7 +76,13 @@
 
     <nav class="main-nav" aria-label="Primary navigation">
       {#each navItems as item}
-        <a href={item.href ? `${localizePath(data.lang)}${item.href}` : localizePath(data.lang)}>
+        <a
+          href={item.href.startsWith('/')
+            ? localizePath(data.lang, item.href)
+            : item.href
+              ? `${localizePath(data.lang)}${item.href}`
+              : localizePath(data.lang)}
+        >
           {data.copy.nav[item.key]}
         </a>
       {/each}
