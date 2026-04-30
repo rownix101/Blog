@@ -184,16 +184,21 @@
         <span>{data.article.minutes} {data.copy.minutes}</span>
       </div>
       {#if data.article.coverImage}
-        <img
-          class="article-cover"
-          src={data.article.coverImage}
-          alt={data.article.coverAlt ?? ''}
-          width="1200"
-          height="675"
-          loading="eager"
-          decoding="async"
-          fetchpriority="high"
-        />
+        <picture>
+          {#if data.article.coverImageAvif}
+            <source srcset={data.article.coverImageAvif} type="image/avif" />
+          {/if}
+          <img
+            class="article-cover"
+            src={data.article.coverImage}
+            alt={data.article.coverAlt ?? ''}
+            width="1200"
+            height="675"
+            loading="eager"
+            decoding="async"
+            fetchpriority="high"
+          />
+        </picture>
       {/if}
     </header>
 

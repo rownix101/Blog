@@ -34,18 +34,29 @@ export const load: PageServerLoad = ({ params, url }) => {
       '@type': 'Article',
       headline: article.title,
       description: article.description,
+      url: shareUrl,
       datePublished: article.date,
       dateModified: article.date,
       inLanguage: article.lang === 'zh' ? 'zh-CN' : 'en-US',
       mainEntityOfPage: shareUrl,
       image: imageUrl ? [imageUrl] : undefined,
+      timeRequired: `PT${article.minutes}M`,
       author: {
         '@type': 'Person',
         name: 'Rownix'
       },
       publisher: {
         '@type': 'Organization',
-        name: "Rownix's Blog"
+        name: "Rownix's Blog",
+        logo: {
+          '@type': 'ImageObject',
+          url: new URL('/favicon.svg', url.origin).toString()
+        }
+      },
+      isPartOf: {
+        '@type': 'Blog',
+        name: "Rownix's Blog",
+        url: new URL(`/${article.lang}`, url.origin).toString()
       }
     },
     related: getRelatedArticleSummaries(article)

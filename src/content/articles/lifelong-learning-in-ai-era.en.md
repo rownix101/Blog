@@ -5,7 +5,8 @@ title: "Lifelong Learning in the AI Era: How Ordinary People Build Their Moat"
 description: "In an era of rapid AI iteration, traditional knowledge reserves are depreciating. How can ordinary people maintain their core competitiveness through cognitive upgrades, cross-disciplinary skills, and mastering AI tools?"
 date: 2026-04-30
 topic: Thoughts
-coverImage: /images/articles/lifelong-learning-ai.png
+coverImage: /images/articles/lifelong-learning-ai.webp
+coverImageAvif: /images/articles/lifelong-learning-ai.avif
 coverAlt: Abstract vector art of a person walking towards an AI core
 ---
 

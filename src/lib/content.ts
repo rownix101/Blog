@@ -16,6 +16,7 @@ export type Article = {
   date: string;
   topic: string;
   coverImage?: string;
+  coverImageAvif?: string;
   coverAlt?: string;
   featured?: boolean;
   markdown: string;
@@ -33,6 +34,7 @@ export type ArticleSummary = Pick<
   | 'date'
   | 'topic'
   | 'coverImage'
+  | 'coverImageAvif'
   | 'coverAlt'
   | 'featured'
   | 'minutes'
@@ -71,6 +73,7 @@ const toArticleSummary = (article: Article): ArticleSummary => ({
   date: article.date,
   topic: article.topic,
   coverImage: article.coverImage,
+  coverImageAvif: article.coverImageAvif,
   coverAlt: article.coverAlt,
   featured: article.featured,
   minutes: article.minutes
@@ -144,6 +147,15 @@ const isSafeUrl = (href: string) => {
   }
 };
 
+const isExternalHttpUrl = (href: string) => {
+  try {
+    const url = new URL(href.trim());
+    return ['http:', 'https:'].includes(url.protocol);
+  } catch {
+    return false;
+  }
+};
+
 const renderMarkdown = (markdown: string) => {
   const toc: TocItem[] = [];
   const headingCounts = new Map<string, number>();
@@ -171,7 +183,11 @@ const renderMarkdown = (markdown: string) => {
     }
 
     const titleAttribute = title ? ` title="${escapeHtml(title)}"` : '';
-    return `<a href="${escapeHtml(href)}"${titleAttribute}>${label}</a>`;
+    const externalAttributes = isExternalHttpUrl(href)
+      ? ' target="_blank" rel="noopener noreferrer"'
+      : '';
+
+    return `<a href="${escapeHtml(href)}"${titleAttribute}${externalAttributes}>${label}</a>`;
   };
 
   renderer.image = function ({ href, title, text, tokens }) {
@@ -240,6 +256,7 @@ const parseArticle = ([path, raw]: [string, string]): ArticleSource => {
     date: metadata.date,
     topic: metadata.topic,
     coverImage: metadata.coverImage,
+    coverImageAvif: metadata.coverImageAvif,
     coverAlt: metadata.coverAlt,
     featured: metadata.featured === 'true',
     markdown,

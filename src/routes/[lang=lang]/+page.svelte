@@ -77,11 +77,21 @@
 </script>
 
 <svelte:head>
+  <title>{data.copy.siteTitle as string}</title>
+  <meta name="description" content={data.copy.siteDescription as string} />
   <link rel="canonical" href={data.canonicalUrl} />
   {#each Object.entries(data.alternateUrls) as [lang, href]}
     <link rel="alternate" hreflang={lang} href={href} />
   {/each}
   <link rel="alternate" hreflang="x-default" href={data.alternateUrls.zh} />
+  <meta property="og:title" content={data.copy.siteTitle as string} />
+  <meta property="og:description" content={data.copy.siteDescription as string} />
+  <meta property="og:url" content={data.canonicalUrl} />
+  <meta property="og:type" content="website" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content={data.copy.siteTitle as string} />
+  <meta name="twitter:description" content={data.copy.siteDescription as string} />
+  <script type="application/ld+json">{JSON.stringify(data.jsonLd)}</script>
 </svelte:head>
 
 <svelte:window onscroll={handleScroll} onresize={handleScroll} />
@@ -98,16 +108,21 @@
     {#if data.featured}
       <aside class="feature-panel" aria-label={data.copy.featured as string}>
         {#if data.featured.coverImage}
-          <img
-            class="card-cover"
-            src={data.featured.coverImage}
-            alt={data.featured.coverAlt ?? ''}
-            width="1200"
-            height="675"
-            loading="eager"
-            decoding="async"
-            fetchpriority="high"
-          />
+          <picture>
+            {#if data.featured.coverImageAvif}
+              <source srcset={data.featured.coverImageAvif} type="image/avif" />
+            {/if}
+            <img
+              class="card-cover"
+              src={data.featured.coverImage}
+              alt={data.featured.coverAlt ?? ''}
+              width="1200"
+              height="675"
+              loading="eager"
+              decoding="async"
+              fetchpriority="high"
+            />
+          </picture>
         {/if}
         <div>
           <span>{data.copy.featured}</span>
@@ -153,15 +168,20 @@
       {#each paginatedArticles as article}
         <article class="article-card">
           {#if article.coverImage}
-            <img
-              class="card-cover"
-              src={article.coverImage}
-              alt={article.coverAlt ?? ''}
-              width="1200"
-              height="675"
-              loading="lazy"
-              decoding="async"
-            />
+            <picture>
+              {#if article.coverImageAvif}
+                <source srcset={article.coverImageAvif} type="image/avif" />
+              {/if}
+              <img
+                class="card-cover"
+                src={article.coverImage}
+                alt={article.coverAlt ?? ''}
+                width="1200"
+                height="675"
+                loading="lazy"
+                decoding="async"
+              />
+            </picture>
           {/if}
           <div>
             <time datetime={article.date}>

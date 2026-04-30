@@ -1,5 +1,5 @@
 import { getAllArticles } from '$lib/content';
-import { languages, type Lang } from '$lib/i18n';
+import { languages } from '$lib/i18n';
 import type { RequestHandler } from './$types';
 
 type SitemapUrl = {
@@ -7,7 +7,7 @@ type SitemapUrl = {
   lastmod?: string;
   changefreq: 'daily' | 'weekly' | 'monthly';
   priority: string;
-  alternates?: Record<Lang, string>;
+  alternates?: Record<string, string>;
 };
 
 const xmlEscape = (value: string) =>
@@ -23,44 +23,48 @@ const absoluteUrl = (origin: string, path: string) => `${origin}${path}`;
 export const GET: RequestHandler = ({ url }) => {
   const origin = url.origin;
   const articles = getAllArticles();
+  const legalPaths = ['privacy', 'cookies', 'terms'] as const;
 
   const pages: SitemapUrl[] = [
     ...languages.map((lang) => ({
       path: `/${lang}`,
       changefreq: 'weekly' as const,
       priority: lang === 'zh' ? '1.0' : '0.9',
-      alternates: Object.fromEntries(languages.map((item) => [item, `/${item}`])) as Record<
-        Lang,
-        string
-      >
+      alternates: Object.fromEntries([
+        ...languages.map((item) => [item, `/${item}`]),
+        ['x-default', '/zh']
+      ])
     })),
+    ...legalPaths.flatMap((legalPath) =>
+      languages.map((lang) => ({
+        path: `/${lang}/${legalPath}`,
+        changefreq: 'monthly' as const,
+        priority: '0.4',
+        alternates: Object.fromEntries([
+          ...languages.map((item) => [item, `/${item}/${legalPath}`]),
+          ['x-default', `/zh/${legalPath}`]
+        ])
+      }))
+    ),
     ...articles.map((article) => ({
       path: `/${article.lang}/articles/${article.slug}`,
       lastmod: article.date,
       changefreq: 'monthly' as const,
       priority: article.featured ? '0.8' : '0.7',
-      alternates: Object.fromEntries(
-        languages
+      alternates: Object.fromEntries([
+        ...languages
           .filter((lang) =>
             articles.some((item) => item.lang === lang && item.slug === article.slug)
           )
-          .map((lang) => [lang, `/${lang}/articles/${article.slug}`])
-      ) as Record<Lang, string>
+          .map((lang) => [lang, `/${lang}/articles/${article.slug}`]),
+        ...(articles.some((item) => item.lang === 'zh' && item.slug === article.slug)
+          ? [['x-default', `/zh/articles/${article.slug}`]]
+          : [])
+      ])
     }))
   ];
 
-  const rootUrl: SitemapUrl = {
-    path: '/',
-    lastmod: articles[0]?.date,
-    changefreq: 'weekly',
-    priority: '0.8',
-    alternates: Object.fromEntries(languages.map((lang) => [lang, `/${lang}`])) as Record<
-      Lang,
-      string
-    >
-  };
-
-  const urls = [rootUrl, ...pages]
+  const urls = pages
     .map((page) => {
       const alternateLinks = page.alternates
         ? Object.entries(page.alternates)
@@ -88,12 +92,12 @@ export const GET: RequestHandler = ({ url }) => {
     .join('\n');
 
   return new Response(
-    `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">\n${urls}\n</urlset>\n`,
+    `<?xml version="1.0" encoding="UTF-8"?>\n<?xml-stylesheet type="text/xsl" href="/sitemap.xsl"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">\n${urls}\n</urlset>\n`,
     {
       headers: {
-        'cache-control': 'public, max-age=3600, s-maxage=86400, stale-while-revalidate=604800',
-        'content-type': 'application/xml; charset=utf-8',
-        'x-content-type-options': 'nosniff'
+        'Cache-Control': 'public, max-age=3600, s-maxage=86400, stale-while-revalidate=604800',
+        'Content-Type': 'application/xml; charset=utf-8',
+        'X-Content-Type-Options': 'nosniff'
       }
     }
   );

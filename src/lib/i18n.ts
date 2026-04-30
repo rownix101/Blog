@@ -68,6 +68,13 @@ export const dictionary = {
     aboutCopy:
       '这里记录对市场、策略和产业的长期观察：先理解结构，再讨论机会；先定义风险，再谈收益。页面保持轻量，内容保持可迁移，并为后续英文、日语和西班牙语版本预留空间。',
     socialTitle: '联系与频道',
+    legal: {
+      title: '法律与隐私',
+      privacy: '隐私政策',
+      cookies: 'Cookie 说明',
+      terms: '使用条款',
+      updated: '更新日期'
+    },
     sponsor: {
       title: '赞助这个博客',
       eyebrow: 'Sponsor',
@@ -82,7 +89,9 @@ export const dictionary = {
       },
       submit: '前往支付',
       success: '支付完成后你已返回本站，感谢支持。',
-      privacy: '本站只生成订单和签名，不在本页面收集银行卡或钱包密码。'
+      privacyPrefix: '本站只生成订单和签名，不在本页面收集银行卡或钱包密码。点击"前往支付"即表示你已阅读并同意',
+      privacyJoin: '与',
+      privacySuffix: '，并同意本站按隐私政策处理必要的支付相关数据。'
     },
     share: {
       title: '分享文章',
@@ -90,6 +99,15 @@ export const dictionary = {
       copy: '复制链接',
       copied: '已复制',
       email: '邮件'
+    },
+    errorPage: {
+      eyebrow: '页面走丢了',
+      title: '这里没有可阅读的内容。',
+      copy: '链接可能已经失效，文章地址可能输入错误，也可能是内容还没有发布。你可以回到首页，或从最近文章继续浏览。',
+      home: '返回首页',
+      articles: '查看文章',
+      latest: '最近文章',
+      detail: '错误代码'
     },
     notFound: '没有找到这篇文章。',
     switchLanguage: '切换语言',
@@ -145,6 +163,13 @@ export const dictionary = {
     aboutCopy:
       'Long-form notes on markets, strategy, and industry: understand structure before opportunity, define risk before return. The interface stays light, the content stays portable, and the publishing system leaves room for English, Japanese, and Spanish editions.',
     socialTitle: 'Contact and channels',
+    legal: {
+      title: 'Legal and privacy',
+      privacy: 'Privacy Policy',
+      cookies: 'Cookie Notice',
+      terms: 'Terms of Use',
+      updated: 'Updated'
+    },
     sponsor: {
       title: 'Sponsor This Blog',
       eyebrow: 'Sponsor',
@@ -159,7 +184,10 @@ export const dictionary = {
       },
       submit: 'Continue to Payment',
       success: 'You have returned after payment. Thank you for the support.',
-      privacy: 'This site only creates the order and signature; card or wallet secrets are handled by the payment provider.'
+      privacyPrefix:
+        'This site only creates the order and signature; card or wallet credentials are handled by the payment provider. By clicking "Continue to Payment" you confirm you have read and agree to the',
+      privacyJoin: 'and',
+      privacySuffix: ', and consent to the processing of necessary payment data as described in the Privacy Policy.'
     },
     share: {
       title: 'Share article',
@@ -167,6 +195,15 @@ export const dictionary = {
       copy: 'Copy link',
       copied: 'Copied',
       email: 'Email'
+    },
+    errorPage: {
+      eyebrow: 'Page not found',
+      title: 'There is nothing to read here.',
+      copy: 'The link may be outdated, the article address may be incorrect, or the content may not be published yet. Return home or continue with recent articles.',
+      home: 'Back home',
+      articles: 'View articles',
+      latest: 'Recent articles',
+      detail: 'Error code'
     },
     notFound: 'This article could not be found.',
     switchLanguage: 'Switch language',

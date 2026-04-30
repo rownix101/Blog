@@ -1,5 +1,6 @@
 <script lang="ts">
   import { languageOptions, languages, localizePath, type Lang } from '$lib/i18n';
+  import type { ArticleSummary } from '$lib/content';
   import { socialLinks } from '$lib/profile';
   import { page } from '$app/state';
   import { tick } from 'svelte';
@@ -9,6 +10,9 @@
   let searchOpen = $state(false);
   let searchQuery = $state('');
   let searchInput = $state<HTMLInputElement | null>(null);
+  let loadedSearchArticles = $state<ArticleSummary[]>([]);
+  let searchLoaded = $state(false);
+  let searchLoading = $state(false);
 
   const navItems = [
     { key: 'home', href: '' },
@@ -16,6 +20,11 @@
     { key: 'topics', href: '#topics' },
     { key: 'about', href: '#about' },
     { key: 'sponsor', href: '/sponsor' }
+  ] as const;
+  const legalItems = [
+    { key: 'privacy', href: '/privacy' },
+    { key: 'cookies', href: '/cookies' },
+    { key: 'terms', href: '/terms' }
   ] as const;
 
   const currentPath = (lang: Lang) => {
@@ -37,16 +46,23 @@
     total: string;
     viewAll: string;
   });
+  const legalCopy = $derived(data.copy.legal as {
+    title: string;
+    privacy: string;
+    cookies: string;
+    terms: string;
+  });
   const normalizedSearchQuery = $derived(searchQuery.trim().toLocaleLowerCase());
+  const availableSearchArticles = $derived(searchLoaded ? loadedSearchArticles : data.latestArticles);
   const searchResults = $derived(
     normalizedSearchQuery
-      ? data.searchArticles.filter((article) =>
+      ? availableSearchArticles.filter((article) =>
           [article.title, article.description, article.topic]
             .join(' ')
             .toLocaleLowerCase()
             .includes(normalizedSearchQuery)
         )
-      : data.searchArticles.slice(0, 6)
+      : data.latestArticles
   );
 
   const closeSearch = () => {
@@ -58,12 +74,26 @@
     searchOpen = true;
     await tick();
     searchInput?.focus();
+    void loadSearchArticles();
+  };
+
+  const loadSearchArticles = async () => {
+    if (searchLoaded || searchLoading) return;
+
+    searchLoading = true;
+    try {
+      const response = await fetch(`/api/search/${data.lang}`);
+      if (response.ok) {
+        loadedSearchArticles = await response.json();
+        searchLoaded = true;
+      }
+    } finally {
+      searchLoading = false;
+    }
   };
 </script>
 
 <svelte:head>
-  <title>{data.copy.siteTitle as string}</title>
-  <meta name="description" content={data.copy.siteDescription as string} />
   <link rel="icon" href="/favicon.svg" />
 </svelte:head>
 
@@ -202,6 +232,13 @@
       {#each socialLinks as link}
         <a href={link.href} target={link.href.startsWith('http') ? '_blank' : undefined} rel="noreferrer">
           {link.label}
+        </a>
+      {/each}
+    </nav>
+    <nav aria-label={legalCopy.title}>
+      {#each legalItems as item}
+        <a href={localizePath(data.lang, item.href)}>
+          {legalCopy[item.key]}
         </a>
       {/each}
     </nav>

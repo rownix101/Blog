@@ -88,6 +88,16 @@ for (const { file, metadata } of articles) {
       warnings.push(`${file}: coverImage is missing coverAlt`);
     }
   }
+
+  if (metadata.coverImageAvif) {
+    if (!metadata.coverImageAvif.startsWith('/')) {
+      errors.push(`${file}: coverImageAvif must be an absolute public path`);
+    }
+
+    if (!existsSync(join(publicDir, metadata.coverImageAvif))) {
+      errors.push(`${file}: coverImageAvif does not exist: ${metadata.coverImageAvif}`);
+    }
+  }
 }
 
 for (const [slug, langs] of slugsByLang) {

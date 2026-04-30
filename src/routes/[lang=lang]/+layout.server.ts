@@ -6,6 +6,6 @@ export const load: LayoutServerLoad = ({ params }) => {
   return {
     lang: params.lang,
     copy: t(params.lang),
-    searchArticles: getArticleSummaries(params.lang)
+    latestArticles: getArticleSummaries(params.lang).slice(0, 6)
   };
 };

@@ -11,7 +11,13 @@
     methods: Record<string, string>;
     submit: string;
     success: string;
+    privacyPrefix: string;
+    privacyJoin: string;
+    privacySuffix: string;
+  });
+  const legalCopy = $derived(data.copy.legal as {
     privacy: string;
+    terms: string;
   });
 
   const presetAmounts = ['9.90', '19.90', '49.90', '99.00'];
@@ -101,7 +107,12 @@
         </div>
       </fieldset>
 
-      <p>{copy.privacy}</p>
+      <p>
+        {copy.privacyPrefix}
+        <a href="/{data.lang}/privacy">{legalCopy.privacy}</a>
+        {copy.privacyJoin}
+        <a href="/{data.lang}/terms">{legalCopy.terms}</a>{copy.privacySuffix}
+      </p>
       <button type="submit">{copy.submit}</button>
     </form>
   </section>

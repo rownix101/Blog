@@ -5,7 +5,8 @@ title: AI 时代的终身学习：普通人如何构建个人护城河
 description: 在人工智能快速迭代的时代，传统的知识储备正在贬值。普通人该如何通过思维升级、跨界能力与驾驭AI工具来保持核心竞争力？
 date: 2026-04-30
 topic: 思考
-coverImage: /images/articles/lifelong-learning-ai.png
+coverImage: /images/articles/lifelong-learning-ai.webp
+coverImageAvif: /images/articles/lifelong-learning-ai.avif
 coverAlt: 走向AI核心的抽象矢量图
 ---
 
