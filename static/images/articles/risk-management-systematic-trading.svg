@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" role="img" aria-labelledby="title desc">
+  <title id="title">Systematic trading risk management cover</title>
+  <desc id="desc">A portfolio dashboard showing exposure limits, drawdown guardrails, correlation, and execution risk.</desc>
+  <rect width="1200" height="675" fill="#fafafa"/>
+  <rect x="62" y="58" width="1076" height="559" fill="#fff" stroke="#18181b" stroke-width="4"/>
+  <rect x="106" y="108" width="304" height="186" fill="#f4f4f5" stroke="#18181b" stroke-width="4"/>
+  <rect x="448" y="108" width="304" height="186" fill="#fff" stroke="#18181b" stroke-width="4"/>
+  <rect x="790" y="108" width="304" height="186" fill="#f4f4f5" stroke="#18181b" stroke-width="4"/>
+  <rect x="106" y="338" width="988" height="210" fill="#fff" stroke="#18181b" stroke-width="4"/>
+  <path d="M136 246 C176 198 220 214 260 174 S338 150 380 126" fill="none" stroke="#ec4899" stroke-width="12" stroke-linecap="round"/>
+  <path d="M486 245h226" stroke="#18181b" stroke-width="8" stroke-linecap="round"/>
+  <path d="M486 206h176" stroke="#ec4899" stroke-width="18" stroke-linecap="round"/>
+  <path d="M486 166h132" stroke="#18181b" stroke-width="18" stroke-linecap="round"/>
+  <g fill="none" stroke="#18181b" stroke-width="5">
+    <circle cx="938" cy="200" r="62"/>
+    <path d="M938 138v62l44 44"/>
+  </g>
+  <path d="M144 486 C222 392 294 506 370 430 S520 406 594 454 742 502 814 408 980 348 1056 398" fill="none" stroke="#18181b" stroke-width="7" stroke-linecap="round"/>
+  <path d="M144 448 C224 416 294 474 370 418 S518 370 594 410 738 470 814 384 976 328 1056 366" fill="none" stroke="#ec4899" stroke-width="10" stroke-linecap="round"/>
+  <path d="M144 506H1056" stroke="#a1a1aa" stroke-width="4" stroke-dasharray="14 14"/>
+  <g fill="#18181b">
+    <rect x="136" y="132" width="110" height="10"/>
+    <rect x="136" y="154" width="72" height="10"/>
+    <rect x="478" y="132" width="128" height="10"/>
+    <rect x="478" y="154" width="94" height="10"/>
+    <rect x="820" y="132" width="136" height="10"/>
+    <rect x="820" y="154" width="78" height="10"/>
+    <rect x="138" y="364" width="170" height="10"/>
+    <rect x="138" y="386" width="104" height="10"/>
+  </g>
+  <g fill="#ec4899">
+    <circle cx="260" cy="174" r="12"/>
+    <circle cx="594" cy="410" r="12"/>
+    <circle cx="814" cy="384" r="12"/>
+  </g>
+</svg>

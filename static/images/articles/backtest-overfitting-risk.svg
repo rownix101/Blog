@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" role="img" aria-labelledby="title desc">
+  <title id="title">Backtest overfitting cover</title>
+  <desc id="desc">A backtest equity curve splits into fragile in-sample performance and weaker out-of-sample performance.</desc>
+  <rect width="1200" height="675" fill="#fafafa"/>
+  <rect x="70" y="70" width="1060" height="535" fill="#fff" stroke="#18181b" stroke-width="4"/>
+  <path d="M150 515H1050M150 135V515" stroke="#18181b" stroke-width="6" stroke-linecap="round"/>
+  <path d="M150 456 C238 440 284 388 356 398 S468 296 540 302 638 198 710 180" fill="none" stroke="#ec4899" stroke-width="16" stroke-linecap="round"/>
+  <path d="M710 180 C772 178 810 282 860 290 S942 380 998 374 1032 420 1050 448" fill="none" stroke="#18181b" stroke-width="10" stroke-linecap="round"/>
+  <path d="M710 130V535" stroke="#a1a1aa" stroke-width="4" stroke-dasharray="16 16"/>
+  <g fill="#fff" stroke="#18181b" stroke-width="4">
+    <rect x="216" y="142" width="178" height="76"/>
+    <rect x="786" y="142" width="190" height="76"/>
+  </g>
+  <g fill="#18181b">
+    <rect x="240" y="166" width="110" height="10"/>
+    <rect x="240" y="190" width="72" height="10"/>
+    <rect x="810" y="166" width="128" height="10"/>
+    <rect x="810" y="190" width="88" height="10"/>
+  </g>
+  <g fill="none" stroke="#18181b" stroke-width="5" stroke-linecap="round">
+    <path d="M206 515v-22M382 515v-22M558 515v-22M734 515v-22M910 515v-22"/>
+    <path d="M150 421h22M150 327h22M150 233h22"/>
+  </g>
+  <g fill="#ec4899">
+    <circle cx="356" cy="398" r="13"/>
+    <circle cx="540" cy="302" r="13"/>
+    <circle cx="710" cy="180" r="13"/>
+  </g>
+  <g fill="#18181b">
+    <circle cx="860" cy="290" r="10"/>
+    <circle cx="998" cy="374" r="10"/>
+    <circle cx="1050" cy="448" r="10"/>
+  </g>
+</svg>

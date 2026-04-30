@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" role="img" aria-labelledby="title desc">
+  <title id="title">Quant research loop cover</title>
+  <desc id="desc">A structured research workflow with hypothesis, data, backtest, validation, execution, and review.</desc>
+  <rect width="1200" height="675" fill="#fafafa"/>
+  <rect x="54" y="52" width="1092" height="571" fill="#fff" stroke="#18181b" stroke-width="4"/>
+  <path d="M120 486 C245 382 364 504 492 400 S729 236 858 330 1025 332 1080 198" fill="none" stroke="#ec4899" stroke-width="16" stroke-linecap="round"/>
+  <path d="M120 514 C248 444 352 544 492 464 S722 292 858 388 1020 418 1080 312" fill="none" stroke="#18181b" stroke-width="6" stroke-linecap="round" opacity=".78"/>
+  <g fill="#fff" stroke="#18181b" stroke-width="4">
+    <rect x="112" y="112" width="198" height="90"/>
+    <rect x="354" y="112" width="198" height="90"/>
+    <rect x="596" y="112" width="198" height="90"/>
+    <rect x="838" y="112" width="198" height="90"/>
+    <rect x="240" y="252" width="198" height="90"/>
+    <rect x="482" y="252" width="198" height="90"/>
+    <rect x="724" y="252" width="198" height="90"/>
+  </g>
+  <g fill="#18181b">
+    <rect x="136" y="137" width="118" height="10"/>
+    <rect x="136" y="162" width="76" height="10"/>
+    <rect x="378" y="137" width="104" height="10"/>
+    <rect x="378" y="162" width="132" height="10"/>
+    <rect x="620" y="137" width="138" height="10"/>
+    <rect x="620" y="162" width="82" height="10"/>
+    <rect x="862" y="137" width="106" height="10"/>
+    <rect x="862" y="162" width="128" height="10"/>
+    <rect x="264" y="277" width="128" height="10"/>
+    <rect x="264" y="302" width="84" height="10"/>
+    <rect x="506" y="277" width="104" height="10"/>
+    <rect x="506" y="302" width="136" height="10"/>
+    <rect x="748" y="277" width="132" height="10"/>
+    <rect x="748" y="302" width="82" height="10"/>
+  </g>
+  <g fill="#ec4899">
+    <circle cx="120" cy="486" r="13"/>
+    <circle cx="492" cy="400" r="13"/>
+    <circle cx="858" cy="330" r="13"/>
+    <circle cx="1080" cy="198" r="13"/>
+  </g>
+  <g stroke="#18181b" stroke-width="5" stroke-linecap="round" fill="none">
+    <path d="M310 157h44"/>
+    <path d="m342 145 12 12-12 12"/>
+    <path d="M552 157h44"/>
+    <path d="m584 145 12 12-12 12"/>
+    <path d="M794 157h44"/>
+    <path d="m826 145 12 12-12 12"/>
+    <path d="M438 297h44"/>
+    <path d="m470 285 12 12-12 12"/>
+    <path d="M680 297h44"/>
+    <path d="m712 285 12 12-12 12"/>
+  </g>
+</svg>

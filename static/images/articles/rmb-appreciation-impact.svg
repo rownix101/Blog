@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" role="img" aria-labelledby="title desc">
+  <title id="title">RMB appreciation impact cover</title>
+  <desc id="desc">A macro market dashboard showing a stronger RMB and its impact on trade, consumption, and assets.</desc>
+  <rect width="1200" height="675" fill="#fbfbf8"/>
+  <rect x="54" y="52" width="1092" height="571" fill="#fff" stroke="#18181b" stroke-width="4"/>
+  <g transform="translate(96 88)">
+    <rect x="0" y="0" width="1008" height="148" fill="#f6f7f2" stroke="#18181b" stroke-width="4"/>
+    <path d="M54 102 C180 86 260 104 370 68 S594 34 712 54 862 80 954 32" fill="none" stroke="#0f766e" stroke-width="16" stroke-linecap="round"/>
+    <path d="M54 118 H954" stroke="#18181b" stroke-width="4" stroke-linecap="round" opacity=".45"/>
+    <g fill="#18181b">
+      <rect x="54" y="32" width="128" height="12"/>
+      <rect x="54" y="56" width="82" height="12"/>
+      <rect x="808" y="88" width="104" height="12"/>
+      <rect x="808" y="112" width="70" height="12"/>
+    </g>
+    <g fill="#0f766e">
+      <circle cx="54" cy="102" r="12"/>
+      <circle cx="370" cy="68" r="12"/>
+      <circle cx="712" cy="54" r="12"/>
+      <circle cx="954" cy="32" r="12"/>
+    </g>
+  </g>
+  <g fill="#fff" stroke="#18181b" stroke-width="4">
+    <rect x="96" y="292" width="286" height="236"/>
+    <rect x="457" y="292" width="286" height="236"/>
+    <rect x="818" y="292" width="286" height="236"/>
+  </g>
+  <g fill="#18181b">
+    <rect x="130" y="326" width="104" height="12"/>
+    <rect x="130" y="354" width="184" height="12"/>
+    <rect x="130" y="382" width="138" height="12"/>
+    <rect x="491" y="326" width="124" height="12"/>
+    <rect x="491" y="354" width="178" height="12"/>
+    <rect x="491" y="382" width="112" height="12"/>
+    <rect x="852" y="326" width="116" height="12"/>
+    <rect x="852" y="354" width="184" height="12"/>
+    <rect x="852" y="382" width="146" height="12"/>
+  </g>
+  <g fill="none" stroke="#18181b" stroke-width="5" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M154 462 h126"/>
+    <path d="M154 494 h178"/>
+    <path d="M178 440 v76"/>
+    <path d="M232 440 v76"/>
+    <path d="M286 440 v76"/>
+    <path d="M520 492 c28-54 72-82 132-82 38 0 72 12 102 36"/>
+    <path d="m730 404 24 42-48-2"/>
+    <path d="M876 492 h164"/>
+    <path d="M900 492 v-74"/>
+    <path d="M954 492 v-112"/>
+    <path d="M1008 492 v-52"/>
+  </g>
+  <g fill="#d97706">
+    <circle cx="154" cy="462" r="10"/>
+    <circle cx="280" cy="462" r="10"/>
+  </g>
+  <g fill="#0f766e">
+    <circle cx="520" cy="492" r="10"/>
+    <circle cx="652" cy="410" r="10"/>
+    <circle cx="1040" cy="492" r="10"/>
+  </g>
+  <g stroke="#18181b" stroke-width="5" stroke-linecap="round" fill="none">
+    <path d="M382 410h75"/>
+    <path d="m445 398 12 12-12 12"/>
+    <path d="M743 410h75"/>
+    <path d="m806 398 12 12-12 12"/>
+  </g>
+</svg>

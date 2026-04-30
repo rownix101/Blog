@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" role="img" aria-labelledby="title desc">
+  <title id="title">Futures contract strategy risk cover</title>
+  <desc id="desc">A futures trading dashboard showing term structure, margin buffer, roll dates, and contract risk.</desc>
+  <rect width="1200" height="675" fill="#fafafa"/>
+  <rect x="62" y="58" width="1076" height="559" fill="#fff" stroke="#18181b" stroke-width="4"/>
+  <rect x="106" y="106" width="434" height="216" fill="#f4f4f5" stroke="#18181b" stroke-width="4"/>
+  <rect x="586" y="106" width="508" height="216" fill="#fff" stroke="#18181b" stroke-width="4"/>
+  <rect x="106" y="366" width="988" height="184" fill="#fff" stroke="#18181b" stroke-width="4"/>
+  <g fill="none" stroke="#18181b" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M164 272V154h312v118"/>
+    <path d="M196 184h76"/>
+    <path d="M196 218h220"/>
+    <path d="M196 252h172"/>
+  </g>
+  <path d="M632 256 C684 182 736 226 786 176 S890 138 1028 224" fill="none" stroke="#f59e0b" stroke-width="12" stroke-linecap="round"/>
+  <path d="M632 274H1040" stroke="#18181b" stroke-width="6" stroke-linecap="round"/>
+  <g stroke="#18181b" stroke-width="4">
+    <path d="M680 274v-26"/>
+    <path d="M760 274v-26"/>
+    <path d="M840 274v-26"/>
+    <path d="M920 274v-26"/>
+    <path d="M1000 274v-26"/>
+  </g>
+  <path d="M146 500h164l46-74 54 94 58-52 54 34 72-88 70 74 74-44 82 52 78-78 148 42" fill="none" stroke="#18181b" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M146 468h900" stroke="#a1a1aa" stroke-width="4" stroke-dasharray="14 14"/>
+  <path d="M356 426v94" stroke="#f59e0b" stroke-width="10" stroke-linecap="round"/>
+  <path d="M664 414v94" stroke="#f59e0b" stroke-width="10" stroke-linecap="round"/>
+  <g fill="#18181b">
+    <rect x="136" y="130" width="138" height="10"/>
+    <rect x="136" y="152" width="96" height="10"/>
+    <rect x="616" y="130" width="134" height="10"/>
+    <rect x="616" y="152" width="88" height="10"/>
+    <rect x="140" y="392" width="184" height="10"/>
+    <rect x="140" y="414" width="112" height="10"/>
+  </g>
+  <g fill="#f59e0b">
+    <circle cx="786" cy="176" r="12"/>
+    <circle cx="920" cy="186" r="12"/>
+    <circle cx="356" cy="426" r="12"/>
+    <circle cx="664" cy="414" r="12"/>
+  </g>
+</svg>

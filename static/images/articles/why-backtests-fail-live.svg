@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" role="img" aria-labelledby="title desc">
+  <title id="title">Why backtests fail live cover</title>
+  <desc id="desc">A strong backtest curve crosses into live trading and breaks under cost, execution, and regime pressure.</desc>
+  <rect width="1200" height="675" fill="#fafafa"/>
+  <rect x="72" y="72" width="1056" height="531" fill="#fff" stroke="#18181b" stroke-width="4"/>
+  <path d="M148 520H1052M148 138V520" stroke="#18181b" stroke-width="6" stroke-linecap="round"/>
+  <path d="M148 456 C226 444 266 406 332 394 S442 322 508 310 614 218 690 190" fill="none" stroke="#14b8a6" stroke-width="16" stroke-linecap="round"/>
+  <path d="M690 190 C744 198 770 250 812 264 S884 316 930 354 1004 420 1052 474" fill="none" stroke="#18181b" stroke-width="11" stroke-linecap="round"/>
+  <path d="M690 126V544" stroke="#a1a1aa" stroke-width="4" stroke-dasharray="16 16"/>
+  <g fill="#fff" stroke="#18181b" stroke-width="4">
+    <rect x="214" y="146" width="178" height="78"/>
+    <rect x="792" y="146" width="230" height="126"/>
+  </g>
+  <g fill="#18181b">
+    <rect x="238" y="170" width="112" height="10"/>
+    <rect x="238" y="195" width="78" height="10"/>
+    <rect x="816" y="170" width="132" height="10"/>
+    <rect x="816" y="198" width="166" height="10"/>
+    <rect x="816" y="226" width="104" height="10"/>
+  </g>
+  <g fill="#fff" stroke="#18181b" stroke-width="4">
+    <circle cx="762" cy="352" r="42"/>
+    <circle cx="880" cy="420" r="42"/>
+    <circle cx="996" cy="492" r="42"/>
+  </g>
+  <g fill="none" stroke="#18181b" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M746 352h32"/>
+    <path d="M762 336v32"/>
+    <path d="M862 408l36 24"/>
+    <path d="M898 408l-36 24"/>
+    <path d="M980 492h32"/>
+  </g>
+  <g fill="none" stroke="#18181b" stroke-width="5" stroke-linecap="round">
+    <path d="M220 520v-22M400 520v-22M580 520v-22M760 520v-22M940 520v-22"/>
+    <path d="M148 426h22M148 332h22M148 238h22"/>
+  </g>
+  <g fill="#14b8a6">
+    <circle cx="332" cy="394" r="13"/>
+    <circle cx="508" cy="310" r="13"/>
+    <circle cx="690" cy="190" r="13"/>
+  </g>
+  <g fill="#18181b">
+    <circle cx="812" cy="264" r="10"/>
+    <circle cx="930" cy="354" r="10"/>
+    <circle cx="1052" cy="474" r="10"/>
+  </g>
+</svg>

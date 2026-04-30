@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" role="img" aria-labelledby="title desc">
+  <title id="title">Why fake meat failed cover</title>
+  <desc id="desc">A plant-based burger, a cooling sales chart, and lab cells show the gap between food-tech hype and consumer demand.</desc>
+  <rect width="1200" height="675" fill="#fafafa"/>
+  <rect x="72" y="72" width="1056" height="531" fill="#fff" stroke="#18181b" stroke-width="4"/>
+  <path d="M142 532H1058" stroke="#18181b" stroke-width="6" stroke-linecap="round"/>
+  <g transform="translate(144 170)">
+    <path d="M56 146c0-66 64-118 146-118s146 52 146 118H56z" fill="#f59e0b" stroke="#18181b" stroke-width="5" stroke-linejoin="round"/>
+    <path d="M62 164h280c28 0 50 22 50 50H12c0-28 22-50 50-50z" fill="#22c55e" stroke="#18181b" stroke-width="5" stroke-linejoin="round"/>
+    <path d="M34 232h336c18 0 32 14 32 32H2c0-18 14-32 32-32z" fill="#7c3aed" stroke="#18181b" stroke-width="5" stroke-linejoin="round"/>
+    <path d="M22 284h360c0 38-31 69-69 69H91c-38 0-69-31-69-69z" fill="#fbbf24" stroke="#18181b" stroke-width="5" stroke-linejoin="round"/>
+    <g fill="#fff" stroke="#18181b" stroke-width="3">
+      <circle cx="132" cy="84" r="7"/>
+      <circle cx="188" cy="58" r="7"/>
+      <circle cx="248" cy="92" r="7"/>
+      <circle cx="302" cy="128" r="7"/>
+    </g>
+    <path d="M96 209c38-24 72 24 112 0s72 24 112 0" fill="none" stroke="#18181b" stroke-width="5" stroke-linecap="round"/>
+  </g>
+  <g transform="translate(600 126)">
+    <rect x="0" y="0" width="420" height="286" fill="#fff" stroke="#18181b" stroke-width="5"/>
+    <path d="M56 232H364M56 54V232" stroke="#18181b" stroke-width="5" stroke-linecap="round"/>
+    <path d="M72 92c44-2 72 20 104 42s54 26 86 42 58 36 86 52" fill="none" stroke="#ef4444" stroke-width="14" stroke-linecap="round"/>
+    <path d="M72 92h74M72 142h106M72 192h54" stroke="#a1a1aa" stroke-width="5" stroke-linecap="round"/>
+    <g fill="#fff" stroke="#18181b" stroke-width="4">
+      <circle cx="72" cy="92" r="14"/>
+      <circle cx="176" cy="134" r="14"/>
+      <circle cx="262" cy="176" r="14"/>
+      <circle cx="348" cy="228" r="14"/>
+    </g>
+  </g>
+  <g transform="translate(662 448)">
+    <circle cx="68" cy="58" r="46" fill="#d1fae5" stroke="#18181b" stroke-width="5"/>
+    <circle cx="174" cy="70" r="34" fill="#e0f2fe" stroke="#18181b" stroke-width="5"/>
+    <circle cx="274" cy="50" r="42" fill="#fef3c7" stroke="#18181b" stroke-width="5"/>
+    <path d="M105 62h34M208 62h30" stroke="#18181b" stroke-width="5" stroke-linecap="round"/>
+    <g fill="#18181b">
+      <circle cx="56" cy="48" r="5"/>
+      <circle cx="78" cy="70" r="5"/>
+      <circle cx="168" cy="62" r="5"/>
+      <circle cx="272" cy="42" r="5"/>
+      <circle cx="292" cy="66" r="5"/>
+    </g>
+  </g>
+  <g fill="#18181b">
+    <rect x="182" y="112" width="210" height="12"/>
+    <rect x="182" y="138" width="144" height="12"/>
+    <rect x="608" y="452" width="26" height="92"/>
+    <rect x="564" y="490" width="26" height="54"/>
+    <rect x="520" y="514" width="26" height="30"/>
+  </g>
+</svg>

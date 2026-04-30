@@ -1,0 +1,85 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" role="img" aria-labelledby="title desc">
+  <title id="title">NVIDIA CUDA AI infrastructure moat cover</title>
+  <desc id="desc">GPU chips, CUDA software layers, networking, cloud, and data center systems forming an infrastructure moat.</desc>
+  <rect width="1200" height="675" fill="#f8fafc"/>
+  <rect x="54" y="52" width="1092" height="571" fill="#ffffff" stroke="#111827" stroke-width="4"/>
+  <g opacity=".12" stroke="#111827" stroke-width="2">
+    <path d="M120 136h960"/>
+    <path d="M120 220h960"/>
+    <path d="M120 304h960"/>
+    <path d="M120 388h960"/>
+    <path d="M120 472h960"/>
+    <path d="M210 94v470"/>
+    <path d="M330 94v470"/>
+    <path d="M450 94v470"/>
+    <path d="M570 94v470"/>
+    <path d="M690 94v470"/>
+    <path d="M810 94v470"/>
+    <path d="M930 94v470"/>
+    <path d="M1050 94v470"/>
+  </g>
+  <g fill="#ffffff" stroke="#111827" stroke-width="4">
+    <rect x="126" y="130" width="198" height="126"/>
+    <rect x="384" y="130" width="198" height="126"/>
+    <rect x="642" y="130" width="198" height="126"/>
+    <rect x="900" y="130" width="198" height="126"/>
+    <rect x="256" y="338" width="198" height="126"/>
+    <rect x="514" y="338" width="198" height="126"/>
+    <rect x="772" y="338" width="198" height="126"/>
+  </g>
+  <g stroke="#111827" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" fill="none">
+    <path d="M324 193h60"/>
+    <path d="m372 181 12 12-12 12"/>
+    <path d="M582 193h60"/>
+    <path d="m630 181 12 12-12 12"/>
+    <path d="M840 193h60"/>
+    <path d="m888 181 12 12-12 12"/>
+    <path d="M454 401h60"/>
+    <path d="m502 389 12 12-12 12"/>
+    <path d="M712 401h60"/>
+    <path d="m760 389 12 12-12 12"/>
+  </g>
+  <g fill="#76b900" stroke="#111827" stroke-width="4">
+    <rect x="156" y="164" width="78" height="58" rx="4"/>
+    <rect x="242" y="164" width="38" height="58" rx="4"/>
+    <path d="M178 148v16M200 148v16M222 148v16M178 222v16M200 222v16M222 222v16"/>
+    <path d="M140 178h16M140 200h16M280 178h16M280 200h16"/>
+  </g>
+  <g fill="#111827">
+    <rect x="414" y="158" width="92" height="12"/>
+    <rect x="414" y="186" width="132" height="12"/>
+    <rect x="414" y="214" width="104" height="12"/>
+    <circle cx="670" cy="164" r="12"/>
+    <circle cx="716" cy="164" r="12"/>
+    <circle cx="762" cy="164" r="12"/>
+    <rect x="672" y="210" width="124" height="12"/>
+    <rect x="930" y="160" width="134" height="18"/>
+    <rect x="930" y="194" width="98" height="18"/>
+    <rect x="930" y="228" width="122" height="18"/>
+  </g>
+  <g fill="#ffffff" stroke="#111827" stroke-width="4">
+    <circle cx="355" cy="372" r="20"/>
+    <circle cx="314" cy="426" r="20"/>
+    <circle cx="396" cy="426" r="20"/>
+    <path d="M344 388 326 410M366 388l18 22M334 426h42"/>
+    <rect x="548" y="372" width="130" height="56"/>
+    <path d="M566 392h94M566 410h68"/>
+    <path d="M820 372h102v56H820z"/>
+    <path d="M842 392h58M842 410h38"/>
+  </g>
+  <path d="M150 512c142-48 220-24 310-74 90-50 114-126 218-110 100 16 130 96 222 90 66-4 108-44 150-84" fill="none" stroke="#76b900" stroke-width="18" stroke-linecap="round"/>
+  <path d="M150 546c108-38 220-26 318-58 126-42 144-128 256-112 112 16 126 94 206 104 54 6 90-16 120-44" fill="none" stroke="#111827" stroke-width="6" stroke-linecap="round" opacity=".82"/>
+  <g fill="#76b900" stroke="#111827" stroke-width="4">
+    <circle cx="150" cy="512" r="15"/>
+    <circle cx="460" cy="438" r="15"/>
+    <circle cx="678" cy="328" r="15"/>
+    <circle cx="900" cy="418" r="15"/>
+    <circle cx="1050" cy="334" r="15"/>
+  </g>
+  <g font-family="Arial, Helvetica, sans-serif" fill="#111827">
+    <text x="128" y="588" font-size="40" font-weight="700">NVIDIA Moat</text>
+    <text x="128" y="628" font-size="22">GPU · CUDA · NVLink · Cloud · AI Factory</text>
+    <text x="888" y="588" font-size="30" font-weight="700">CUDA + System</text>
+    <text x="888" y="624" font-size="20">Infrastructure lock-in</text>
+  </g>
+</svg>

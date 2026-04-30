@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" role="img" aria-labelledby="title desc">
+  <title id="title">Crypto market strategy risk cover</title>
+  <desc id="desc">A crypto market dashboard showing funding rates, leverage, liquidity, and exchange risk.</desc>
+  <rect width="1200" height="675" fill="#fafafa"/>
+  <rect x="60" y="58" width="1080" height="560" fill="#fff" stroke="#18181b" stroke-width="4"/>
+  <rect x="104" y="104" width="298" height="210" fill="#f4f4f5" stroke="#18181b" stroke-width="4"/>
+  <rect x="450" y="104" width="298" height="210" fill="#fff" stroke="#18181b" stroke-width="4"/>
+  <rect x="796" y="104" width="298" height="210" fill="#f4f4f5" stroke="#18181b" stroke-width="4"/>
+  <rect x="104" y="360" width="990" height="190" fill="#fff" stroke="#18181b" stroke-width="4"/>
+  <g fill="none" stroke="#18181b" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="252" cy="210" r="62"/>
+    <path d="M252 150v120"/>
+    <path d="M222 186h48c20 0 32 10 32 26s-12 26-32 26h-48"/>
+    <path d="M222 210h56"/>
+  </g>
+  <path d="M490 254h218" stroke="#18181b" stroke-width="8" stroke-linecap="round"/>
+  <path d="M490 212h160" stroke="#14b8a6" stroke-width="18" stroke-linecap="round"/>
+  <path d="M490 172h204" stroke="#18181b" stroke-width="18" stroke-linecap="round"/>
+  <g fill="none" stroke="#18181b" stroke-width="5">
+    <path d="M884 244V170h122v74"/>
+    <path d="M856 244h178"/>
+    <path d="M914 170v-28h62v28"/>
+  </g>
+  <path d="M144 492 C220 410 296 510 374 430 S516 392 600 440 744 508 830 408 996 350 1054 392" fill="none" stroke="#18181b" stroke-width="7" stroke-linecap="round"/>
+  <path d="M144 454 C224 428 298 470 374 416 S522 374 604 404 740 460 830 382 992 318 1054 352" fill="none" stroke="#14b8a6" stroke-width="10" stroke-linecap="round"/>
+  <path d="M144 512H1054" stroke="#a1a1aa" stroke-width="4" stroke-dasharray="14 14"/>
+  <g fill="#18181b">
+    <rect x="136" y="128" width="112" height="10"/>
+    <rect x="136" y="150" width="78" height="10"/>
+    <rect x="482" y="128" width="122" height="10"/>
+    <rect x="482" y="150" width="88" height="10"/>
+    <rect x="828" y="128" width="132" height="10"/>
+    <rect x="828" y="150" width="86" height="10"/>
+    <rect x="140" y="386" width="178" height="10"/>
+    <rect x="140" y="408" width="108" height="10"/>
+  </g>
+  <g fill="#14b8a6">
+    <circle cx="374" cy="416" r="12"/>
+    <circle cx="604" cy="404" r="12"/>
+    <circle cx="830" cy="382" r="12"/>
+  </g>
+</svg>
