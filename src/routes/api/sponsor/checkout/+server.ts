@@ -4,7 +4,8 @@ import {
   normalizePayType,
   normalizeReturnLang
 } from '$lib/server/yifut';
-import { error, type RequestHandler } from '@sveltejs/kit';
+import { createNowPaymentsInvoice } from '$lib/server/nowpayments';
+import { error, redirect, type RequestHandler } from '@sveltejs/kit';
 
 const escapeHtml = (value: string) =>
   value
@@ -22,9 +23,22 @@ export const POST: RequestHandler = async ({ request, url, platform }) => {
     error(400, 'Invalid sponsor amount.');
   }
 
+  const payType = normalizePayType(form.get('pay_type'));
+
+  if (payType === 'crypto') {
+    const invoiceUrl = await createNowPaymentsInvoice({
+      amount,
+      origin: url.origin,
+      returnPath: `/api/sponsor/return/${returnLang}`,
+      platformEnv: platform?.env as Record<string, string | undefined> | undefined
+    });
+
+    redirect(303, invoiceUrl);
+  }
+
   const payment = await buildSponsorPayment({
     amount,
-    payType: normalizePayType(form.get('pay_type')),
+    payType,
     origin: url.origin,
     returnPath: `/api/sponsor/return/${returnLang}`,
     platformEnv: platform?.env as Record<string, string | undefined> | undefined

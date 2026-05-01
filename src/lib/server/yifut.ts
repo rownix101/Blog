@@ -159,7 +159,7 @@ export const normalizeAmount = (rawAmount: FormDataEntryValue | null) => {
 
 export const normalizePayType = (rawType: FormDataEntryValue | null) => {
   const value = String(rawType ?? '').trim();
-  const allowed = new Set(['alipay', 'wxpay']);
+  const allowed = new Set(['alipay', 'wxpay', 'crypto']);
 
   return allowed.has(value) ? value : 'alipay';
 };

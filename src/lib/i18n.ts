@@ -79,14 +79,17 @@ export const dictionary = {
       title: '赞助这个博客',
       eyebrow: 'Sponsor',
       intro:
-        '如果这些文章对你的研究、交易复盘或产业理解有帮助，可以用一笔小额赞助支持后续写作。支付会跳转到第三方收银台完成。',
+        '如果这些文章对你的研究、交易复盘或产业理解有帮助，可以用一笔小额赞助支持后续写作。收款服务将通过第三方服务提供。',
       amountLabel: '赞助金额',
-      amountHelp: '也可以输入自定义金额，范围 ¥1.00 到 ¥5000.00。',
+      amountHelp: '也可以输入自定义金额，范围 1.00 到 5000.00。',
       methodLabel: '支付方式',
       methods: {
         alipay: '支付宝',
-        wxpay: '微信支付'
+        wxpay: '微信支付',
+        crypto: '加密货币'
       },
+      cryptoPriceNote:
+        '加密货币收款服务将通过第三方服务提供，支付信息以第三方收银台显示为准。',
       submit: '前往支付',
       success: '支付完成后你已返回本站，感谢支持。',
       privacyPrefix: '本站只生成订单和签名，不在本页面收集银行卡或钱包密码。点击"前往支付"即表示你已阅读并同意',
@@ -174,14 +177,17 @@ export const dictionary = {
       title: 'Sponsor This Blog',
       eyebrow: 'Sponsor',
       intro:
-        'If the writing helps your research, trading review, or industry thinking, you can support future posts with a small contribution. Payment is completed through a third-party checkout.',
+        'If the writing helps your research, trading review, or industry thinking, you can support future posts with a small contribution. Collection services are provided through third-party services.',
       amountLabel: 'Amount',
-      amountHelp: 'You can also enter a custom amount from ¥1.00 to ¥5000.00.',
+      amountHelp: 'You can also enter a custom amount from 1.00 to 5000.00.',
       methodLabel: 'Payment Method',
       methods: {
         alipay: 'Alipay',
-        wxpay: 'WeChat Pay'
+        wxpay: 'WeChat Pay',
+        crypto: 'Crypto'
       },
+      cryptoPriceNote:
+        'Crypto collection services are provided through third-party services. Payment details are shown at the third-party checkout.',
       submit: 'Continue to Payment',
       success: 'You have returned after payment. Thank you for the support.',
       privacyPrefix:

@@ -927,7 +927,7 @@ a:focus-visible {
 }
 
 .method-grid {
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
 .amount-grid label,
@@ -1004,6 +1004,10 @@ a:focus-visible {
 
 .sponsor-form p {
   margin: 0;
+}
+
+.sponsor-form .method-note {
+  color: var(--color-text-soft);
 }
 
 .sponsor-form p a {

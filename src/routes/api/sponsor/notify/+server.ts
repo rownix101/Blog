@@ -1,3 +1,4 @@
+import { getNowPaymentsIpnSecret, verifyNowPaymentsSignature } from '$lib/server/nowpayments';
 import { getYifutPublicKey, verifyParams } from '$lib/server/yifut';
 import { text, type RequestHandler } from '@sveltejs/kit';
 
@@ -19,6 +20,28 @@ const handleNotify = async (
   return text('ignored');
 };
 
+const handleNowPaymentsNotify = async (
+  payload: unknown,
+  signature: string | null,
+  platformEnv?: Record<string, string | undefined>
+) => {
+  const ipnSecret = getNowPaymentsIpnSecret(platformEnv);
+  const verified = ipnSecret
+    ? await verifyNowPaymentsSignature({ payload, signature, ipnSecret })
+    : false;
+  const paymentStatus =
+    payload && typeof payload === 'object'
+      ? String((payload as Record<string, unknown>).payment_status ?? '')
+      : '';
+  const successStatuses = new Set(['confirmed', 'finished']);
+
+  if (verified && successStatuses.has(paymentStatus)) {
+    return text('success');
+  }
+
+  return text('ignored');
+};
+
 export const GET: RequestHandler = ({ url, platform }) =>
   handleNotify(
     paramsFromSearch(url.searchParams),
@@ -26,6 +49,16 @@ export const GET: RequestHandler = ({ url, platform }) =>
   );
 
 export const POST: RequestHandler = async ({ request, platform }) => {
+  if (request.headers.get('content-type')?.includes('application/json')) {
+    const payload = await request.json();
+
+    return handleNowPaymentsNotify(
+      payload,
+      request.headers.get('x-nowpayments-sig'),
+      platform?.env as Record<string, string | undefined> | undefined
+    );
+  }
+
   const form = await request.formData();
   const params = Object.fromEntries(
     Array.from(form.entries()).map(([key, value]) => [key, String(value)])

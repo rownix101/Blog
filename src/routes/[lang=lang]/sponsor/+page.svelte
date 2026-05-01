@@ -9,6 +9,7 @@
     amountHelp: string;
     methodLabel: string;
     methods: Record<string, string>;
+    cryptoPriceNote: string;
     submit: string;
     success: string;
     privacyPrefix: string;
@@ -23,6 +24,8 @@
   const presetAmounts = ['9.90', '19.90', '49.90', '99.00'];
   let selectedAmount = $state('19.90');
   let customAmount = $state('');
+  let selectedPayType = $state('alipay');
+  const amountPrefix = $derived(selectedPayType === 'crypto' ? '$' : '¥');
 
   const selectPresetAmount = (amount: string) => {
     selectedAmount = amount;
@@ -74,7 +77,7 @@
                 checked={selectedAmount === amount}
                 onchange={() => selectPresetAmount(amount)}
               />
-              <span>¥{amount}</span>
+              <span>{amountPrefix}{amount}</span>
             </label>
           {/each}
         </div>
@@ -100,11 +103,20 @@
         <div class="method-grid">
           {#each Object.entries(copy.methods) as [value, label], index}
             <label>
-              <input type="radio" name="pay_type" value={value} checked={index === 0} />
+              <input
+                type="radio"
+                name="pay_type"
+                value={value}
+                checked={index === 0}
+                onchange={() => (selectedPayType = value)}
+              />
               <span>{label}</span>
             </label>
           {/each}
         </div>
+        {#if selectedPayType === 'crypto'}
+          <p class="method-note">{copy.cryptoPriceNote}</p>
+        {/if}
       </fieldset>
 
       <p>
