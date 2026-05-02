@@ -18,6 +18,38 @@ export const languageOptions = [
 export const isLang = (value: string | undefined): value is Lang =>
   languages.includes(value as Lang);
 
+export const preferredLangFromHeader = (
+  acceptLanguage: string | null | undefined,
+  fallback: Lang = defaultLang
+): Lang => {
+  if (!acceptLanguage) return fallback;
+
+  const preferences = acceptLanguage
+    .split(',')
+    .map((part, index) => {
+      const [tag = '', ...params] = part.trim().split(';');
+      const qParam = params.find((param) => param.trim().startsWith('q='));
+      const q = qParam ? Number(qParam.trim().slice(2)) : 1;
+
+      return {
+        tag: tag.toLowerCase(),
+        q: Number.isFinite(q) ? q : 0,
+        index
+      };
+    })
+    .filter((preference) => preference.tag && preference.q > 0)
+    .sort((a, b) => b.q - a.q || a.index - b.index);
+
+  for (const { tag } of preferences) {
+    const primaryTag = tag.split('-')[0];
+
+    if (isLang(tag)) return tag;
+    if (isLang(primaryTag)) return primaryTag;
+  }
+
+  return fallback;
+};
+
 export const dictionary = {
   zh: {
     siteTitle: "Rownix's Blog",

@@ -4,7 +4,6 @@
   import { socialLinks } from '$lib/profile';
   import { page } from '$app/state';
   import { tick } from 'svelte';
-  import './app.css';
 
   let { data, children } = $props();
   let searchOpen = $state(false);
