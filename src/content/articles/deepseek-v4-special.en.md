@@ -4,6 +4,7 @@ lang: en
 title: "DeepSeek V4: Million-Token Context, Open-Source Frontier Models, and China's AI Stack Migration"
 description: DeepSeek V4 Preview is not just another model upgrade. It puts long context, reasoning modes, agent workflows, and domestic accelerator adaptation into the same technical story.
 date: 2026-04-30
+updated: 2026-05-02
 topic: AI
 coverImage: /images/articles/deepseek-v4-special.svg
 coverAlt: DeepSeek V4 million-token context and AI stack migration feature image
@@ -17,6 +18,12 @@ The weight of V4 cannot be judged only by launch messaging or benchmark placemen
 As of April 30, 2026, the confirmed facts are these: DeepSeek V4 remains a Preview Release; the official release includes Flash and Pro variants; V4-Pro has 1.6T total parameters and 49B activated parameters, while V4-Flash has 284B total parameters and 13B activated parameters; both are MoE models with support for a 1 million token context; the weights use the MIT License; and the Instruct model supports Non-think, Think, and Think Max reasoning modes. What should not be treated as established fact is the full training hardware setup, the true training cost, the share of Huawei chips used in training, or whether official benchmarks reproduce across all third-party scenarios.
 
 > The real point of V4 is not "DeepSeek caught up with someone again." It is that long-context economics, agent post-training, open weights, and domestic accelerator adaptation have become one systems problem.
+
+## What V4 Changes In Evaluation
+
+V4 puts model capability, reasoning budget, context length, and hardware path into the same evaluation table. Enterprises are no longer only comparing which model answers better. They have to ask whether long context reduces retrieval and manual preparation cost, whether agents reduce rework, whether Flash/Pro/Think Max routing lowers total inference cost, and whether Ascend adaptation reduces future compute-supply risk.
+
+That changes the order of model selection. A common process is to check leaderboards first, then price, then deployment. V4 is better evaluated in reverse: start with whether the task needs long context and tool use, then decide how Flash, Pro, and Think Max should be routed, and only then choose API use, private deployment, or domestic accelerator adaptation. The relevant competition is not a few points on a single-task benchmark, but the total failure cost of a complex workflow.
 
 ## Three Threads Define V4's Weight
 
@@ -51,6 +58,14 @@ This is also the product logic behind the Flash/Pro split. Flash is not simply a
 The MIT License further changes the commercial nature of the model. Many open models look downloadable, but licensing, commercial restrictions, weight availability, deployment documentation, and inference framework support can keep enterprises away. V4's MIT License makes private deployment, industry fine-tuning, model gateway integration, and internal agent-platform evaluation easier to put into procurement workflows. Of course, a permissive license does not make deployment simple. A 1.6T MoE model still has a high engineering bar.
 
 The most important point here is not parameter scale. It is whether DeepSeek is trying to replicate a new open-model pattern: provide strong enough base weights, use MoE to control inference cost, expose reasoning modes as budget tiers, enter high-value scenarios through long context and agent post-training, then let cloud and hardware vendors adapt an ecosystem around it.
+
+## V4 Sells Schedulable Intelligence
+
+Many model launches compress capability into one aggregate score: stronger model, lower price, longer context. Enterprise systems do not buy aggregate scores. They buy the ability to finish work reliably. The Flash/Pro split and the Non-think/Think/Think Max modes make intelligence schedulable. Lower-risk requests do not need the highest reasoning budget. High-value failures can be escalated. Long-context work can be designed together with retrieval, summaries, and tool calls.
+
+This matters most for agents. Agent cost is not only token cost; it includes human takeover, reruns, environment cleanup, bad commits, and audit work after failure. If a coding agent misreads a log after six tool-call rounds, the earlier tokens are already spent and the final output may still introduce a new bug. V4 should therefore be judged by whether it reduces the total cost of completing a task, not by input and output token prices alone.
+
+The official mode comparison supports this routing view. Flash is not only for trivial tasks: on SWE Verified, V4-Flash Non-think already reaches 73.7 resolved, Flash Max rises to 79.0, close to V4-Pro Max at 80.6. But Pro still has a much higher ceiling on knowledge-heavy and complex reasoning tasks; on SimpleQA-Verified, Flash Max reaches 34.1 while Pro Max reaches 57.9. Flash looks like the default layer for high-throughput workflows, while Pro is better treated as the escalation layer for high-uncertainty work.
 
 ## Million-Token Context Is Really A Cost Problem
 
@@ -87,6 +102,8 @@ For that reason, V4 should not be evaluated only by asking whether Pro-Max score
 The relationship between DeepSeek V4 and Huawei Ascend is the part of this release that is easiest to overinterpret and hardest to ignore. The publicly verifiable information is that V4 has been adapted to Huawei chips; Huawei says Ascend 950-based supernode clusters support V4; and it says some V4-Flash training used its chips. At the same time, DeepSeek has not disclosed whether V4 also used Nvidia chips for training. These boundaries matter. "Supported" should not be confused with "trained entirely on domestic hardware."
 
 If DeepSeek has indeed rebuilt parts of the software stack for Ascend, it means the task for China's AI industry has moved from "what do we do if we cannot buy the strongest GPUs?" to "how do we jointly optimize models, frameworks, chips, and cloud clusters?" The difficulty of hardware substitution is not only peak compute. It is ecosystem stickiness. Nvidia's barrier is not just chips; it is CUDA, kernels, communication libraries, debugging tools, developer experience, and cloud-service maturity.
+
+But V4 is not only an Ascend story. NVIDIA has already placed DeepSeek V4 inside Blackwell, NIM, SGLang, and vLLM deployment paths, and reported initial V4-Pro tests above 150 tokens/sec/user on GB200 NVL72. That points to a dual-stack competition: in China, V4 gives Ascend a flagship workload; in the global developer ecosystem, the same open weights are also being absorbed quickly into NVIDIA's mature inference stack. For DeepSeek, that is strategically useful because model influence is not locked to one hardware path.
 
 There are also demand-side signals. After V4's release, large Chinese internet companies and GPU rental or cloud-computing companies reportedly began seeking Huawei Ascend 950 AI chip orders. This suggests V4 may have become a catalyst for procurement decisions. Once a model proves it can serve high-value applications on domestic hardware, enterprises start recalculating supply security, compliance, cost, and long-term bargaining power.
 
@@ -149,7 +166,9 @@ The next things worth watching are not trending topics, but four hard metrics: w
 References:
 - [DeepSeek official Hugging Face model card](https://huggingface.co/deepseek-ai/DeepSeek-V4-Pro)
 - [Hugging Face technical analysis](https://huggingface.co/blog/deepseekv4)
+- [NVIDIA DeepSeek V4 Blackwell deployment analysis](https://developer.nvidia.com/blog/build-with-deepseek-v4-using-nvidia-blackwell-and-gpu-accelerated-endpoints/)
 - [Reuters factbox mirror](https://www.investing.com/news/economy-news/factboxdeepseekv4-the-chinese-ai-model-adapted-for-huawei-chips-4636025)
+- [Reuters / The Information early chip order report mirror](https://www.investing.com/news/stock-market-news/deepseeks-v4-model-will-run-on-huawei-chips-the-information-reports-4597099)
 - [Reuters procurement follow-up mirror](https://www.investing.com/news/stock-market-news/exclusivebig-chinese-tech-firms-scramble-to-secure-huawei-ai-chips-after-deepseek-v4-launch-sources-say-4643661)
 - [Bloomberg delay and chip adaptation report](https://www.bloomberg.com/news/articles/2026-04-26/deepseek-v4-delay-shows-shift-to-china-chips-cctv-account-says)
 - [TechCrunch release analysis](https://techcrunch.com/2026/04/24/deepseek-previews-new-ai-model-that-closes-the-gap-with-frontier-models/)

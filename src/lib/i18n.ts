@@ -82,6 +82,9 @@ export const dictionary = {
     featured: '精选',
     readArticle: '阅读全文',
     minutes: '分钟阅读',
+    articleMeta: {
+      updated: '更新'
+    },
     pagination: {
       label: '文章分页',
       previous: '上一页',
@@ -180,6 +183,9 @@ export const dictionary = {
     featured: 'Featured',
     readArticle: 'Read article',
     minutes: 'min read',
+    articleMeta: {
+      updated: 'Updated'
+    },
     pagination: {
       label: 'Article pagination',
       previous: 'Previous',

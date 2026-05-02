@@ -91,10 +91,34 @@
   };
 
   onMount(() => {
-    const updateProgress = () => {
-      const scrollableHeight = document.documentElement.scrollHeight - window.innerHeight;
-      readingProgress = scrollableHeight > 0 ? Math.min(100, Math.max(0, (window.scrollY / scrollableHeight) * 100)) : 0;
-      showBackToTop = window.scrollY > 300;
+    let scrollableHeight = 0;
+    let animationFrame = 0;
+    let measureFrame = 0;
+
+    const updateFromScrollPosition = () => {
+      animationFrame = 0;
+      const nextProgress =
+        scrollableHeight > 0 ? Math.min(100, Math.max(0, (window.scrollY / scrollableHeight) * 100)) : 0;
+      const nextShowBackToTop = window.scrollY > 300;
+
+      if (readingProgress !== nextProgress) readingProgress = nextProgress;
+      if (showBackToTop !== nextShowBackToTop) showBackToTop = nextShowBackToTop;
+    };
+
+    const scheduleScrollUpdate = () => {
+      if (animationFrame) return;
+      animationFrame = window.requestAnimationFrame(updateFromScrollPosition);
+    };
+
+    const measureScrollableHeight = () => {
+      measureFrame = 0;
+      scrollableHeight = document.documentElement.scrollHeight - window.innerHeight;
+      scheduleScrollUpdate();
+    };
+
+    const scheduleMeasure = () => {
+      if (measureFrame) return;
+      measureFrame = window.requestAnimationFrame(measureScrollableHeight);
     };
 
     const headings = tableOfContents
@@ -125,15 +149,21 @@
     const footerTarget = document.querySelector('.site-footer');
     if (footerTarget) footerObserver.observe(footerTarget);
 
-    updateProgress();
-    window.addEventListener('scroll', updateProgress, { passive: true });
-    window.addEventListener('resize', updateProgress);
+    const resizeObserver = new ResizeObserver(scheduleMeasure);
+    resizeObserver.observe(document.body);
+
+    scheduleMeasure();
+    window.addEventListener('scroll', scheduleScrollUpdate, { passive: true });
+    window.addEventListener('resize', scheduleMeasure);
 
     return () => {
       observer.disconnect();
       footerObserver.disconnect();
-      window.removeEventListener('scroll', updateProgress);
-      window.removeEventListener('resize', updateProgress);
+      resizeObserver.disconnect();
+      window.cancelAnimationFrame(animationFrame);
+      window.cancelAnimationFrame(measureFrame);
+      window.removeEventListener('scroll', scheduleScrollUpdate);
+      window.removeEventListener('resize', scheduleMeasure);
     };
   });
 </script>
@@ -181,6 +211,16 @@
             dateStyle: 'long'
           }).format(new Date(data.article.date))}
         </time>
+        {#if data.article.updated && data.article.updated !== data.article.date}
+          <span>
+            {data.copy.articleMeta.updated}
+            <time datetime={data.article.updated}>
+              {new Intl.DateTimeFormat(data.lang === 'zh' ? 'zh-CN' : 'en-US', {
+                dateStyle: 'long'
+              }).format(new Date(data.article.updated))}
+            </time>
+          </span>
+        {/if}
         <span>{data.article.minutes} {data.copy.minutes}</span>
       </div>
       {#if data.article.coverImage}

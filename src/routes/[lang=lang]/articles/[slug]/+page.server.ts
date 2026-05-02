@@ -36,7 +36,7 @@ export const load: PageServerLoad = ({ params, url }) => {
       description: article.description,
       url: shareUrl,
       datePublished: article.date,
-      dateModified: article.date,
+      dateModified: article.updated ?? article.date,
       inLanguage: article.lang === 'zh' ? 'zh-CN' : 'en-US',
       mainEntityOfPage: shareUrl,
       image: imageUrl ? [imageUrl] : undefined,

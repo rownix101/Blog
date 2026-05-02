@@ -14,6 +14,7 @@ export type Article = {
   title: string;
   description: string;
   date: string;
+  updated?: string;
   topic: string;
   coverImage?: string;
   coverImageAvif?: string;
@@ -32,6 +33,7 @@ export type ArticleSummary = Pick<
   | 'title'
   | 'description'
   | 'date'
+  | 'updated'
   | 'topic'
   | 'coverImage'
   | 'coverImageAvif'
@@ -71,6 +73,7 @@ const toArticleSummary = (article: Article): ArticleSummary => ({
   title: article.title,
   description: article.description,
   date: article.date,
+  updated: article.updated,
   topic: article.topic,
   coverImage: article.coverImage,
   coverImageAvif: article.coverImageAvif,
@@ -254,6 +257,7 @@ const parseArticle = ([path, raw]: [string, string]): ArticleSource => {
     title: metadata.title,
     description: metadata.description,
     date: metadata.date,
+    updated: metadata.updated,
     topic: metadata.topic,
     coverImage: metadata.coverImage,
     coverImageAvif: metadata.coverImageAvif,
