@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="675" viewBox="0 0 1200 675" role="img" aria-labelledby="title desc">
+  <title id="title">AI capex and inference economics diagram</title>
+  <desc id="desc">A schematic of AI infrastructure economics, connecting capital expenditure, GPU clusters, power, depreciation, utilization, inference cost, and revenue.</desc>
+  <rect width="1200" height="675" fill="#111827"/>
+  <rect x="74" y="56" width="1052" height="563" rx="20" fill="#182235" stroke="#4f6278" stroke-width="2"/>
+  <g fill="#26354d" stroke="#7dd3fc" stroke-width="2">
+    <rect x="128" y="120" width="230" height="110" rx="12"/>
+    <rect x="128" y="282" width="230" height="110" rx="12"/>
+    <rect x="128" y="444" width="230" height="110" rx="12"/>
+    <rect x="485" y="104" width="230" height="128" rx="12"/>
+    <rect x="485" y="274" width="230" height="128" rx="12"/>
+    <rect x="485" y="444" width="230" height="128" rx="12"/>
+    <rect x="842" y="170" width="230" height="110" rx="12"/>
+    <rect x="842" y="395" width="230" height="110" rx="12"/>
+  </g>
+  <g stroke="#facc15" stroke-width="4" fill="none" opacity=".82">
+    <path d="M358 175 H485"/>
+    <path d="M358 337 H485"/>
+    <path d="M358 499 H485"/>
+    <path d="M715 168 H795 Q842 168 842 225"/>
+    <path d="M715 338 H796 Q842 338 842 225"/>
+    <path d="M715 508 H796 Q842 508 842 450"/>
+    <path d="M957 280 V395"/>
+  </g>
+  <g font-family="Arial, sans-serif" fill="#f8fafc">
+    <text x="243" y="166" text-anchor="middle" font-size="24" font-weight="700">Capex</text>
+    <text x="243" y="199" text-anchor="middle" font-size="19">GPUs, racks, sites</text>
+    <text x="243" y="328" text-anchor="middle" font-size="24" font-weight="700">Power</text>
+    <text x="243" y="361" text-anchor="middle" font-size="19">energy and cooling</text>
+    <text x="243" y="490" text-anchor="middle" font-size="24" font-weight="700">Depreciation</text>
+    <text x="243" y="523" text-anchor="middle" font-size="19">cost moves to P&amp;L</text>
+    <text x="600" y="154" text-anchor="middle" font-size="24" font-weight="700">GPU cluster</text>
+    <text x="600" y="187" text-anchor="middle" font-size="19">supply, networking, uptime</text>
+    <text x="600" y="324" text-anchor="middle" font-size="24" font-weight="700">Scheduler</text>
+    <text x="600" y="357" text-anchor="middle" font-size="19">batch, cache, route</text>
+    <text x="600" y="494" text-anchor="middle" font-size="24" font-weight="700">Inference</text>
+    <text x="600" y="527" text-anchor="middle" font-size="19">cost per task</text>
+    <text x="957" y="216" text-anchor="middle" font-size="24" font-weight="700">Revenue</text>
+    <text x="957" y="249" text-anchor="middle" font-size="19">seats plus usage</text>
+    <text x="957" y="441" text-anchor="middle" font-size="24" font-weight="700">Margin</text>
+    <text x="957" y="474" text-anchor="middle" font-size="19">utilization decides</text>
+  </g>
+  <g fill="#7dd3fc">
+    <circle cx="407" cy="175" r="6"/>
+    <circle cx="407" cy="337" r="6"/>
+    <circle cx="407" cy="499" r="6"/>
+    <circle cx="779" cy="168" r="6"/>
+    <circle cx="779" cy="338" r="6"/>
+    <circle cx="779" cy="508" r="6"/>
+  </g>
+  <text x="88" y="650" font-family="Arial, sans-serif" font-size="18" fill="#a7b5c8">The model is the product ceiling. Inference economics are the business floor.</text>
+</svg>

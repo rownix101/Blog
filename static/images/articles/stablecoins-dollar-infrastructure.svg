@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="675" viewBox="0 0 1200 675" role="img" aria-labelledby="title desc">
+  <title id="title">Stablecoin dollar infrastructure diagram</title>
+  <desc id="desc">A dense network diagram showing stablecoins connecting reserves, exchanges, wallets, payments, DeFi, and global users.</desc>
+  <rect width="1200" height="675" fill="#101820"/>
+  <rect x="60" y="58" width="1080" height="559" rx="22" fill="#16242f" stroke="#3f5968" stroke-width="2"/>
+  <g stroke="#69b3a2" stroke-width="3" opacity=".72" fill="none">
+    <path d="M600 338 260 178"/>
+    <path d="M600 338 930 172"/>
+    <path d="M600 338 240 500"/>
+    <path d="M600 338 940 512"/>
+    <path d="M600 338 600 118"/>
+    <path d="M600 338 600 558"/>
+    <path d="M260 178 240 500"/>
+    <path d="M930 172 940 512"/>
+    <path d="M240 500 940 512"/>
+    <path d="M260 178 930 172"/>
+  </g>
+  <circle cx="600" cy="338" r="92" fill="#f2c14e"/>
+  <circle cx="600" cy="338" r="62" fill="#18242d"/>
+  <text x="600" y="326" text-anchor="middle" font-family="Arial, sans-serif" font-size="30" font-weight="700" fill="#f8f4e3">USD</text>
+  <text x="600" y="363" text-anchor="middle" font-family="Arial, sans-serif" font-size="22" fill="#f8f4e3">stablecoins</text>
+  <g font-family="Arial, sans-serif" font-weight="700" fill="#f8f4e3">
+    <g>
+      <rect x="158" y="120" width="204" height="92" rx="14" fill="#284653"/>
+      <text x="260" y="157" text-anchor="middle" font-size="22">Treasury</text>
+      <text x="260" y="186" text-anchor="middle" font-size="22">reserves</text>
+    </g>
+    <g>
+      <rect x="498" y="70" width="204" height="92" rx="14" fill="#2f5d50"/>
+      <text x="600" y="109" text-anchor="middle" font-size="22">Banks and</text>
+      <text x="600" y="138" text-anchor="middle" font-size="22">custody</text>
+    </g>
+    <g>
+      <rect x="828" y="118" width="204" height="92" rx="14" fill="#284653"/>
+      <text x="930" y="156" text-anchor="middle" font-size="22">Exchanges</text>
+      <text x="930" y="185" text-anchor="middle" font-size="22">and OTC</text>
+    </g>
+    <g>
+      <rect x="138" y="456" width="204" height="92" rx="14" fill="#284653"/>
+      <text x="240" y="493" text-anchor="middle" font-size="22">Wallets and</text>
+      <text x="240" y="522" text-anchor="middle" font-size="22">payments</text>
+    </g>
+    <g>
+      <rect x="498" y="514" width="204" height="92" rx="14" fill="#2f5d50"/>
+      <text x="600" y="552" text-anchor="middle" font-size="22">Cross-border</text>
+      <text x="600" y="581" text-anchor="middle" font-size="22">settlement</text>
+    </g>
+    <g>
+      <rect x="838" y="466" width="204" height="92" rx="14" fill="#284653"/>
+      <text x="940" y="503" text-anchor="middle" font-size="22">DeFi</text>
+      <text x="940" y="532" text-anchor="middle" font-size="22">liquidity</text>
+    </g>
+  </g>
+  <text x="86" y="650" font-family="Arial, sans-serif" font-size="18" fill="#8fb1be">Dollar liabilities, reserve yield, redemption paths, and liquidity controls decide the system.</text>
+</svg>
