@@ -7,7 +7,7 @@ date: 2026-04-29
 topic: 量化交易
 coverImage: /images/articles/why-backtests-fail-live.svg
 coverAlt: 回测曲线进入实盘后被成本、成交和环境变化压低的示意图
-featured: true
+featured: false
 ---
 
 很多策略在回测里像一台稳定印钞机，一上线就开始漏水。研究阶段的资金曲线顺滑，最大回撤可控，胜率也漂亮；到了实盘，滑点比预期大，订单成交不完整，信号频率变了，连续亏损来得比报告里更快。最后研究者往往把原因归结为“市场变了”或者“运气不好”。

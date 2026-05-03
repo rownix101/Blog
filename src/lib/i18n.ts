@@ -62,7 +62,7 @@ export const dictionary = {
       sponsor: '赞助'
     },
     heroLabel: '市场结构 · 策略研究 · 风险管理',
-    heroTitle: '把复杂市场问题拆成可验证的分析。',
+    heroTitle: '拆解技术、产业、市场与风险。',
     heroCopy:
       '这里关注量化策略、衍生品机制、宏观变量和产业变化。每篇文章都尽量从数据锚点、交易约束和风险边界出发，而不是停留在简单观点。',
     latest: '最新文章',
@@ -100,8 +100,24 @@ export const dictionary = {
     },
     allTopics: '全部主题',
     aboutTitle: '关于这个博客',
-    aboutCopy:
-      '这里记录对市场、策略和产业的长期观察：先理解结构，再讨论机会；先定义风险，再谈收益。页面保持轻量，内容保持可迁移，并为后续英文、日语和西班牙语版本预留空间。',
+    aboutDescription: '这里记录我对技术、产业、市场和风险的长期观察。',
+    aboutSections: [
+      {
+        title: '写什么',
+        body:
+          '这个博客不只写市场，也会写 AI、基础设施、公司案例、宏观变量、支付网络和交易机制。主题看起来分散，但核心问题相似：一个系统如何运转，哪些变量真正改变结果，风险又藏在哪里。'
+      },
+      {
+        title: '怎么写',
+        body:
+          '我更关心结构，而不是热闹的结论。文章会尽量把观点拆回数据锚点、机制约束、执行条件和失效边界；如果一个判断无法被复盘、被质疑、被修正，它就不值得写得太确定。'
+      },
+      {
+        title: '为什么写',
+        body:
+          '写作是整理判断的方式。很多问题单独看像新闻，放长一点看才会露出产业周期、商业模式、技术路径和人群行为的变化。这个博客用来沉淀这些观察，也方便以后回头检查自己哪里看对了，哪里看错了。'
+      }
+    ],
     socialTitle: '联系与频道',
     legal: {
       title: '法律与隐私',
@@ -163,7 +179,7 @@ export const dictionary = {
       sponsor: 'Sponsor'
     },
     heroLabel: 'Market Structure · Strategy Research · Risk Management',
-    heroTitle: 'Breaking complex markets into testable analysis.',
+    heroTitle: 'Analyzing technology, industry, markets, and risk.',
     heroCopy:
       'This blog focuses on quantitative strategy, derivative mechanics, macro variables, and industry change, grounding each piece in data anchors, trading constraints, and risk boundaries instead of simple market takes.',
     latest: 'Latest Articles',
@@ -201,8 +217,25 @@ export const dictionary = {
     },
     allTopics: 'All topics',
     aboutTitle: 'About this blog',
-    aboutCopy:
-      'Long-form notes on markets, strategy, and industry: understand structure before opportunity, define risk before return. The interface stays light, the content stays portable, and the publishing system leaves room for English, Japanese, and Spanish editions.',
+    aboutDescription:
+      'Long-form notes on technology, industry, markets, and risk.',
+    aboutSections: [
+      {
+        title: 'What I write about',
+        body:
+          'This blog is not only about markets. It also covers AI, infrastructure, company cases, macro variables, payment networks, and trading mechanics. The topics may look scattered, but the underlying question is usually the same: how a system works, which variables actually change outcomes, and where risk is hidden.'
+      },
+      {
+        title: 'How I write',
+        body:
+          'I care more about structure than loud conclusions. Each piece tries to trace an argument back to data anchors, mechanism constraints, execution conditions, and failure boundaries. If a claim cannot be reviewed, challenged, or corrected later, it should not be written with too much certainty.'
+      },
+      {
+        title: 'Why I write',
+        body:
+          'Writing is a way to organize judgment. Many questions look like news in isolation, but reveal changes in industry cycles, business models, technology paths, and human behavior over time. This blog is where I keep those observations and later check what I got right and what I missed.'
+      }
+    ],
     socialTitle: 'Contact and channels',
     legal: {
       title: 'Legal and privacy',

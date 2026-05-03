@@ -1,6 +1,5 @@
 <script lang="ts">
   import { localizePath } from '$lib/i18n';
-  import { socialLinks } from '$lib/profile';
   import { onMount } from 'svelte';
   import { fade } from 'svelte/transition';
 
@@ -298,23 +297,6 @@
           >
             {topic}
           </button>
-        {/each}
-      </div>
-    </div>
-
-    <div id="about" class="plain-section">
-      <p class="eyebrow">{data.copy.aboutTitle}</p>
-      <p>{data.copy.aboutCopy}</p>
-      <div class="social-list" aria-label={data.copy.socialTitle as string}>
-        {#each socialLinks as link}
-          <a
-            href={link.href}
-            target={link.href.startsWith('http') ? '_blank' : undefined}
-            rel="noreferrer"
-          >
-            <span>{link.label}</span>
-            <strong>{link.value}</strong>
-          </a>
         {/each}
       </div>
     </div>

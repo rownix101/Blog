@@ -768,9 +768,6 @@ a:focus-visible {
 }
 
 .bottom-grid {
-  display: grid;
-  grid-template-columns: minmax(220px, 0.85fr) minmax(0, 1.15fr);
-  gap: clamp(32px, 6vw, 64px);
   padding: clamp(48px, 6vw, 68px) 0 84px;
   border-top: 1px solid var(--color-border-soft);
 }
@@ -845,6 +842,72 @@ a:focus-visible {
 .topic-list .active-topic {
   border-color: var(--color-text);
   background: var(--color-surface-muted);
+}
+
+.about-page {
+  padding: clamp(50px, 7vw, 78px) 0 92px;
+}
+
+.about-hero {
+  max-width: 820px;
+}
+
+.about-hero h1 {
+  margin: 0;
+  font-size: clamp(2.6rem, 6vw, 4.8rem);
+  line-height: 1;
+  letter-spacing: 0;
+}
+
+.about-hero p:not(.eyebrow) {
+  max-width: 680px;
+  margin: 24px 0 0;
+  color: var(--color-text-soft);
+  font-size: clamp(1.04rem, 2vw, 1.24rem);
+  line-height: 1.75;
+}
+
+.about-content {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(260px, 360px);
+  gap: clamp(34px, 6vw, 70px);
+  margin-top: clamp(42px, 6vw, 66px);
+  border-top: 1px solid var(--color-border-soft);
+  padding-top: clamp(30px, 5vw, 46px);
+}
+
+.about-sections {
+  display: grid;
+  gap: 30px;
+  max-width: 760px;
+}
+
+.about-sections section {
+  display: grid;
+  gap: 12px;
+}
+
+.about-sections h2 {
+  margin: 0;
+  font-size: clamp(1.28rem, 2vw, 1.7rem);
+  line-height: 1.25;
+}
+
+.about-sections p {
+  margin: 0;
+  color: var(--color-prose);
+  font-size: 1rem;
+  line-height: 1.78;
+}
+
+.about-contact {
+  align-self: start;
+  border-top: 6px solid var(--color-text);
+  padding-top: 18px;
+}
+
+.about-contact .social-list {
+  grid-template-columns: 1fr;
 }
 
 .sponsor-page {
@@ -1557,7 +1620,7 @@ a:focus-visible {
   .site-header,
   .hero,
   .content-grid,
-  .bottom-grid,
+  .about-content,
   .article-page,
   .sponsor-checkout,
   .error-hero,

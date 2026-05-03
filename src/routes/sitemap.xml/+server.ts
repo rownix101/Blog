@@ -23,7 +23,7 @@ const absoluteUrl = (origin: string, path: string) => `${origin}${path}`;
 export const GET: RequestHandler = ({ url }) => {
   const origin = url.origin;
   const articles = getAllArticles();
-  const legalPaths = ['privacy', 'cookies', 'terms'] as const;
+  const staticPaths = ['about', 'privacy', 'cookies', 'terms'] as const;
 
   const pages: SitemapUrl[] = [
     ...languages.map((lang) => ({
@@ -35,14 +35,14 @@ export const GET: RequestHandler = ({ url }) => {
         ['x-default', '/zh']
       ])
     })),
-    ...legalPaths.flatMap((legalPath) =>
+    ...staticPaths.flatMap((staticPath) =>
       languages.map((lang) => ({
-        path: `/${lang}/${legalPath}`,
+        path: `/${lang}/${staticPath}`,
         changefreq: 'monthly' as const,
-        priority: '0.4',
+        priority: staticPath === 'about' ? '0.6' : '0.4',
         alternates: Object.fromEntries([
-          ...languages.map((item) => [item, `/${item}/${legalPath}`]),
-          ['x-default', `/zh/${legalPath}`]
+          ...languages.map((item) => [item, `/${item}/${staticPath}`]),
+          ['x-default', `/zh/${staticPath}`]
         ])
       }))
     ),

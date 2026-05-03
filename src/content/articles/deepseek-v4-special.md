@@ -8,7 +8,7 @@ updated: 2026-05-02
 topic: AI 专题
 coverImage: /images/articles/deepseek-v4-special.svg
 coverAlt: DeepSeek V4 百万上下文与 AI 栈迁移专题图
-featured: true
+featured: false
 ---
 
 DeepSeek V4 Preview 的价值，不在于又多了一个“大参数模型”，而在于它把三个原本分散的叙事合到了一起：开源模型继续逼近闭源前沿，Agent 正在取代单轮聊天成为主要战场，中国 AI 栈开始从“能跑”走向“为国产芯片深度优化”。如果只看榜单，V4 是一次模型发布；如果把技术、价格、硬件和企业采购放在一起看，它更像一次基础设施迁移的公开测试。

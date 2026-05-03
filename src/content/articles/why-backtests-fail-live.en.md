@@ -7,7 +7,7 @@ date: 2026-04-29
 topic: Quant Trading
 coverImage: /images/articles/why-backtests-fail-live.svg
 coverAlt: Backtest curve degraded by costs, fills, and regime change after going live
-featured: true
+featured: false
 ---
 
 Many strategies look like stable money printers in backtests and start leaking as soon as they go live. During research, the equity curve is smooth, maximum drawdown is controlled, and win rate looks attractive. In live trading, slippage is larger than expected, orders fill incompletely, signal frequency changes, and losing streaks arrive faster than the report suggested. Researchers often blame "the market changed" or "bad luck."

@@ -7,6 +7,7 @@ date: 2026-05-03
 topic: AI 专题
 coverImage: /images/articles/ai-unemployment-wave.svg
 coverAlt: AI 失业潮与劳动力转型的抽象图
+featured: true
 ---
 
 AI 失业潮最吓人的版本，可能不是某家公司下午突然裁掉一半员工。

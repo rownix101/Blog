@@ -8,7 +8,7 @@ updated: 2026-05-02
 topic: AI
 coverImage: /images/articles/deepseek-v4-special.svg
 coverAlt: DeepSeek V4 million-token context and AI stack migration feature image
-featured: true
+featured: false
 ---
 
 The value of DeepSeek V4 Preview is not that it adds another large-parameter model to the market. Its real significance is that it merges three stories that used to be separate: open-source models continue to approach the closed-source frontier, agents are replacing single-turn chat as the main battlefield, and China's AI stack is moving from "it can run" toward deeper optimization for domestic chips. If you only look at rankings, V4 is a model release. If you look at technology, pricing, hardware, and enterprise procurement together, it looks more like a public test of an infrastructure migration.

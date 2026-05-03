@@ -17,7 +17,7 @@
     { key: 'home', href: '' },
     { key: 'articles', href: '#articles' },
     { key: 'topics', href: '#topics' },
-    { key: 'about', href: '#about' },
+    { key: 'about', href: '/about' },
     { key: 'sponsor', href: '/sponsor' }
   ] as const;
   const legalItems = [

@@ -7,6 +7,7 @@ date: 2026-05-03
 topic: AI Special
 coverImage: /images/articles/ai-unemployment-wave.svg
 coverAlt: Abstract illustration of AI-driven labor market transition
+featured: true
 ---
 
 The scariest version of the AI unemployment wave is probably not a company firing half its staff in one afternoon.
