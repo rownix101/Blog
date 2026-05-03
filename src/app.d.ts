@@ -1,3 +1,5 @@
+import type { CommentPlatformEnv } from '$lib/server/comments';
+
 declare global {
   namespace App {
     interface Locals {
@@ -5,7 +7,10 @@ declare global {
     }
 
     interface Platform {
-      env?: Record<string, string | undefined>;
+      env?: CommentPlatformEnv;
+      ctx?: {
+        waitUntil: (promise: Promise<unknown>) => void;
+      };
     }
   }
 }

@@ -1,4 +1,5 @@
 <script lang="ts">
+  import Comments from '$lib/components/Comments.svelte';
   import { localizePath } from '$lib/i18n';
   import { onMount } from 'svelte';
   import { fade } from 'svelte/transition';
@@ -27,6 +28,23 @@
     show: string;
     hide: string;
   });
+  const commentsCopy = $derived(data.copy.comments as {
+    title: string;
+    loading: string;
+    empty: string;
+    disabled: string;
+    nameLabel: string;
+    namePlaceholder: string;
+    emailLabel: string;
+    emailPlaceholder: string;
+    bodyLabel: string;
+    bodyPlaceholder: string;
+    submit: string;
+    submitting: string;
+    success: string;
+    error: string;
+  });
+  const commentsEndpoint = $derived(`/api/comments/${data.lang}/${data.article.slug}`);
   const tableOfContents = $derived(
     data.article.toc.map((item: { id: string; label: string; depth: number }) => ({
       id: item.id,
@@ -324,6 +342,8 @@
         </button>
       </div>
     </section>
+
+    <Comments endpoint={commentsEndpoint} copy={commentsCopy} lang={data.lang} />
   </article>
 
   <aside class="article-side" aria-label={tocCopy.title}>

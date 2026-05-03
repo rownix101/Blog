@@ -154,6 +154,22 @@ export const dictionary = {
       copied: '已复制',
       email: '邮件'
     },
+    comments: {
+      title: '评论',
+      loading: '正在加载评论。',
+      empty: '还没有评论，欢迎留下第一条想法。',
+      disabled: '评论区还没有配置完成。',
+      nameLabel: '昵称',
+      namePlaceholder: '你的昵称',
+      emailLabel: '邮箱（可选，不公开）',
+      emailPlaceholder: 'you@example.com',
+      bodyLabel: '评论',
+      bodyPlaceholder: '写下你的想法',
+      submit: '提交评论',
+      submitting: '提交中',
+      success: '评论已发布。',
+      error: '评论暂时无法提交，请稍后再试。'
+    },
     errorPage: {
       eyebrow: '页面走丢了',
       title: '这里没有可阅读的内容。',
@@ -272,6 +288,22 @@ export const dictionary = {
       copy: 'Copy link',
       copied: 'Copied',
       email: 'Email'
+    },
+    comments: {
+      title: 'Comments',
+      loading: 'Loading comments.',
+      empty: 'No comments yet. Be the first to add one.',
+      disabled: 'Comments are not configured yet.',
+      nameLabel: 'Name',
+      namePlaceholder: 'Your name',
+      emailLabel: 'Email (optional, not public)',
+      emailPlaceholder: 'you@example.com',
+      bodyLabel: 'Comment',
+      bodyPlaceholder: 'Share your thoughts',
+      submit: 'Post comment',
+      submitting: 'Posting',
+      success: 'Your comment has been posted.',
+      error: 'Comments are temporarily unavailable. Try again later.'
     },
     errorPage: {
       eyebrow: 'Page not found',

@@ -8,3 +8,8 @@ binding = "ASSETS"
 
 [observability]
 enabled = true
+
+[[d1_databases]]
+binding = "COMMENTS_DB"
+database_name = "blog-comments"
+database_id = "replace-with-cloudflare-d1-database-id"
