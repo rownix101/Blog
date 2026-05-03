@@ -191,7 +191,7 @@
   {#if data.imageUrl}
     <meta name="twitter:image" content={data.imageUrl} />
   {/if}
-  <script type="application/ld+json">{JSON.stringify(data.jsonLd)}</script>
+  {@html `<script type="application/ld+json">${data.jsonLd}</script>`}
 </svelte:head>
 
 <div class="reading-progress" aria-hidden="true">

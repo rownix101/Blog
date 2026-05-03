@@ -1,5 +1,6 @@
 import { getArticleSummaries, getTopics } from '$lib/content';
 import { languages, t } from '$lib/i18n';
+import { serializeJsonLd } from '$lib/json-ld';
 import type { PageServerLoad } from './$types';
 
 export const load: PageServerLoad = ({ params, url }) => {
@@ -15,7 +16,7 @@ export const load: PageServerLoad = ({ params, url }) => {
     alternateUrls: Object.fromEntries(
       languages.map((lang) => [lang, new URL(`/${lang}`, url.origin).toString()])
     ),
-    jsonLd: {
+    jsonLd: serializeJsonLd({
       '@context': 'https://schema.org',
       '@type': 'Blog',
       name: copy.siteTitle,
@@ -26,6 +27,6 @@ export const load: PageServerLoad = ({ params, url }) => {
         '@type': 'Person',
         name: 'Rownix'
       }
-    }
+    })
   };
 };

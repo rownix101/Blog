@@ -4,6 +4,7 @@ import {
   getArticleSummariesBySlug,
   getRelatedArticleSummaries
 } from '$lib/content';
+import { serializeJsonLd } from '$lib/json-ld';
 import type { PageServerLoad } from './$types';
 
 export const load: PageServerLoad = ({ params, url }) => {
@@ -29,7 +30,7 @@ export const load: PageServerLoad = ({ params, url }) => {
     canonicalUrl: shareUrl,
     alternateUrls,
     imageUrl,
-    jsonLd: {
+    jsonLd: serializeJsonLd({
       '@context': 'https://schema.org',
       '@type': 'Article',
       headline: article.title,
@@ -58,7 +59,7 @@ export const load: PageServerLoad = ({ params, url }) => {
         name: "Rownix's Blog",
         url: new URL(`/${article.lang}`, url.origin).toString()
       }
-    },
+    }),
     related: getRelatedArticleSummaries(article)
   };
 };

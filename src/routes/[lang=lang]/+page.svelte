@@ -91,7 +91,7 @@
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:title" content={data.copy.siteTitle as string} />
   <meta name="twitter:description" content={data.copy.siteDescription as string} />
-  <script type="application/ld+json">{JSON.stringify(data.jsonLd)}</script>
+  {@html `<script type="application/ld+json">${data.jsonLd}</script>`}
 </svelte:head>
 
 <svelte:window onscroll={handleScroll} onresize={handleScroll} />
