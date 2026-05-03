@@ -171,7 +171,11 @@
 <svelte:head>
   <title>{data.article.title} | {data.copy.siteTitle}</title>
   <meta name="description" content={data.article.description} />
+  <meta name="robots" content="index,follow,max-image-preview:large" />
   <link rel="canonical" href={data.canonicalUrl} />
+  {#if data.preloadImage}
+    <link rel="preload" as="image" href={data.preloadImage} fetchpriority="high" />
+  {/if}
   {#each Object.entries(data.alternateUrls) as [lang, href]}
     <link rel="alternate" hreflang={lang} href={href} />
   {/each}
@@ -180,16 +184,23 @@
   <meta property="og:description" content={data.article.description} />
   <meta property="og:url" content={data.shareUrl} />
   <meta property="og:type" content="article" />
+  <meta property="og:locale" content={data.lang === 'zh' ? 'zh_CN' : 'en_US'} />
+  <meta property="article:published_time" content={data.article.date} />
+  <meta property="article:modified_time" content={data.article.updated ?? data.article.date} />
+  <meta property="article:section" content={data.article.topic} />
+  <meta property="article:author" content="Rownix" />
   {#if data.article.coverImage}
     <meta property="og:image" content={data.imageUrl} />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="675" />
+    <meta property="og:image:alt" content={data.article.coverAlt ?? data.article.title} />
   {/if}
   <meta name="twitter:card" content={data.article.coverImage ? 'summary_large_image' : 'summary'} />
   <meta name="twitter:title" content={data.article.title} />
   <meta name="twitter:description" content={data.article.description} />
   {#if data.imageUrl}
     <meta name="twitter:image" content={data.imageUrl} />
+    <meta name="twitter:image:alt" content={data.article.coverAlt ?? data.article.title} />
   {/if}
   {@html `<script type="application/ld+json">${data.jsonLd}</script>`}
 </svelte:head>

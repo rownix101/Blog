@@ -5,7 +5,7 @@ title: "Polymarket's Real Power Is Not Letting People Bet"
 description: Polymarket is not merely a news-betting product. It turns events, probabilities, liquidity, and settlement rules into tradable markets.
 date: 2026-05-02
 topic: Asset Research
-coverImage: /images/articles/polymarket-prediction-market-structure.png
+coverImage: /images/articles/polymarket-prediction-market-structure.webp
 coverAlt: Diagram of events, probabilities, order books, and regulation interacting inside a Polymarket-style prediction market
 featured: false
 ---

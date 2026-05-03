@@ -7,7 +7,22 @@ export const handle: Handle = async ({ event, resolve }) => {
     ? maybeLang
     : preferredLangFromHeader(event.request.headers.get('accept-language'));
 
-  return resolve(event, {
+  const response = await resolve(event, {
     transformPageChunk: ({ html }) => html.replace('%lang%', event.locals.lang as Lang)
   });
+
+  const isCacheablePage =
+    event.request.method === 'GET' &&
+    response.status === 200 &&
+    !event.url.pathname.startsWith('/api/') &&
+    !event.url.pathname.includes('/sponsor/return');
+
+  if (isCacheablePage && !response.headers.has('cache-control')) {
+    response.headers.set(
+      'cache-control',
+      'public, max-age=0, s-maxage=3600, stale-while-revalidate=86400'
+    );
+  }
+
+  return response;
 };

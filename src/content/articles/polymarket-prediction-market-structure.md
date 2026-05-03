@@ -5,7 +5,7 @@ title: Polymarket 真正厉害的地方，不是让人下注
 description: Polymarket 的核心不是预测新闻，而是把事件、概率、流动性和结算规则变成可交易市场。它的机会在信息定价，风险也在市场结构本身。
 date: 2026-05-02
 topic: 资产专题
-coverImage: /images/articles/polymarket-prediction-market-structure.png
+coverImage: /images/articles/polymarket-prediction-market-structure.webp
 coverAlt: Polymarket 预测市场中事件、概率、订单簿和监管路径交织的示意图
 featured: false
 ---

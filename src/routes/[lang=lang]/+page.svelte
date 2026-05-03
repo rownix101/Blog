@@ -1,6 +1,7 @@
 <script lang="ts">
   import { localizePath } from '$lib/i18n';
   import { socialLinks } from '$lib/profile';
+  import { onMount } from 'svelte';
   import { fade } from 'svelte/transition';
 
   let { data } = $props();
@@ -11,19 +12,34 @@
   let showBackToTop = $state(false);
   let footerVisible = $state(false);
 
-  const handleScroll = () => {
-    showBackToTop = window.scrollY > 300;
-  };
-
-  import { onMount } from 'svelte';
   onMount(() => {
+    let animationFrame = 0;
+
+    const updateScrollState = () => {
+      animationFrame = 0;
+      showBackToTop = window.scrollY > 300;
+    };
+    const scheduleScrollUpdate = () => {
+      if (animationFrame) return;
+      animationFrame = window.requestAnimationFrame(updateScrollState);
+    };
+
     const observer = new IntersectionObserver((entries) => {
       footerVisible = entries[0].isIntersecting;
     });
     const target = document.querySelector('.bottom-grid') || document.querySelector('.site-footer');
     if (target) observer.observe(target);
 
-    return () => observer.disconnect();
+    updateScrollState();
+    window.addEventListener('scroll', scheduleScrollUpdate, { passive: true });
+    window.addEventListener('resize', scheduleScrollUpdate);
+
+    return () => {
+      observer.disconnect();
+      window.cancelAnimationFrame(animationFrame);
+      window.removeEventListener('scroll', scheduleScrollUpdate);
+      window.removeEventListener('resize', scheduleScrollUpdate);
+    };
   });
 
   const searchCopy = $derived(data.copy.search as {
@@ -79,7 +95,16 @@
 <svelte:head>
   <title>{data.copy.siteTitle as string}</title>
   <meta name="description" content={data.copy.siteDescription as string} />
+  <meta name="robots" content="index,follow,max-image-preview:large" />
   <link rel="canonical" href={data.canonicalUrl} />
+  {#if data.featured?.coverImage}
+    <link
+      rel="preload"
+      as="image"
+      href={data.featured.coverImageAvif ?? data.featured.coverImage}
+      fetchpriority="high"
+    />
+  {/if}
   {#each Object.entries(data.alternateUrls) as [lang, href]}
     <link rel="alternate" hreflang={lang} href={href} />
   {/each}
@@ -88,13 +113,20 @@
   <meta property="og:description" content={data.copy.siteDescription as string} />
   <meta property="og:url" content={data.canonicalUrl} />
   <meta property="og:type" content="website" />
-  <meta name="twitter:card" content="summary" />
+  <meta property="og:locale" content={data.lang === 'zh' ? 'zh_CN' : 'en_US'} />
+  {#if data.featuredImageUrl}
+    <meta property="og:image" content={data.featuredImageUrl} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="675" />
+  {/if}
+  <meta name="twitter:card" content={data.featuredImageUrl ? 'summary_large_image' : 'summary'} />
   <meta name="twitter:title" content={data.copy.siteTitle as string} />
   <meta name="twitter:description" content={data.copy.siteDescription as string} />
+  {#if data.featuredImageUrl}
+    <meta name="twitter:image" content={data.featuredImageUrl} />
+  {/if}
   {@html `<script type="application/ld+json">${data.jsonLd}</script>`}
 </svelte:head>
-
-<svelte:window onscroll={handleScroll} onresize={handleScroll} />
 
 <main>
   <section class="hero">

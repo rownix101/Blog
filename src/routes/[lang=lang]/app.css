@@ -66,7 +66,7 @@ h2,
 h3,
 strong,
 a {
-  overflow-wrap: anywhere;
+  overflow-wrap: break-word;
 }
 
 a:focus-visible {
@@ -446,8 +446,8 @@ a:focus-visible {
   font-size: clamp(3rem, 7vw, 5.8rem);
   line-height: 0.95;
   letter-spacing: 0;
-  overflow-wrap: anywhere;
-  word-break: break-word;
+  overflow-wrap: break-word;
+  word-break: normal;
 }
 
 .lede {
@@ -526,8 +526,8 @@ a:focus-visible {
   margin: 0;
   font-size: 1.8rem;
   line-height: 1.1;
-  overflow-wrap: anywhere;
-  word-break: break-word;
+  overflow-wrap: break-word;
+  word-break: normal;
 }
 
 .feature-panel h2 a {
@@ -612,6 +612,8 @@ a:focus-visible {
   gap: 12px;
   padding: 22px 0;
   border-bottom: 1px solid var(--color-border-soft);
+  content-visibility: auto;
+  contain-intrinsic-size: auto 520px;
 }
 
 .article-card > div,
@@ -628,8 +630,8 @@ a:focus-visible {
   margin: 0;
   font-size: clamp(1.45rem, 3vw, 2.25rem);
   line-height: 1.08;
-  overflow-wrap: anywhere;
-  word-break: break-word;
+  overflow-wrap: break-word;
+  word-break: normal;
 }
 
 .article-card h3 a {
@@ -818,7 +820,7 @@ a:focus-visible {
 }
 
 .social-list strong {
-  overflow-wrap: anywhere;
+  overflow-wrap: break-word;
   color: var(--color-text);
   font-size: 0.98rem;
 }
@@ -1139,8 +1141,8 @@ a:focus-visible {
   font-size: clamp(2.5rem, 6vw, 5rem);
   line-height: 1;
   letter-spacing: 0;
-  overflow-wrap: anywhere;
-  word-break: break-word;
+  overflow-wrap: break-word;
+  word-break: normal;
 }
 
 .error-copy > p:not(.eyebrow) {
@@ -1298,8 +1300,8 @@ a:focus-visible {
   font-size: clamp(2.55rem, 6vw, 4.6rem);
   line-height: 1;
   letter-spacing: 0;
-  overflow-wrap: anywhere;
-  word-break: break-word;
+  overflow-wrap: break-word;
+  word-break: normal;
 }
 
 .prose header > p:not(.eyebrow) {
@@ -1488,7 +1490,7 @@ a:focus-visible {
 
 .toc-list a {
   display: block;
-  overflow-wrap: anywhere;
+  overflow-wrap: break-word;
   color: var(--color-muted);
   font-size: 0.92rem;
   line-height: 1.45;
@@ -1533,8 +1535,8 @@ a:focus-visible {
 }
 
 .related strong {
-  overflow-wrap: anywhere;
-  word-break: break-word;
+  overflow-wrap: break-word;
+  word-break: normal;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -1619,7 +1621,7 @@ a:focus-visible {
   }
 
   .brand span:last-child {
-    overflow-wrap: anywhere;
+    overflow-wrap: break-word;
   }
 
   .header-search {
@@ -1693,13 +1695,13 @@ a:focus-visible {
   .hero h1 {
     font-size: 2.2rem;
     line-height: 1.06;
-    word-break: break-all;
+    word-break: normal;
   }
 
   .error-copy h1 {
     font-size: 2.1rem;
     line-height: 1.08;
-    word-break: break-all;
+    word-break: normal;
   }
 
   .error-code {
@@ -1717,7 +1719,7 @@ a:focus-visible {
   .prose h1 {
     font-size: 2.05rem;
     line-height: 1.08;
-    word-break: break-all;
+    word-break: normal;
   }
 
   .feature-panel h2,
@@ -1725,7 +1727,7 @@ a:focus-visible {
   .related strong {
     font-size: 1.45rem;
     line-height: 1.12;
-    word-break: break-all;
+    word-break: normal;
   }
 
   .lede,
@@ -1733,7 +1735,7 @@ a:focus-visible {
   .prose > p {
     font-size: 1rem;
     line-height: 1.75;
-    word-break: break-all;
+    word-break: normal;
   }
 
   .lede {

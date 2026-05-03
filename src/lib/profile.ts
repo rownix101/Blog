@@ -1,8 +1,8 @@
 export const socialLinks = [
   {
     label: 'Email',
-    href: 'mailto:rownix101%40gmail.com',
-    value: 'rownix101 [at] gmail.com'
+    href: 'mailto:connect%40rownix.dev',
+    value: 'connect@rownix.dev'
   },
   {
     label: 'X',
