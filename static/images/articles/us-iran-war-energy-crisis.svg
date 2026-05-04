@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="675" viewBox="0 0 1200 675" role="img" aria-labelledby="title desc">
+  <title id="title">US Iran war energy crisis diagram</title>
+  <desc id="desc">A geopolitical energy diagram showing the Strait of Hormuz, oil tankers, price pressure, Europe, and negotiation risk.</desc>
+  <rect width="1200" height="675" fill="#101820"/>
+  <rect x="58" y="56" width="1084" height="562" rx="18" fill="#16232c" stroke="#465f6a" stroke-width="2"/>
+
+  <path d="M145 132 C310 96 448 128 572 204 C688 275 814 256 1048 154 L1048 520 C835 596 690 548 570 476 C432 394 306 382 145 438 Z" fill="#233b45"/>
+  <path d="M145 246 C315 210 444 242 568 310 C696 380 835 354 1048 254 L1048 408 C832 488 686 456 566 388 C428 310 302 304 145 356 Z" fill="#2f7182" opacity=".86"/>
+  <path d="M604 198 C652 232 690 270 716 314 C688 350 648 381 600 408 C552 378 512 343 486 302 C516 260 554 226 604 198 Z" fill="#f2c14e" opacity=".95"/>
+  <path d="M604 232 C636 254 662 280 678 309 C658 334 632 355 600 374 C568 353 542 328 526 301 C546 274 572 251 604 232 Z" fill="#16232c"/>
+  <text x="602" y="305" text-anchor="middle" font-family="Arial, sans-serif" font-size="26" font-weight="700" fill="#f8f4e3">Hormuz</text>
+  <text x="602" y="336" text-anchor="middle" font-family="Arial, sans-serif" font-size="20" fill="#f8f4e3">risk gate</text>
+
+  <g stroke="#f2c14e" stroke-width="4" stroke-linecap="round" fill="none" opacity=".75">
+    <path d="M234 292 C350 260 438 274 520 320"/>
+    <path d="M684 336 C782 366 880 350 986 304"/>
+    <path d="M308 406 C424 380 510 398 590 450"/>
+  </g>
+
+  <g font-family="Arial, sans-serif" fill="#f8f4e3" font-weight="700">
+    <g>
+      <rect x="126" y="112" width="216" height="96" rx="12" fill="#284653"/>
+      <text x="234" y="151" text-anchor="middle" font-size="22">Energy</text>
+      <text x="234" y="181" text-anchor="middle" font-size="22">prices</text>
+    </g>
+    <g>
+      <rect x="854" y="96" width="216" height="96" rx="12" fill="#443f32"/>
+      <text x="962" y="135" text-anchor="middle" font-size="22">Europe</text>
+      <text x="962" y="165" text-anchor="middle" font-size="22">holds back</text>
+    </g>
+    <g>
+      <rect x="116" y="466" width="236" height="96" rx="12" fill="#443f32"/>
+      <text x="234" y="505" text-anchor="middle" font-size="22">Inflation</text>
+      <text x="234" y="535" text-anchor="middle" font-size="22">pressure</text>
+    </g>
+    <g>
+      <rect x="838" y="452" width="248" height="96" rx="12" fill="#284653"/>
+      <text x="962" y="491" text-anchor="middle" font-size="22">Negotiation</text>
+      <text x="962" y="521" text-anchor="middle" font-size="22">endgame</text>
+    </g>
+  </g>
+
+  <g fill="#f8f4e3" opacity=".9">
+    <path d="M406 286 h92 l22 18 h-136 z"/>
+    <rect x="422" y="266" width="52" height="20" rx="3"/>
+    <path d="M792 326 h104 l24 18 h-152 z"/>
+    <rect x="812" y="302" width="54" height="24" rx="3"/>
+  </g>
+
+  <g stroke="#d95d39" stroke-width="3" fill="none" opacity=".8">
+    <path d="M344 160 C430 166 492 196 548 256"/>
+    <path d="M850 145 C766 168 704 206 658 260"/>
+    <path d="M352 512 C444 498 510 462 556 392"/>
+    <path d="M838 500 C752 482 696 446 648 388"/>
+  </g>
+
+  <text x="88" y="648" font-family="Arial, sans-serif" font-size="18" fill="#9fb8c2">Military power, oil flows, alliance politics, and domestic inflation define the limits of escalation.</text>
+</svg>

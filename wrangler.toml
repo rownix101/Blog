@@ -12,4 +12,4 @@ enabled = true
 [[d1_databases]]
 binding = "COMMENTS_DB"
 database_name = "blog-comments"
-database_id = "replace-with-cloudflare-d1-database-id"
+database_id = "2dbabfab-d9e0-48d4-a971-d0dabe667ced"
