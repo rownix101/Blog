@@ -1,5 +1,6 @@
 import { getArticle } from '$lib/content';
 import {
+  COMMENT_LIMITS,
   createComment,
   listComments,
   normalizeCommentInput,
@@ -47,9 +48,10 @@ export const GET: RequestHandler = async ({ params, platform }) => {
   }
 };
 
-export const POST: RequestHandler = async ({ params, request, url, platform }) => {
+export const POST: RequestHandler = async ({ params, request, url, platform, locals }) => {
   const { lang, slug } = params;
   const db = platform?.env?.COMMENTS_DB;
+  const user = locals.user;
 
   if (!lang || !slug) {
     error(400, 'Invalid article route.');
@@ -68,9 +70,11 @@ export const POST: RequestHandler = async ({ params, request, url, platform }) =
     );
   }
 
+  if (!user) {
+    return json({ message: 'Login required.' }, { status: 401, headers: jsonHeaders });
+  }
+
   let payload: {
-    authorName?: unknown;
-    authorEmail?: unknown;
     body?: unknown;
     website?: unknown;
   };
@@ -85,7 +89,11 @@ export const POST: RequestHandler = async ({ params, request, url, platform }) =
     return json({ message: 'Comment accepted.' }, { status: 202, headers: jsonHeaders });
   }
 
-  const { value, errors } = normalizeCommentInput(payload);
+  const { value, errors } = normalizeCommentInput({
+    authorName: user.displayName.slice(0, COMMENT_LIMITS.authorNameMax),
+    authorEmail: user.email,
+    body: payload.body
+  });
 
   if (Object.keys(errors).length) {
     return json(
@@ -96,6 +104,7 @@ export const POST: RequestHandler = async ({ params, request, url, platform }) =
 
   const articleUrl = new URL(`/${lang}/articles/${slug}`, url.origin).toString();
   const newComment = {
+    userId: user.id,
     articleLang: lang,
     articleSlug: slug,
     articleTitle: article.title,

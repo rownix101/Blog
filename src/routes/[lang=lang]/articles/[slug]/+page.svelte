@@ -33,16 +33,16 @@
     loading: string;
     empty: string;
     disabled: string;
-    nameLabel: string;
-    namePlaceholder: string;
-    emailLabel: string;
-    emailPlaceholder: string;
     bodyLabel: string;
     bodyPlaceholder: string;
     submit: string;
     submitting: string;
     success: string;
     error: string;
+    loginToComment: string;
+    loginLink: string;
+    commentingAs: string;
+    logout: string;
   });
   const commentsEndpoint = $derived(`/api/comments/${data.lang}/${data.article.slug}`);
   const tableOfContents = $derived(
@@ -343,7 +343,7 @@
       </div>
     </section>
 
-    <Comments endpoint={commentsEndpoint} copy={commentsCopy} lang={data.lang} />
+    <Comments endpoint={commentsEndpoint} copy={commentsCopy} lang={data.lang} user={data.user} />
   </article>
 
   <aside class="article-side" aria-label={tocCopy.title}>

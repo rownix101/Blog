@@ -26,6 +26,7 @@ export type PublicComment = {
 };
 
 export type NewComment = {
+  userId: number;
   articleLang: Lang;
   articleSlug: string;
   articleTitle: string;
@@ -123,6 +124,7 @@ export const createComment = async (db: D1DatabaseBinding, comment: NewComment) 
   const result = await db
     .prepare(
       `INSERT INTO article_comments (
+        user_id,
         article_lang,
         article_slug,
         author_name,
@@ -130,9 +132,10 @@ export const createComment = async (db: D1DatabaseBinding, comment: NewComment) 
         body,
         status,
         created_at
-      ) VALUES (?, ?, ?, ?, ?, 'approved', ?)`
+      ) VALUES (?, ?, ?, ?, ?, ?, 'approved', ?)`
     )
     .bind(
+      comment.userId,
       comment.articleLang,
       comment.articleSlug,
       comment.authorName,

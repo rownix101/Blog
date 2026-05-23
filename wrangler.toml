@@ -9,7 +9,17 @@ binding = "ASSETS"
 [observability]
 enabled = true
 
+[[kv_namespaces]]
+binding = "AUTH_KV"
+id = "AUTH_KV_ID_PLACEHOLDER"
+
 [[d1_databases]]
 binding = "COMMENTS_DB"
 database_name = "blog-comments"
 database_id = "2dbabfab-d9e0-48d4-a971-d0dabe667ced"
+
+# OAuth credentials — set via `wrangler secret put` or Cloudflare dashboard
+# wrangler secret put GOOGLE_CLIENT_ID
+# wrangler secret put GOOGLE_CLIENT_SECRET
+# wrangler secret put X_CLIENT_ID
+# wrangler secret put X_CLIENT_SECRET

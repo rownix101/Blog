@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" role="img" aria-labelledby="title desc">
+  <title id="title">Amusing ourselves to death cover</title>
+  <desc id="desc">An abstract composition of screens, a smile icon, broken public issues, and attention fragments.</desc>
+  <rect width="1200" height="675" fill="#f8fafc"/>
+  <rect x="54" y="52" width="1092" height="571" fill="#fff" stroke="#111827" stroke-width="4"/>
+  <g opacity=".14" fill="#111827">
+    <circle cx="176" cy="146" r="9"/>
+    <circle cx="270" cy="94" r="7"/>
+    <circle cx="1018" cy="132" r="10"/>
+    <circle cx="1082" cy="510" r="8"/>
+    <circle cx="126" cy="530" r="7"/>
+    <circle cx="960" cy="586" r="6"/>
+  </g>
+  <g transform="translate(176 116)">
+    <rect width="848" height="443" rx="22" fill="#111827"/>
+    <rect x="28" y="32" width="792" height="348" rx="12" fill="#f9fafb"/>
+    <rect x="384" y="393" width="80" height="14" rx="7" fill="#e5e7eb"/>
+  </g>
+  <g transform="translate(290 178)">
+    <rect x="0" y="0" width="250" height="150" rx="10" fill="#f97316" stroke="#111827" stroke-width="4"/>
+    <rect x="28" y="30" width="150" height="14" fill="#111827"/>
+    <rect x="28" y="62" width="194" height="10" fill="#fff" opacity=".78"/>
+    <rect x="28" y="88" width="118" height="10" fill="#fff" opacity=".78"/>
+    <path d="M192 105c18 0 34 13 34 31h-68c0-18 16-31 34-31z" fill="#fff" opacity=".9"/>
+    <circle cx="180" cy="88" r="10" fill="#111827"/>
+    <circle cx="204" cy="88" r="10" fill="#111827"/>
+  </g>
+  <g transform="translate(590 178)">
+    <rect x="0" y="0" width="250" height="150" rx="10" fill="#06b6d4" stroke="#111827" stroke-width="4"/>
+    <path d="M50 51h148M50 82h104M50 113h166" stroke="#111827" stroke-width="14" stroke-linecap="round"/>
+    <path d="M184 34l34 34-34 34" fill="none" stroke="#fff" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+  <g transform="translate(390 370)">
+    <rect width="420" height="92" rx="12" fill="#fff" stroke="#111827" stroke-width="4"/>
+    <path d="M38 46h76M146 46h44M222 46h62M318 46h66" stroke="#111827" stroke-width="14" stroke-linecap="round"/>
+    <path d="M116 24l30 44M294 24l30 44" stroke="#ef4444" stroke-width="8" stroke-linecap="round"/>
+  </g>
+  <g fill="none" stroke="#111827" stroke-width="5" stroke-linecap="round">
+    <path d="M190 160c-60 64-64 150-14 214"/>
+    <path d="M1010 170c58 66 62 154 10 218"/>
+    <path d="M226 552c210 62 538 66 748 0"/>
+  </g>
+  <g fill="#111827">
+    <path d="M214 370l-48 16 30 16z"/>
+    <path d="M986 384l48-16-30-16z"/>
+  </g>
+  <g transform="translate(526 236)">
+    <circle cx="74" cy="74" r="62" fill="#fde047" stroke="#111827" stroke-width="5"/>
+    <circle cx="52" cy="58" r="7" fill="#111827"/>
+    <circle cx="96" cy="58" r="7" fill="#111827"/>
+    <path d="M42 86c18 24 48 24 66 0" fill="none" stroke="#111827" stroke-width="7" stroke-linecap="round"/>
+  </g>
+  <g transform="translate(142 430)" fill="#fff" stroke="#111827" stroke-width="4">
+    <rect width="158" height="74" rx="8"/>
+    <path d="M26 28h92M26 48h54" stroke="#111827" stroke-width="8" stroke-linecap="round"/>
+  </g>
+  <g transform="translate(900 414)" fill="#fff" stroke="#111827" stroke-width="4">
+    <rect width="158" height="74" rx="8"/>
+    <path d="M28 26h80M28 48h102" stroke="#111827" stroke-width="8" stroke-linecap="round"/>
+  </g>
+</svg>
