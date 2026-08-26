@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" role="img" aria-labelledby="title desc">
+  <title id="title">SOL application signing and publisher lineage</title>
+  <desc id="desc">A complete application bundle is hashed and signed while publisher identity continues through a verified sequence of rotating keys.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#07111f"/><stop offset="1" stop-color="#102b45"/></linearGradient>
+    <linearGradient id="amber" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffe49a"/><stop offset=".55" stop-color="#ffbd59"/><stop offset="1" stop-color="#ef7938"/></linearGradient>
+    <linearGradient id="glass" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#a9def6" stop-opacity=".22"/><stop offset="1" stop-color="#5d9bc7" stop-opacity=".06"/></linearGradient>
+    <filter id="glow" x="-70%" y="-70%" width="240%" height="240%"><feGaussianBlur stdDeviation="16" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    <marker id="arrow" markerWidth="11" markerHeight="11" refX="9" refY="5.5" orient="auto"><path d="M0 0 11 5.5 0 11z" fill="#ffbd59"/></marker>
+  </defs>
+  <rect width="1200" height="675" fill="url(#bg)"/><circle cx="1074" cy="92" r="252" fill="#27709d" opacity=".12"/><circle cx="78" cy="681" r="298" fill="#16476b" opacity=".17"/>
+  <g opacity=".14" stroke="#92cbe5"><path d="M0 115h1200M0 215h1200M0 315h1200M0 415h1200M0 515h1200M0 615h1200"/><path d="M100 0v675M250 0v675M400 0v675M550 0v675M700 0v675M850 0v675M1000 0v675M1150 0v675"/></g>
+  <g transform="translate(75 63)"><circle cx="41" cy="41" r="26" fill="#ffb84f" opacity=".25" filter="url(#glow)"/><circle cx="41" cy="41" r="22" fill="url(#amber)"/><path d="M41 7V0M41 82v-7M7 41H0M82 41h-7M17 17l-5-5M70 70l-5-5M65 17l5-5M17 65l-5 5" stroke="#ffd276" stroke-width="4" stroke-linecap="round"/><text x="86" y="37" fill="#f8fbff" font-family="Inter,system-ui,sans-serif" font-size="37" font-weight="760" letter-spacing="5">SOL SIGN</text><text x="88" y="65" fill="#a4c8dc" font-family="Inter,system-ui,sans-serif" font-size="14" letter-spacing="2.7">CONTENT · PUBLISHER · CONTINUITY</text></g>
+  <text x="600" y="190" fill="#fff" font-family="Inter,system-ui,sans-serif" font-size="47" font-weight="770" text-anchor="middle" letter-spacing="2.2">IDENTITY THAT SURVIVES KEY ROTATION</text>
+  <g transform="translate(70 270)" font-family="Inter,system-ui,sans-serif"><rect width="285" height="220" rx="23" fill="url(#glass)" stroke="#8ec8e5" stroke-opacity=".62" stroke-width="2"/><path d="M82 46h84l36 36v76H82z" fill="#82bfdc" opacity=".14" stroke="#c5eafa" stroke-width="3"/><path d="M166 46v36h36M102 104h78M102 126h78" fill="none" stroke="#c8ecfc" stroke-width="4" stroke-linecap="round"/><text x="142" y="185" fill="#f6fbff" font-size="22" font-weight="720" text-anchor="middle">COMPLETE BUNDLE</text><text x="142" y="209" fill="#9fc4d8" font-size="13" text-anchor="middle">Every path · byte · digest</text></g>
+  <g transform="translate(458 270)" font-family="Inter,system-ui,sans-serif"><rect width="285" height="220" rx="23" fill="url(#glass)" stroke="#ffbd59" stroke-width="2.5"/><path d="M142 37 187 55v37c0 34-20 55-45 71-25-16-45-37-45-71V55z" fill="#ffbd59" opacity=".15" stroke="#ffcc76" stroke-width="3"/><path d="m119 96 16 16 31-38" fill="none" stroke="#ffd17d" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/><text x="142" y="185" fill="#f6fbff" font-size="22" font-weight="720" text-anchor="middle">SIGNED RELEASE</text><text x="142" y="209" fill="#e7bb6d" font-size="13" text-anchor="middle">Version · manifest · contract</text></g>
+  <g transform="translate(842 278)" font-family="Inter,system-ui,sans-serif">
+    <path d="M48 78h164" stroke="#75b4d4" stroke-width="4"/>
+    <circle cx="48" cy="78" r="30" fill="#153b58" stroke="#9fd6ef" stroke-width="3"/><circle cx="130" cy="78" r="30" fill="#153b58" stroke="#9fd6ef" stroke-width="3"/><circle cx="212" cy="78" r="34" fill="#3f3526" stroke="#ffbd59" stroke-width="3"/>
+    <circle cx="39" cy="75" r="7" fill="#cceeff"/><path d="M46 75h20M59 75v9" stroke="#cceeff" stroke-width="4" stroke-linecap="round"/>
+    <circle cx="121" cy="75" r="7" fill="#cceeff"/><path d="M128 75h20M141 75v9" stroke="#cceeff" stroke-width="4" stroke-linecap="round"/>
+    <circle cx="202" cy="75" r="8" fill="#ffd17a"/><path d="M210 75h22M224 75v10" stroke="#ffd17a" stroke-width="4" stroke-linecap="round"/>
+    <text x="48" y="130" fill="#a7cadc" font-size="14" text-anchor="middle">KEY A</text><text x="130" y="130" fill="#a7cadc" font-size="14" text-anchor="middle">KEY B</text><text x="212" y="130" fill="#ffca70" font-size="14" font-weight="700" text-anchor="middle">KEY C</text>
+    <text x="130" y="174" fill="#f6fbff" font-size="21" font-weight="720" text-anchor="middle">PUBLISHER LINEAGE</text><text x="130" y="199" fill="#9fc4d8" font-size="13" text-anchor="middle">Root → current signer</text>
+  </g>
+  <path d="M372 380h67" stroke="#ffbd59" stroke-width="4" marker-end="url(#arrow)"/><path d="M760 380h55" stroke="#ffbd59" stroke-width="4" marker-end="url(#arrow)"/>
+  <g transform="translate(244 548)" font-family="Inter,system-ui,sans-serif"><rect width="712" height="70" rx="18" fill="#06121e" fill-opacity=".78" stroke="#5f9dc3" stroke-opacity=".42"/><text x="356" y="30" fill="#fff" font-size="17" font-weight="680" text-anchor="middle" letter-spacing="1.4">INTEGRITY + AUTHENTICITY + CONTINUITY</text><text x="356" y="53" fill="#ffbd59" font-size="14" font-weight="720" text-anchor="middle" letter-spacing="2.7">ONE FOUNDATION FOR UPDATE AND TRUST</text></g>
+</svg>

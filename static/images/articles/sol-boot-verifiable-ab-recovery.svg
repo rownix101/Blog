@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" role="img" aria-labelledby="title desc">
+  <title id="title">SOL verified A/B boot and recovery</title>
+  <desc id="desc">SOL boot verifies a trial deployment, promotes success, falls back to a known-good slot, or enters independent recovery.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#07111f"/><stop offset="1" stop-color="#102b45"/>
+    </linearGradient>
+    <linearGradient id="amber" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ffe49a"/><stop offset=".55" stop-color="#ffbd59"/><stop offset="1" stop-color="#ef7938"/>
+    </linearGradient>
+    <linearGradient id="glass" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#acdff7" stop-opacity=".22"/><stop offset="1" stop-color="#5b98c5" stop-opacity=".06"/>
+    </linearGradient>
+    <filter id="glow" x="-70%" y="-70%" width="240%" height="240%"><feGaussianBlur stdDeviation="16" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    <marker id="arrow" markerWidth="11" markerHeight="11" refX="9" refY="5.5" orient="auto"><path d="M0 0 11 5.5 0 11z" fill="#ffbd59"/></marker>
+  </defs>
+  <rect width="1200" height="675" fill="url(#bg)"/>
+  <circle cx="1080" cy="94" r="255" fill="#27709d" opacity=".12"/>
+  <circle cx="74" cy="684" r="300" fill="#164568" opacity=".18"/>
+  <g opacity=".14" stroke="#92cbe5"><path d="M0 115h1200M0 215h1200M0 315h1200M0 415h1200M0 515h1200M0 615h1200"/><path d="M100 0v675M250 0v675M400 0v675M550 0v675M700 0v675M850 0v675M1000 0v675M1150 0v675"/></g>
+  <g transform="translate(75 63)">
+    <circle cx="41" cy="41" r="26" fill="#ffb84f" opacity=".25" filter="url(#glow)"/><circle cx="41" cy="41" r="22" fill="url(#amber)"/>
+    <path d="M41 7V0M41 82v-7M7 41H0M82 41h-7M17 17l-5-5M70 70l-5-5M65 17l5-5M17 65l-5 5" stroke="#ffd276" stroke-width="4" stroke-linecap="round"/>
+    <text x="86" y="37" fill="#f8fbff" font-family="Inter,system-ui,sans-serif" font-size="37" font-weight="760" letter-spacing="5">SOL BOOT</text>
+    <text x="88" y="65" fill="#a4c8dc" font-family="Inter,system-ui,sans-serif" font-size="14" letter-spacing="2.7">VERIFY · TRIAL · PROMOTE · RETURN</text>
+  </g>
+  <text x="600" y="195" fill="#fff" font-family="Inter,system-ui,sans-serif" font-size="45" font-weight="760" text-anchor="middle" letter-spacing="2">A FAILED UPDATE MUST HAVE A WAY BACK</text>
+  <g transform="translate(82 270)" font-family="Inter,system-ui,sans-serif">
+    <rect width="280" height="192" rx="23" fill="url(#glass)" stroke="#8dc7e5" stroke-width="2" stroke-opacity=".62"/>
+    <circle cx="140" cy="69" r="36" fill="#77b8dc" opacity=".16" stroke="#bfe7fa" stroke-width="3"/>
+    <path d="m123 68 12 12 24-28" fill="none" stroke="#cceeff" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+    <text x="140" y="134" fill="#f7fbff" font-size="23" font-weight="720" text-anchor="middle">SLOT A</text><text x="140" y="162" fill="#9fc3d8" font-size="15" text-anchor="middle">KNOWN-GOOD</text>
+  </g>
+  <g transform="translate(460 270)" font-family="Inter,system-ui,sans-serif">
+    <rect width="280" height="192" rx="23" fill="url(#glass)" stroke="#ffbd59" stroke-width="2.5"/>
+    <circle cx="140" cy="69" r="36" fill="#ffbd59" opacity=".16" stroke="#ffcb73" stroke-width="3"/>
+    <path d="M140 46v24l17 10" fill="none" stroke="#ffd17f" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+    <text x="140" y="134" fill="#f7fbff" font-size="23" font-weight="720" text-anchor="middle">SLOT B</text><text x="140" y="162" fill="#e5b96c" font-size="15" text-anchor="middle">BOUNDED TRIAL</text>
+  </g>
+  <g transform="translate(838 270)" font-family="Inter,system-ui,sans-serif">
+    <rect width="280" height="192" rx="23" fill="url(#glass)" stroke="#8dc7e5" stroke-width="2" stroke-opacity=".62"/>
+    <path d="M140 36 183 53v32c0 31-20 49-43 63-23-14-43-32-43-63V53z" fill="#76b8dc" opacity=".16" stroke="#bfe7fa" stroke-width="3"/>
+    <path d="M120 83h40M140 63v40" stroke="#cceeff" stroke-width="7" stroke-linecap="round"/>
+    <text x="140" y="159" fill="#f7fbff" font-size="21" font-weight="720" text-anchor="middle">RECOVERY</text>
+  </g>
+  <path d="M379 366h62" stroke="#ffbd59" stroke-width="4" stroke-linecap="round" marker-end="url(#arrow)"/>
+  <path d="M757 366h62" stroke="#ffbd59" stroke-width="4" stroke-linecap="round" marker-end="url(#arrow)"/>
+  <path d="M600 480c0 75-378 75-378 6" fill="none" stroke="#8bc4df" stroke-opacity=".75" stroke-width="3" stroke-dasharray="9 8" marker-end="url(#arrow)"/>
+  <text x="600" y="558" fill="#d5e8f2" font-family="Inter,system-ui,sans-serif" font-size="17" font-weight="630" text-anchor="middle" letter-spacing="1.6">CONSUME ATTEMPT BEFORE TRANSFER · PROMOTE ONLY AFTER HEALTH</text>
+  <rect x="287" y="590" width="626" height="49" rx="16" fill="#06121e" fill-opacity=".78" stroke="#5e9ac0" stroke-opacity=".42"/>
+  <text x="600" y="621" fill="#ffbd59" font-family="Inter,system-ui,sans-serif" font-size="16" font-weight="720" text-anchor="middle" letter-spacing="2.5">PRESERVE THE LAST VERIFIED PATH</text>
+</svg>
